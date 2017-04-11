@@ -1,0 +1,822 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="李剑飞" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/avatar2.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Safari有一个“添加至屏幕”的功能，其实就是在桌面上添加了一个网页书签，App可以使用这个功能来实现创建桌面快捷方式。 一、运用基本技术点 JavaScript Data URI Schema Socket基本知识 Base64编码  基本原理程序内部创建一个简单的Web站点，通过这个站点调用Safari，站点将自定义的Html页面返回给Safari，此时利用Safari的“添加至主屏幕”功">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS App创建桌面快捷方式">
+<meta property="og:url" content="http://www.lijianfei.cn/2015/08/27/iOS-desktop/index.html">
+<meta property="og:site_name" content="李剑飞的博客">
+<meta property="og:description" content="Safari有一个“添加至屏幕”的功能，其实就是在桌面上添加了一个网页书签，App可以使用这个功能来实现创建桌面快捷方式。 一、运用基本技术点 JavaScript Data URI Schema Socket基本知识 Base64编码  基本原理程序内部创建一个简单的Web站点，通过这个站点调用Safari，站点将自定义的Html页面返回给Safari，此时利用Safari的“添加至主屏幕”功">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/SpeedyDesktop.gif">
+<meta property="og:updated_time" content="2016-08-02T08:11:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS App创建桌面快捷方式">
+<meta name="twitter:description" content="Safari有一个“添加至屏幕”的功能，其实就是在桌面上添加了一个网页书签，App可以使用这个功能来实现创建桌面快捷方式。 一、运用基本技术点 JavaScript Data URI Schema Socket基本知识 Base64编码  基本原理程序内部创建一个简单的Web站点，通过这个站点调用Safari，站点将自定义的Html页面返回给Safari，此时利用Safari的“添加至主屏幕”功">
+<meta name="twitter:image" content="http://7xraw1.com1.z0.glb.clouddn.com/SpeedyDesktop.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.lijianfei.cn/2015/08/27/iOS-desktop/"/>
+
+
+
+
+
+  <title> iOS App创建桌面快捷方式 | 李剑飞的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1260409211&web_id=1260409211" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李剑飞的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://www.lijianfei.cn/2015/08/27/iOS-desktop/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李剑飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李剑飞的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS App创建桌面快捷方式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-08-27T09:53:55+08:00">
+                2015-08-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="http://7xraw1.com1.z0.glb.clouddn.com/SpeedyDesktop.gif" alt=""></p>
+<p>Safari有一个“添加至屏幕”的功能，其实就是在桌面上添加了一个网页书签，App可以使用这个功能来实现创建桌面快捷方式。</p>
+<h1 id="一、运用基本技术点"><a href="#一、运用基本技术点" class="headerlink" title="一、运用基本技术点"></a>一、运用基本技术点</h1><ol>
+<li>JavaScript</li>
+<li>Data URI Schema</li>
+<li>Socket基本知识</li>
+<li>Base64编码</li>
+</ol>
+<h1 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h1><p>程序内部创建一个简单的Web站点，通过这个站点调用Safari，站点将自定义的Html页面返回给Safari，此时利用Safari的“添加至主屏幕”功能，将自定义的Html制作成桌面书签，当用户点击桌面图标时，则运行自定义的Javascript来进行跳转至App。</p>
+<h1 id="三、什么是-data-URI-scheme？"><a href="#三、什么是-data-URI-scheme？" class="headerlink" title="三、什么是 data URI scheme？"></a>三、什么是 data URI scheme？</h1><p>假设你有以下的图像：</p>
+<p>A .png</p>
+<p>把它在网页上显示出来的标准方法是：</p>
+<p><code>&lt;img src=”http://sjolzy.cn/images/A.png”/&gt;</code><br>这 种取得资料的方法称为 http URI scheme ，同样的效果使用 data URI scheme 可以写成：</p>
+<p><code>&lt;img src=”data:image/png;base64,iVBO…” /&gt;</code>换句话说我们把图像档案的内容内置在 HTML 档案中，节省了一个 HTTP 请求。</p>
+<p>网页优化的一大首要任务是减少HTTP 请求 (http request) 的次数，例如通过合并多个JS文件，合并CSS样式文件。除此之外，还有一个data URL 的密技，让我们直接把图像的内容崁入网页里面，这个密技的官方名称是 data URI schema 。</p>
+<p>Data URI scheme 的语法<br>我们来分析一下这句 img 标签的语法：</p>
+<p><code>&lt;img src=”data:image/png;base64,iVBOR….&gt;</code>它包含一下部分：</p>
+<p>data – 取得数据的协定名称</p>
+<p>image/png – 数据类型名称</p>
+<p>base64 – 数据的编码方法</p>
+<p>iVBOR…. – 编码后的数据</p>
+<p>: , ; – data URI scheme 指定的分隔符号</p>
+<h1 id="四、什么是-Base64-编码？"><a href="#四、什么是-Base64-编码？" class="headerlink" title="四、什么是 Base64 编码？"></a>四、什么是 Base64 编码？</h1><p>简单地说它把一些 8-bit 数据翻译成标准 ASCII 字符，往上有很多免费的 base64 编码和解码的工具。</p>
+<h1 id="五、Socket基本知识"><a href="#五、Socket基本知识" class="headerlink" title="五、Socket基本知识"></a>五、Socket基本知识</h1><p>自行脑补，这里我用了iOS中很棒的一个HttpServer第三方框架<a href="https://github.com/robbiehanson/CocoaHTTPServer" target="_blank" rel="external">CocoaHttpServer</a>。</p>
+<h1 id="六、实现"><a href="#六、实现" class="headerlink" title="六、实现"></a>六、实现</h1><p>上面基本知识介绍完毕，下面开始撸代码。</p>
+<p>iOS 的代码很简单，我们使用CocoaHttpServer创建一个本地的站点即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">- (IBAction)action:(id)sender</div><div class="line">&#123;</div><div class="line">    [DDLog addLogger:[DDTTYLogger sharedInstance]];</div><div class="line">    _httpServer = [[HTTPServer alloc] init];</div><div class="line">    [_httpServer setType:@&quot;_http._tcp.&quot;];</div><div class="line">    NSString *webPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@&quot;Web&quot;];</div><div class="line"> </div><div class="line">    DDLogInfo(@&quot;Setting document root: %@&quot;, webPath);</div><div class="line"> </div><div class="line">    [_httpServer setDocumentRoot:webPath];</div><div class="line"> </div><div class="line">    [self startServer];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">- (void)startServer</div><div class="line">&#123;</div><div class="line">    // Start the server (and check for problems)</div><div class="line"> </div><div class="line">    NSError *error;</div><div class="line">    if([_httpServer start:&amp;error])</div><div class="line">    &#123;</div><div class="line">        DDLogInfo(@&quot;Started HTTP Server on port %hu&quot;, [_httpServer listeningPort]);</div><div class="line"> </div><div class="line">        // open the url.</div><div class="line">        NSString *urlStrWithPort = [NSString stringWithFormat:@&quot;http://localhost:%d&quot;,[_httpServer listeningPort]];</div><div class="line">        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStrWithPort]];</div><div class="line">    &#125;</div><div class="line">    else</div><div class="line">    &#123;</div><div class="line">        DDLogError(@&quot;Error starting HTTP Server: %@&quot;, error);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>ok。核心代码来了…</p>
+<p>创建一个index.html文件，里面内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE html&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head lang=&quot;en&quot;&gt;</div><div class="line">    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;</div><div class="line">    &lt;meta http-equiv=&quot;refresh&quot; content=&quot;0;URL = *&quot;&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line"> </div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<p>什么意思呢？</p>
+<p><code>&lt;meta http-equiv=&quot;refresh&quot; content=&quot;0; url=&quot;&gt;</code></p>
+<p>页面定期刷新，如果加url的，则会重新定向到指定的网页，content后面跟的是时间（单位秒），把这句话加到指定网页的<head></head>里一般也用在实时性很强的应用中，需要定期刷新。</p>
+<p>这个文件放在文件夹WEB目录下，<strong>切记这个文件在工程中是实体文件夹，folder references</strong>。</p>
+<p>接下来我们会再创建一个content.html的文件，但是这个文件不会放在WEB文件夹内，而是转换成data URI schema  放在上面的重定向到指定网页的位置。</p>
+<p>以下是我demo的content.html文件的内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE html&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">    &lt;meta name=&quot;apple-mobile-web-app-capable&quot; content=&quot;yes&quot;&gt;</div><div class="line">    &lt;meta name=&quot;apple-mobile-web-app-status-bar-style&quot; content=&quot;black&quot;&gt;</div><div class="line">    &lt;meta content=&quot;text/html charset=UTF-8&quot; http-equiv=&quot;Content-Type&quot; /&gt;</div><div class="line">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, user-scalable=no&quot; /&gt;</div><div class="line"> </div><div class="line">    &lt;link rel=&apos;apple-touch-icon&apos; href=&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADcAAAA3CAAAAACNsI2aAAAACXBIWXMAAAB5AAAAeQBPsriEAAAB6ElEQVR42rVWO46EMAzNadAcY3vaOQMXoXcXKZehS8NpqNxamw8JxDYra1Zjhgge9jhx/By7bYvtl4Y8Qn+tEjty6WxuQ0KkfOM5wJEeEkT1bsigU+xGQV+QfZ2ned0LAkLnyQ4XV2XB/k+jXdTs8Mc1+UlvQehEt5Fit7hLFsUfqfOk3d1lJ9VO+qN1sFvJm+IScB7s3uo8ZVzC8RrsXjIuqp2n0d+sxFNbHxCw9cF34yn2L5jyJWndIprzRfqLpvw0+6PCh1fjgxpP5NL4VzlYEa6zOYDgzyvk0cMbykMek6THipSXAD5/BKh8H/3JGZTxPgM9Px9WDL0CkM1ORJie48nsWAXQ8kW1YxlknKfIWJs/EBXgoZ6Jf2KMNMYz4FgBJjTGkxR/H67vm/H8eP9ShlyRqfli24c0svy0zLNXgOkNtQJEle/P/MPOv8T3TGZIZIbO7sL7BMON74nkuQqUj4XvnMvwiNCBjO+yev2NVDtZLeX5rvD9lu0zauxW+a6dBvJ8H5Gyfzz3wIBkO57rYECyHeeWF+xW+YcT47Jkdzi4TpT+lPNdIv9Z34fxNOxf0PhO91yw5MuMen56AxLPOtG7W9T63SCQ2k9Uol1so3bVnrog2JTyU57n1bb37n3s5s8Of5RfsaTdSlfuyUAAAAA8dEVYdGNvbW1lbnQAIEltYWdlIGdlbmVyYXRlZCBieSBHTlUgR2hvc3RzY3JpcHQgKGRldmljZT1wbm1yYXcpCvqLFvMAAABKdEVYdHNpZ25hdHVyZQA4NWUxYWU0YTJmYmE3OGVlZDRmZDhmMGFjZjIzNzYwOWU4NGY1NDk2Y2RlMjBiNWQ3NmM5Y2JjMjk4YzRhZWJjJecJ2gAAAABJRU5ErkJggg==&apos;&gt;</div><div class="line">    &lt;title&gt;李剑飞的快捷方式&lt;/title&gt;</div><div class="line"> </div><div class="line">&lt;/head&gt;</div><div class="line"> </div><div class="line">&lt;body bgcolor=&quot;#ffffff&quot;&gt;</div><div class="line">    &lt;a href=&quot;com.lijianfei.demo://ABCD&quot; id=&quot;qbt&quot; style=&quot;display: none&quot;&gt;&lt;/a&gt;</div><div class="line">    &lt;span id=&quot;msg&quot;&gt;&lt;/span&gt;</div><div class="line">&lt;/body&gt;</div><div class="line"> </div><div class="line">&lt;script&gt;</div><div class="line">    if (window.navigator.standalone == true)</div><div class="line">    &#123;</div><div class="line">        var lnk = document.getElementById(&quot;qbt&quot;)</div><div class="line">        var evt = document.createEvent(&apos;MouseEvent&apos;)</div><div class="line">        evt.initMouseEvent(&apos;click&apos;)</div><div class="line">        lnk.dispatchEvent(evt)</div><div class="line">    &#125;</div><div class="line">    else</div><div class="line">    &#123;</div><div class="line">        document.getElementById(&quot;msg&quot;).innerHTML=&apos;&lt;div style=&quot;font-size:12px&quot;&gt; 添加快捷方式 &lt;/div&gt;&apos;</div><div class="line">    &#125;</div><div class="line">&lt;/script&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<p>相信稍微做过前端开发的同学们都看懂是什么意思了，我这里大概讲一下。</p>
+<p>上面这那几个meta标签其实就是为了设置样式，<a href="https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html" target="_blank" rel="external">更多详情请看苹果官方文档关于这部分的介绍</a>。</p>
+<p>下面这个link就是快捷方式的启动图标，这个图片是经过Base64编码的。</p>
+<p>再下面的title就是快捷方式的名称。</p>
+<p>接下来body标签中的超链接就是我demo的URL Schemes,通过URL Schemes来跳转进我们的App。下面的span标签用来占位，我们使用JS代码来控制它的显示内容。</p>
+<p>这段JS代码的意思就是检测iOS WebApp是否运行在全屏模式。</p>
+<p>iOS上的Safari浏览器可以让Web应用程序全屏显示，以取得类似本地应用的显示效果。但是这需要用户把Web应用程序的图标添加到主屏幕才可以。作为开发者，为了更好的显示效果，我们可能希望自己开发的Web应用程序在非全屏状态下运行时提示用户把Web应用程序的图标添加到主屏幕。要检测Web应用程序当前是否运行在全屏状态，只要检测window.navigator.standalone是否为true就可以了，如果这个属性为true则表示Web应用程序当前运行在全屏状态，否则运行在非全屏状态。检测到Web应用程序运行在非全屏状态时就可以提示用户把Web应用程序的图标添加到主屏幕。</p>
+<p>最后再把content.html里的这段代码通过<a href="http://software.hixie.ch/utilities/cgi/data/data" target="_blank" rel="external">这个网站</a>转换成data URI schema 放在index.html中，就完成了。</p>
+<p><a href="https://github.com/lijianfeigeek/iOS-desktop" target="_blank" rel="external">Demo地址</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/jianfeishuo.jpg" alt="李剑飞 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎订阅我的微信公众号"剑飞说"！</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.png" alt="李剑飞 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.png" alt="李剑飞 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      李剑飞
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://www.lijianfei.cn/2015/08/27/iOS-desktop/" title="iOS App创建桌面快捷方式">http://www.lijianfei.cn/2015/08/27/iOS-desktop/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/08/28/1yearQunar/" rel="next" title="在Qunar一年的职业生涯成长">
+                <i class="fa fa-chevron-left"></i> 在Qunar一年的职业生涯成长
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/07/08/a-ubantu-hackathon/" rel="prev" title="Ubuntu的黑客马拉松">
+                Ubuntu的黑客马拉松 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="李剑飞" />
+          <p class="site-author-name" itemprop="name">李剑飞</p>
+           
+              <p class="site-description motion-element" itemprop="description">本站没有添加评论，扫二维码加我微信好友，咨询文章的疑问点。本站只发布原创内容，我的学习笔记会记录在下面的 Wiki 链接中。</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lijianfeigeek" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/1855052150" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/lijianfei_" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lijianfeigeek/lijianfeigeek.github.io/wiki" target="_blank" title="Wiki">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Wiki
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://lijianfei.deercv.com/" target="_blank" title="Resume">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Resume
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、运用基本技术点"><span class="nav-number">1.</span> <span class="nav-text">一、运用基本技术点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本原理"><span class="nav-number">2.</span> <span class="nav-text">基本原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、什么是-data-URI-scheme？"><span class="nav-number">3.</span> <span class="nav-text">三、什么是 data URI scheme？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、什么是-Base64-编码？"><span class="nav-number">4.</span> <span class="nav-text">四、什么是 Base64 编码？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、Socket基本知识"><span class="nav-number">5.</span> <span class="nav-text">五、Socket基本知识</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#六、实现"><span class="nav-number">6.</span> <span class="nav-text">六、实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李剑飞</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

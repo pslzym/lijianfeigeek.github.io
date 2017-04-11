@@ -1,0 +1,989 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="李剑飞" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/avatar2.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Block 底层解析 什么是block? block编译转换结构 block实际结构   block的类型 NSConcreteGlobalBlock和NSConcreteStackBlock NSConcreteMallocBlock 三种类型block测试(MRC)   捕捉变量对block结构的影响 局部变量 全局变量 局部静态变量 __block修饰的变量 self隐式循环引用 ObjC">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Objective-C中block实现和技巧学习">
+<meta property="og:url" content="http://www.lijianfei.cn/2016/07/21/objective-block-learning/index.html">
+<meta property="og:site_name" content="李剑飞的博客">
+<meta property="og:description" content="Block 底层解析 什么是block? block编译转换结构 block实际结构   block的类型 NSConcreteGlobalBlock和NSConcreteStackBlock NSConcreteMallocBlock 三种类型block测试(MRC)   捕捉变量对block结构的影响 局部变量 全局变量 局部静态变量 __block修饰的变量 self隐式循环引用 ObjC">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/what_is_block.jpg">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/block_layout.jpg">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/block_type.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/block_type2.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/AUPE.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/block_type_cpp.jpg">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/malloc_block.jpg">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/capture_var_effect_block_cpp.jpg">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/capture_global_var_effect_block_cpp.jpg">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/capture_local_var_effect_block_new_cpp.jpg">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/__block_modify_var_cpp.jpg">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/runtime_Block_byref_assign_copy_func.jpg">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/self_hidden_retain_cycle_cpp.jpg">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/block_type_copy.jpg">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/block_release.jpg">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/block_in_ARC.png">
+<meta property="og:updated_time" content="2016-09-12T04:07:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Objective-C中block实现和技巧学习">
+<meta name="twitter:description" content="Block 底层解析 什么是block? block编译转换结构 block实际结构   block的类型 NSConcreteGlobalBlock和NSConcreteStackBlock NSConcreteMallocBlock 三种类型block测试(MRC)   捕捉变量对block结构的影响 局部变量 全局变量 局部静态变量 __block修饰的变量 self隐式循环引用 ObjC">
+<meta name="twitter:image" content="http://7xraw1.com1.z0.glb.clouddn.com/what_is_block.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.lijianfei.cn/2016/07/21/objective-block-learning/"/>
+
+
+
+
+
+  <title> Objective-C中block实现和技巧学习 | 李剑飞的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1260409211&web_id=1260409211" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李剑飞的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://www.lijianfei.cn/2016/07/21/objective-block-learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李剑飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李剑飞的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Objective-C中block实现和技巧学习
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-07-21T12:06:51+08:00">
+                2016-07-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li>Block 底层解析<ul>
+<li>什么是block?<ul>
+<li>block编译转换结构</li>
+<li>block实际结构</li>
+</ul>
+</li>
+<li>block的类型<ul>
+<li>NSConcreteGlobalBlock和NSConcreteStackBlock</li>
+<li>NSConcreteMallocBlock</li>
+<li>三种类型block测试(MRC)</li>
+</ul>
+</li>
+<li>捕捉变量对block结构的影响<ul>
+<li>局部变量</li>
+<li>全局变量</li>
+<li>局部静态变量</li>
+<li>__block修饰的变量</li>
+<li>self隐式循环引用</li>
+<li>ObjC对象(MRC)</li>
+<li>Block中使用的ObjC对象的行为(MRC)</li>
+</ul>
+</li>
+<li>不同类型block的复制<ul>
+<li>Block的copy、retain、release操作(MRC)</li>
+</ul>
+</li>
+<li>ARC中的block<ul>
+<li>block试验</li>
+<li>block作为参数传递</li>
+<li>block作为返回值</li>
+<li>block属性</li>
+</ul>
+</li>
+<li>ARC与非ARC(MRC)下的Weak-Strong Dance<ul>
+<li>ARC 的Weak-Strong Dance</li>
+<li>非ARC(MRC) 的Weak-Strong Dance</li>
+<li>总结</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>测试Demo工程地址</li>
+<li>参考文献</li>
+</ul>
+<h1 id="Blcok-底层解析"><a href="#Blcok-底层解析" class="headerlink" title="Blcok 底层解析"></a>Blcok 底层解析</h1><h2 id="什么是block"><a href="#什么是block" class="headerlink" title="什么是block?"></a>什么是block?</h2><p>什么是block？<br>首先，看一个极简的block：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">int main(int argc, const char * argv[]) &#123;</div><div class="line">    @autoreleasepool &#123;</div><div class="line"></div><div class="line">        ^&#123; &#125;;</div><div class="line">    &#125;</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>如何声明一个block在 Objective-C ？</p>
+<ul>
+<li><p>As a local variable:</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">returnType (^blockName)(parameterTypes) = ^returnType(parameters) &#123;...&#125;;</div></pre></td></tr></table></figure>
+</li>
+<li><p>As a property:</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@property (nonatomic, copy, nullability) returnType (^blockName)(parameterTypes);</div></pre></td></tr></table></figure>
+</li>
+<li><p>As a method parameter:</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (void)someMethodThatTakesABlock:(returnType (^nullability)(parameterTypes))blockName;</div></pre></td></tr></table></figure>
+</li>
+<li><p>As an argument to a method call:</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[someObject someMethodThatTakesABlock:^returnType (parameters) &#123;...&#125;];</div></pre></td></tr></table></figure>
+</li>
+<li><p>As a typedef:</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">    typedef returnType (^TypeName)(parameterTypes);</div><div class="line">TypeName blockName = ^returnType(parameters) &#123;...&#125;;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="block编译转换结构"><a href="#block编译转换结构" class="headerlink" title="block编译转换结构"></a>block编译转换结构</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">int myMain()</div><div class="line">&#123;</div><div class="line">    ^&#123; &#125; ();</div><div class="line">    </div><div class="line">    ^&#123; &#125; ();</div><div class="line">    </div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>对其执行<code>clang -rewrite-objc</code>编译转换成C++实现，得到以下代码：</p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/what_is_block.jpg" alt=""></p>
+<h3 id="block的实际结构"><a href="#block的实际结构" class="headerlink" title="block的实际结构"></a>block的实际结构</h3><p>关于block的数据结构和runtime是开源的，可以在llvm项目看到，或者下载苹果的<a href="http://opensource.apple.com//tarballs/libclosure/" target="_blank" rel="external">libclosure</a>库的源码来看。苹果也提供了<a href="http://opensource.apple.com/source/libclosure/libclosure-63/" target="_blank" rel="external">在线的代码查看方式</a>，其中包含了很多示例和文档说明。</p>
+<p>接下来观察下Block_private.h文件中对block的相关结构体的真实定义：</p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/block_layout.jpg" alt=""></p>
+<ul>
+<li>invoke，同上文的FuncPtr，block执行时调用的函数指针，block定义时内部的执行代码都在这个函数中</li>
+<li>Block_descriptor，block的详细描述</li>
+</ul>
+<p>总体来说，block就是一个里面存储了指向<code>函数体中包含定义block时的代码块</code>的函数指针，以及<code>block外部上下文</code>变量等信息的结构体。</p>
+<h2 id="block的类型"><a href="#block的类型" class="headerlink" title="block的类型"></a>block的类型</h2><p>在block runtime中，定义了6种类：</p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/block_type.png" alt=""></p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/block_type2.png" alt=""></p>
+<ul>
+<li>_NSConcreteStackBlock         栈上创建的block</li>
+<li>_NSConcreteMallocBlock        堆上创建的block</li>
+<li>_NSConcreteGlobalBlock        作为全局变量的block</li>
+<li>_NSConcreteWeakBlockVariable</li>
+<li>_NSConcreteAutoBlock</li>
+<li>_NSConcreteFinalizingBlock</li>
+</ul>
+<p>其中我们能接触到的主要是前3种，后三种用于GC，咱们就先不看了。</p>
+<p>block的常见类型有3种：</p>
+<ul>
+<li>_NSConcreteGlobalBlock（全局）</li>
+<li>_NSConcreteStackBlock（栈）</li>
+<li>_NSConcreteMallocBlock（堆）</li>
+</ul>
+<p>APUE(Unix环境高级编程)的进程虚拟内存段分布图：</p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/AUPE.png" alt=""></p>
+<p>其中前2种在Block.h种声明，后1种在Block_private.h中声明。</p>
+<h3 id="NSConcreteGlobalBlock和NSConcreteStackBlock"><a href="#NSConcreteGlobalBlock和NSConcreteStackBlock" class="headerlink" title="NSConcreteGlobalBlock和NSConcreteStackBlock"></a>NSConcreteGlobalBlock和NSConcreteStackBlock</h3><p>首先，根据前面两种类型，编写以下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">void (^globalBlock)() = ^&#123;</div><div class="line">    </div><div class="line">&#125;;</div><div class="line"></div><div class="line"></div><div class="line">int block_type_Main()</div><div class="line">&#123;</div><div class="line">    void (^stackBlock1)() = ^&#123;</div><div class="line">        </div><div class="line">    &#125;;</div><div class="line">    </div><div class="line">    stackBlock1();</div><div class="line">    globalBlock();</div><div class="line">    </div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>对其进行编译转换后得到以下代码：</p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/block_type_cpp.jpg" alt=""></p>
+<p>可以看出globalBlock的isa指向了_NSConcreteGlobalBlock，即在全局区域创建，编译时就已经确定了，位于上图中的代码段；stackBlock的isa指向了_NSConcreteStackBlock，即在栈区创建。</p>
+<h3 id="NSConcreteMallocBlock"><a href="#NSConcreteMallocBlock" class="headerlink" title="NSConcreteMallocBlock"></a>NSConcreteMallocBlock</h3><p>堆中的block无法直接创建，其需要由_NSConcreteStackBlock类型的block拷贝而来(也就是说block需要执行copy之后才能存放到堆中)。由于block的拷贝最终都会调用_Block_copy_internal函数，所以观察这个函数就可以知道堆中block是如何被创建的了：<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/malloc_block.jpg" alt=""></p>
+<h3 id="三种类型block测试-MRC"><a href="#三种类型block测试-MRC" class="headerlink" title="三种类型block测试(MRC)"></a>三种类型block测试(MRC)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">#import &quot;block_in_MRC.h&quot;</div><div class="line"></div><div class="line">typedef long (^BlkSum)(int, int);</div><div class="line"></div><div class="line"></div><div class="line">@implementation block_in_MRC</div><div class="line">+ (void)main</div><div class="line">&#123;</div><div class="line">    BlkSum blk1 = ^ long (int a, int b) &#123;</div><div class="line">        return a + b;</div><div class="line">    &#125;;</div><div class="line">    NSLog(@&quot;blk1 = %@&quot;, blk1);// blk1 = &lt;__NSGlobalBlock__: 0x47d0&gt;</div><div class="line">    </div><div class="line">    </div><div class="line">    int base = 100;</div><div class="line">    BlkSum blk2 = ^ long (int a, int b) &#123;</div><div class="line">        return base + a + b;</div><div class="line">    &#125;;</div><div class="line">    NSLog(@&quot;blk2 = %@&quot;, blk2); // blk2 = &lt;__NSStackBlock__: 0xbfffddf8&gt;</div><div class="line">    </div><div class="line">    BlkSum blk3 = [[blk2 copy] autorelease];</div><div class="line">    NSLog(@&quot;blk3 = %@&quot;, blk3); // blk3 = &lt;__NSMallocBlock__: 0x902fda0&gt;</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<h2 id="捕捉变量对block结构的影响"><a href="#捕捉变量对block结构的影响" class="headerlink" title="捕捉变量对block结构的影响"></a>捕捉变量对block结构的影响</h2><p>编译转换捕捉不同变量类型的block，以对比它们的区别。</p>
+<h3 id="局部变量"><a href="#局部变量" class="headerlink" title="局部变量"></a>局部变量</h3><p>代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// 局部变量</div><div class="line"></div><div class="line">int capture_var_effect_block_Main()</div><div class="line">&#123;</div><div class="line">    </div><div class="line">    int a;</div><div class="line">    ^&#123;a;&#125;;</div><div class="line">    </div><div class="line">    // 报错  var is not assignable(missing __block type specifier)</div><div class="line">//    ^&#123;a = 10;&#125;;</div><div class="line">    </div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>对其进行编译转换后得到以下代码(注释不会被编译)：</p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/capture_var_effect_block_cpp.jpg" alt=""></p>
+<p>我们通过指针传递</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">int test()</div><div class="line">&#123;</div><div class="line">    int a = 0;</div><div class="line">    // 利用指针p存储a的地址</div><div class="line">    int *p = &amp;a;</div><div class="line">    </div><div class="line">    ^&#123;</div><div class="line">        // 通过a的地址设置a的值</div><div class="line">        *p = 10;</div><div class="line">    &#125;();</div><div class="line">    </div><div class="line">   return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>变量a的生命周期是和方法test的栈相关联的，当test运行结束，栈随之销毁，那么变量a就会被销毁，p也就成为了野指针。如果block是作为参数或者返回值，这些类型都是跨栈的，也就是说再次调用会造成野指针错误。</p>
+<h3 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h3><p>代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// 全局静态</div><div class="line">static int a;</div><div class="line">// 全局</div><div class="line">int b;</div><div class="line"></div><div class="line">int capture_global_var_effect_block()</div><div class="line">&#123;</div><div class="line">    ^&#123;</div><div class="line">        a = 10;</div><div class="line">        b = 10;</div><div class="line">    &#125;();</div><div class="line">    </div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>编译转换后</p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/capture_global_var_effect_block_cpp.jpg" alt=""></p>
+<p>直接使用了a，b变量；</p>
+<h3 id="局部静态变量"><a href="#局部静态变量" class="headerlink" title="局部静态变量"></a>局部静态变量</h3><p>代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">int capture_local_var_effect_block()</div><div class="line">&#123;</div><div class="line">    static int a;</div><div class="line">    // 静态局部变量是存储在静态数据存储区域的，也就是和程序拥有一样的生命周期，也就是说在程序运行时，都能够保证block访问到一个有效的变量。但是其作用范围还是局限于定义它的函数中，所以只能在block通过静态局部变量的地址来进行访问。</div><div class="line">    ^&#123;</div><div class="line">        a = 10;</div><div class="line">    &#125;();</div><div class="line">    </div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>编译转换后<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/capture_local_var_effect_block_new_cpp.jpg" alt=""></p>
+<h3 id="block修饰的变量"><a href="#block修饰的变量" class="headerlink" title="__block修饰的变量"></a>__block修饰的变量</h3><p>代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">int __block_modify_var()</div><div class="line">&#123;</div><div class="line">    __block int a;</div><div class="line">    </div><div class="line">    ^&#123;</div><div class="line">        a = 10;</div><div class="line">    &#125;();</div><div class="line">    </div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>编译转换后</p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/__block_modify_var_cpp.jpg" alt=""></p>
+<p>runtime.c _Block_byref_assign_copy 方法</p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/runtime_Block_byref_assign_copy_func.jpg" alt=""></p>
+<h3 id="self隐式循环引用"><a href="#self隐式循环引用" class="headerlink" title="self隐式循环引用"></a>self隐式循环引用</h3><p>代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">@implementation self_hidden_retain_cycle</div><div class="line">&#123;</div><div class="line">    int _a;</div><div class="line">    void (^_block)();</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)test</div><div class="line">&#123;</div><div class="line">    void (^_block)() = ^&#123;</div><div class="line">        _a = 10;</div><div class="line">    &#125;;</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>编译转换后<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/self_hidden_retain_cycle_cpp.jpg" alt=""></p>
+<h3 id="ObjC对象-MRC"><a href="#ObjC对象-MRC" class="headerlink" title="ObjC对象(MRC)"></a>ObjC对象(MRC)</h3><p>代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">@interface MyClass : NSObject &#123;</div><div class="line">    NSObject* _instanceObj;</div><div class="line">&#125;</div><div class="line">@end</div><div class="line"></div><div class="line">@implementation MyClass</div><div class="line"></div><div class="line">NSObject* __globalObj = nil;</div><div class="line"></div><div class="line">- (id) init &#123;</div><div class="line">    if (self = [super init]) &#123;</div><div class="line">        _instanceObj = [[NSObject alloc] init];</div><div class="line">    &#125;</div><div class="line">    return self;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void) test &#123;</div><div class="line">    static NSObject* __staticObj = nil;</div><div class="line">    __globalObj = [[NSObject alloc] init];</div><div class="line">    __staticObj = [[NSObject alloc] init];</div><div class="line"></div><div class="line">    NSObject* localObj = [[NSObject alloc] init];</div><div class="line">    __block NSObject* blockObj = [[NSObject alloc] init];</div><div class="line"></div><div class="line">    typedef void (^MyBlock)(void) ;</div><div class="line">    MyBlock aBlock = ^&#123;</div><div class="line">        NSLog(@&quot;%@&quot;, __globalObj);</div><div class="line">        NSLog(@&quot;%@&quot;, __staticObj);</div><div class="line">        NSLog(@&quot;%@&quot;, _instanceObj);</div><div class="line">        NSLog(@&quot;%@&quot;, localObj);</div><div class="line">        NSLog(@&quot;%@&quot;, blockObj);</div><div class="line">    &#125;;</div><div class="line">    aBlock = [[aBlock copy] autorelease];</div><div class="line">    aBlock();</div><div class="line"></div><div class="line">    NSLog(@&quot;%d&quot;, [__globalObj retainCount]);</div><div class="line">    NSLog(@&quot;%d&quot;, [__staticObj retainCount]);</div><div class="line">    NSLog(@&quot;%d&quot;, [_instanceObj retainCount]);</div><div class="line">    NSLog(@&quot;%d&quot;, [localObj retainCount]);</div><div class="line">    NSLog(@&quot;%d&quot;, [blockObj retainCount]);</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure></p>
+<p>执行结果为1 1 1 2 1。</p>
+<p><strong>globalObj和</strong>staticObj在内存中的位置是确定的，所以Block copy时不会retain对象。</p>
+<p>_instanceObj在Block copy时也没有直接retain _instanceObj对象本身，但会retain self。所以在Block中可以直接读写_instanceObj变量。</p>
+<p>localObj在Block copy时，系统自动retain对象，增加其引用计数。</p>
+<p>blockObj在Block copy时也不会retain。</p>
+<p>非ObjC对象，如GCD队列dispatch_queue_t。Block copy时并不会自动增加他的引用计数。</p>
+<h3 id="Block中使用的ObjC对象的行为"><a href="#Block中使用的ObjC对象的行为" class="headerlink" title="Block中使用的ObjC对象的行为"></a>Block中使用的ObjC对象的行为</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">@property (nonatomic, copy) void(^myBlock)(void);</div><div class="line"></div><div class="line">block_in_MRC* obj = [[[block_in_MRC alloc] init] autorelease];</div><div class="line">    self.myBlock = ^ &#123;</div><div class="line">        //  obj doSomething</div><div class="line">    &#125;;</div></pre></td></tr></table></figure>
+<p>对象obj在Block被copy到堆上的时候自动retain了一次。因为Block不知道obj什么时候被释放，为了不在Block使用obj前被释放，Block retain了obj一次，在Block被释放的时候，obj被release一次。</p>
+<h2 id="不同类型block的复制"><a href="#不同类型block的复制" class="headerlink" title="不同类型block的复制"></a>不同类型block的复制</h2><p>block的复制代码在_Block_copy_internal函数中。</p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/block_type_copy.jpg" alt=""></p>
+<h3 id="Block的copy、retain、release操作-MRC"><a href="#Block的copy、retain、release操作-MRC" class="headerlink" title="Block的copy、retain、release操作(MRC)"></a>Block的copy、retain、release操作(MRC)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">+ (void)test</div><div class="line">&#123;</div><div class="line">    int base = 100;</div><div class="line">    BlkSum blk2 = ^ long (int a, int b) &#123;</div><div class="line">        return base + a + b;</div><div class="line">    &#125;;</div><div class="line">    NSLog(@&quot;blk2 = %@&quot;, blk2); // blk2 = &lt;__NSStackBlock__: 0xbfffddf8&gt;</div><div class="line">    </div><div class="line">    BlkSum blk3 = [[[[[blk2 copy] copy] copy] copy] copy];</div><div class="line">    NSLog(@&quot;blk3 = %@&quot;, blk3); // blk3 = &lt;__NSMallocBlock__: 0x902fda0&gt;</div><div class="line">    NSLog(@&quot;blk3 retainCount = %@&quot;, @([blk3 retainCount]));// blk3 retainCount = 1</div><div class="line"></div><div class="line">    </div><div class="line">    BlkSum blk4 = [blk2 copy];</div><div class="line">    [blk4 retain];</div><div class="line">    NSLog(@&quot;blk4 retainCount = %@&quot;, @([blk4 retainCount]));// blk4 retainCount = 1</div><div class="line">    [blk4 release];</div><div class="line">    NSLog(@&quot;blk4 retainCount = %@&quot;, @([blk4 retainCount]));// blk4 retainCount = 1</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Block_release in runtime.c</p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/block_release.jpg" alt=""></p>
+<ul>
+<li>对Block不管是retain、copy、release都不会改变引用计数retainCount，retainCount始终是1；</li>
+<li>NSGlobalBlock：retain、copy、release操作都无效；</li>
+<li>NSStackBlock：retain、release操作无效，必须注意的是，NSStackBlock在函数返回后，Block内存将被回收。即使retain也没用。容易犯的错误是[[mutableAarry addObject:stackBlock]，在函数出栈后，从mutableAarry中取到的stackBlock已经被回收，变成了野指针。正确的做法是先将stackBlock copy到堆上，然后加入数组：[mutableAarry addObject:[[stackBlock copy] autorelease]]。支持copy，copy之后生成新的NSMallocBlock类型对象。</li>
+<li>NSMallocBlock支持retain、release，虽然retainCount始终是1，但内存管理器中仍然会增加、减少计数。copy之后不会生成新的对象，只是增加了一次引用，类似retain；</li>
+</ul>
+<h2 id="ARC中的block"><a href="#ARC中的block" class="headerlink" title="ARC中的block"></a>ARC中的block</h2><p><img src="http://7xraw1.com1.z0.glb.clouddn.com/block_in_ARC.png" alt=""></p>
+<p><a href="https://developer.apple.com/library/mac/releasenotes/ObjectiveC/RN-TransitioningToARC/Introduction/Introduction.html" target="_blank" rel="external">苹果文档</a>提及，在ARC模式下，在栈间传递block时，不需要手动copy栈中的block，即可让block正常工作。主要原因是ARC对栈中的block自动执行了copy，将_NSConcreteStackBlock类型的block转换成了_NSConcreteMallocBlock的block。</p>
+<h3 id="block-实验"><a href="#block-实验" class="headerlink" title="block 实验"></a>block 实验</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">+ (void)main</div><div class="line">&#123;</div><div class="line">    int i = 10;</div><div class="line">    void (^block)() = ^&#123;i;&#125;;</div><div class="line">    </div><div class="line">    __weak void (^weakBlock)() = ^&#123;i;&#125;;</div><div class="line">    </div><div class="line">    void (^stackBlock)() = ^&#123;&#125;;</div><div class="line">    </div><div class="line">    // ARC情况下</div><div class="line">    </div><div class="line">    // 创建时，都会在栈中</div><div class="line">    // &lt;__NSStackBlock__: 0x7fff5fbff730&gt;</div><div class="line">    NSLog(@&quot;%@&quot;, ^&#123;i;&#125;);</div><div class="line">    </div><div class="line">    // 因为stackBlock为strong类型，且捕获了外部变量，所以赋值时，自动进行了copy</div><div class="line">    // &lt;__NSMallocBlock__: 0x100206920&gt;</div><div class="line">    NSLog(@&quot;%@&quot;, block);</div><div class="line">    </div><div class="line">    // 如果是weak类型的block，依然不会自动进行copy</div><div class="line">    // &lt;__NSStackBlock__: 0x7fff5fbff728&gt;</div><div class="line">    NSLog(@&quot;%@&quot;, weakBlock);</div><div class="line">    </div><div class="line">    // 如果block是strong类型，并且没有捕获外部变量，那么就会转换成__NSGlobalBlock__</div><div class="line">    // &lt;__NSGlobalBlock__: 0x100001110&gt;</div><div class="line">    NSLog(@&quot;%@&quot;, stackBlock);</div><div class="line">    </div><div class="line">    // 在非ARC情况下，产生以下输出</div><div class="line">    // &lt;__NSStackBlock__: 0x7fff5fbff6d0&gt;</div><div class="line">    // &lt;__NSStackBlock__: 0x7fff5fbff730&gt;</div><div class="line">    // &lt;__NSStackBlock__: 0x7fff5fbff700&gt;</div><div class="line">    // &lt;__NSGlobalBlock__: 0x1000010d0&gt;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看出，ARC对类型为strong且捕获了外部变量的block进行了copy。并且当block类型为strong，但是创建时没有捕获外部变量，block最终会变成<strong>NSGlobalBlock</strong>类型（这里可能因为block中的代码没有捕获外部变量，所以不需要在栈中开辟变量，也就是说，在编译时，这个block的所有内容已经在代码段中生成了，所以就把block的类型转换为全局类型）</p>
+<h3 id="block作为参数传递"><a href="#block作为参数传递" class="headerlink" title="block作为参数传递"></a>block作为参数传递</h3><p>在栈中的block需要注意的情况：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">NSMutableArray *arrayM;</div><div class="line"></div><div class="line">void myBlock()</div><div class="line">&#123;</div><div class="line">    int a = 5;</div><div class="line">    Block block = ^ &#123;</div><div class="line">        NSLog(@&quot;%d&quot;, a);</div><div class="line">    &#125;;</div><div class="line">    </div><div class="line">    [arrayM addObject:block];</div><div class="line">    NSLog(@&quot;%@&quot;, block);</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (void)test</div><div class="line">&#123;</div><div class="line">    arrayM = @[].mutableCopy;</div><div class="line">    </div><div class="line">    myBlock();</div><div class="line">    </div><div class="line">    Block block = [arrayM firstObject];</div><div class="line">    // 非ARC这里崩溃</div><div class="line">    block();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以看到，ARC情况下因为自动执行了copy，所以返回类型为<strong>NSMallocBlock</strong>，在函数结束后依然可以访问；而非ARC情况下，需要我们手动调用[block copy]来将block拷贝到堆中，否则因为栈中的block生命周期和函数中的栈生命周期关联，当函数退出后，相应的堆被销毁，block也就不存在了。<br>如果把block的以下代码删除：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">NSLog(@&quot;%d&quot;, a);</div></pre></td></tr></table></figure></p>
+<p>那么block就会变成全局类型，在test中访问也不会出崩溃。</p>
+<h3 id="block作为返回值"><a href="#block作为返回值" class="headerlink" title="block作为返回值"></a>block作为返回值</h3><p>在非ARC情况下，如果返回值是block，则一般这样操作：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">return [[block copy] autorelease];</div></pre></td></tr></table></figure>
+<p>对于外部要使用的block，更趋向于把它拷贝到堆中，使其脱离栈生命周期的约束。</p>
+<h3 id="block属性"><a href="#block属性" class="headerlink" title="block属性"></a>block属性</h3><p>这里还有一点关于block类型的ARC属性。上文也说明了，ARC会自动帮strong类型且捕获外部变量的block进行copy，所以在定义block类型的属性时也可以使用strong，不一定使用copy。也就是以下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">/** 假如有栈block赋给以下两个属性 **/</div><div class="line"></div><div class="line">// 这里因为ARC，当栈block中会捕获外部变量时，这个block会被copy进堆中</div><div class="line">// 如果没有捕获外部变量，这个block会变为全局类型</div><div class="line">// 不管怎么样，它都脱离了栈生命周期的约束</div><div class="line"></div><div class="line">@property (strong, nonatomic) Block *strongBlock;</div><div class="line"></div><div class="line">// 这里都会被copy进堆中</div><div class="line">@property (copy, nonatomic) Block *copyBlock;</div></pre></td></tr></table></figure></p>
+<h2 id="ARC与非ARC-MRC-下的Weak-Strong-Dance"><a href="#ARC与非ARC-MRC-下的Weak-Strong-Dance" class="headerlink" title="ARC与非ARC(MRC)下的Weak-Strong Dance"></a>ARC与非ARC(MRC)下的Weak-Strong Dance</h2><h3 id="ARC"><a href="#ARC" class="headerlink" title="ARC"></a>ARC</h3><p>在使用block过程中，经常会遇到<code>retain cycle</code>的问题，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">- (void)dealloc  </div><div class="line">&#123;  </div><div class="line">  [[NSNotificationCenter defaultCenter] removeObserver:_observer];  </div><div class="line">&#125;  </div><div class="line"></div><div class="line">- (void)loadView  </div><div class="line">&#123;  </div><div class="line"></div><div class="line">  [super loadView];  </div><div class="line"></div><div class="line">  _observer = [[NSNotificationCenter defaultCenter] addObserverForName:@&quot;testKey&quot;  </div><div class="line">                                                                object:nil  </div><div class="line">                                                                 queue:nil  </div><div class="line">                                                            usingBlock:^(NSNotification *note) &#123;  </div><div class="line">      [self dismissModalViewControllerAnimated:YES];    </div><div class="line">  &#125;];  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在block中用到了self，self会被block retain，而_observer会copy一份该block，就是说_observer间接持有self，同时当前的self也会retain _observer，最终导致self持有_observer，_observer持有self，形成<code>retain cycle</code>。</p>
+<p>对于在block中的<code>retain cycle</code>，在2011 WWDC Session #322 (Objective-C Advancements in Depth)有一个解决方案<code>weak-strong dance</code>，很漂亮的名字。其实现如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">- (void)dealloc  </div><div class="line">&#123;  </div><div class="line">  [[NSNotificationCenter defaultCenter] removeObserver:_observer];  </div><div class="line">&#125;  </div><div class="line"></div><div class="line">- (void)loadView  </div><div class="line">&#123;  </div><div class="line">  [super loadView];  </div><div class="line">  __weak TestViewController *wself = self;  </div><div class="line">  _observer = [[NSNotificationCenter defaultCenter] addObserverForName:@&quot;testKey&quot;  </div><div class="line">                                                                object:nil  </div><div class="line">                                                                 queue:nil  </div><div class="line">                                                            usingBlock:^(NSNotification *note) &#123;  </div><div class="line">      __strong TestViewController *sself = wself;  </div><div class="line">      [sself dismissModalViewControllerAnimated:YES];  </div><div class="line">  &#125;];  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在block中使用self之前先用一个<code>__weak</code>变量引用self，导致block不会retain self，打破retain cycle，然后在block中使用wself之前先用<code>__strong</code>类型变量引用wself，以确保使用过程中不会dealloc。简而言之就是推迟对self的retain，在使用时才进行retain。这有点像lazy loading的意思。</p>
+<p>注：iOS5以下没有<code>__weak</code>，则需使用<code>__unsafe_unretained</code>。</p>
+<h3 id="非ARC-MRC"><a href="#非ARC-MRC" class="headerlink" title="非ARC(MRC)"></a>非ARC(MRC)</h3><p>在非ARC环境中，显然之前的使用的<code>__weak</code>或<code>__unsafe_unretained</code>将会是无效的，那么我们需使用另外一种方法来代替，这里就需要用到<code>__block</code>。</p>
+<p><code>__block</code>在ARC和非ARC中有点细微的差别（<a href="http://www.mikeash.com/pyblog/friday-qa-2011-09-30-automatic-reference-counting.html" target="_blank" rel="external">Automatic Reference Counting : Blocks</a>）：</p>
+<ul>
+<li><p>在ARC中，<code>__block</code>会自动进行retain</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// ARC 中 `__block`会自动进行retain 实验</div><div class="line">+ (void)test__Block</div><div class="line">&#123;</div><div class="line">    // You can use CFGetRetainCount with Objective-C objects, even under ARC:</div><div class="line">    NSObject *objc = [[NSObject alloc] init];</div><div class="line">    NSLog(@&quot;test__Block-- objc Retain count is %ld&quot;, CFGetRetainCount((__bridge CFTypeRef)objc));</div><div class="line">    __block NSObject *objcNew = objc;</div><div class="line">    NSLog(@&quot;test__Block-- objc Retain count is %ld&quot;, CFGetRetainCount((__bridge CFTypeRef)objc));</div><div class="line">&#125;</div><div class="line">// 输出</div><div class="line">// test__Block-- objc Retain count is 1</div><div class="line">// test__Block-- objc Retain count is 2</div></pre></td></tr></table></figure>
+</li>
+<li><p>在非ARC中，<code>__block</code>不会自动进行retain</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 在MRC中 __block不会自动进行retain</div><div class="line">+ (void)test__Block</div><div class="line">&#123;</div><div class="line">    // You can use CFGetRetainCount with Objective-C objects, even under ARC:</div><div class="line">    NSObject *objc = [[NSObject alloc] init];</div><div class="line">    NSLog(@&quot;test__Block-- objc Retain count is %ld&quot;, CFGetRetainCount((__bridge CFTypeRef)objc));</div><div class="line">    __block NSObject *objcNew = objc;</div><div class="line">    NSLog(@&quot;test__Block-- objc Retain count is %ld&quot;, CFGetRetainCount((__bridge CFTypeRef)objc));</div><div class="line">&#125;</div><div class="line">// 输出</div><div class="line">// test__Block-- objc Retain count is 1</div><div class="line">// test__Block-- objc Retain count is 1</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>因此首先要注意的一点就是用<code>__block</code>打破<code>retain cycle</code>的方法仅在非ARC下有效，下面是非ARC的<code>weak-strong dance</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">- (void)dealloc  </div><div class="line">&#123;  </div><div class="line">  [[NSNotificationCenter defaultCenter] removeObserver:_observer];  </div><div class="line">  [_observer release];  </div><div class="line">  [super dealloc];  </div><div class="line">&#125;  </div><div class="line"></div><div class="line">- (void)loadView  </div><div class="line">&#123;  </div><div class="line">  [super loadView];  </div><div class="line">  __block TestViewController *bself = self;  </div><div class="line">  _observer = [[NSNotificationCenter defaultCenter] addObserverForName:@&quot;testKey&quot;  </div><div class="line">                                                                object:nil  </div><div class="line">                                                                 queue:nil  </div><div class="line">                                                               ngBlock:^(NSNotification *note) &#123;  </div><div class="line"></div><div class="line">      [bself retain];  </div><div class="line">      [bself dismissModalViewControllerAnimated:YES];  </div><div class="line">      [bself release];  </div><div class="line"></div><div class="line">  &#125;];  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>将self赋值为<code>__block</code>类型变量，在非ARC中<code>__block</code>类型变量不会进行retain，从而打破retain cycle，然后在使用bself前进行retain，以确保在使用过程中不会dealloc 。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>打破循环引用：</p>
+<ul>
+<li>ARC下： __week</li>
+<li>非ARC（MRC）下：__block</li>
+</ul>
+<p>__block的作用：</p>
+<p>非ARC（MRC）下</p>
+<ol>
+<li>说明变量可改</li>
+<li>说明指针指向的对象不做隐式retain操作。</li>
+</ol>
+<p>ARC下只有1。</p>
+<h1 id="测试Demo工程地址"><a href="#测试Demo工程地址" class="headerlink" title="测试Demo工程地址"></a>测试Demo工程地址</h1><p><a href="https://github.com/lijianfeigeek/objective_block_learning" target="_blank" rel="external">block_learning</a></p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul>
+<li><a href="http://fuckingblocksyntax.com/" target="_blank" rel="external">How Do I Declare A Block in Objective-C?</a></li>
+<li><a href="http://triplecc.github.io/blog/2015-07-19-blockji-qiao-yu-di-ceng-jie-xi/" target="_blank" rel="external">Block技巧与底层解析</a></li>
+<li><a href="http://blog.devtang.com/2013/07/28/a-look-inside-blocks/" target="_blank" rel="external">谈Objective-C block的实现</a></li>
+<li><a href="http://tanqisen.github.io/blog/2013/04/19/gcd-block-cycle-retain/" target="_blank" rel="external">正确使用Block避免Cycle Retain和Crash</a></li>
+<li><a href="http://blog.ibireme.com/2013/11/27/objc-block/" target="_blank" rel="external">objc 中的 block</a></li>
+<li><a href="http://opensource.apple.com/source/libclosure/libclosure-63/" target="_blank" rel="external">Block Apple Source Code Browser </a></li>
+<li>《Objective-C 高级编程》</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/jianfeishuo.jpg" alt="李剑飞 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎订阅我的微信公众号"剑飞说"！</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.png" alt="李剑飞 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.png" alt="李剑飞 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      李剑飞
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://www.lijianfei.cn/2016/07/21/objective-block-learning/" title="Objective-C中block实现和技巧学习">http://www.lijianfei.cn/2016/07/21/objective-block-learning/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/26/WWDC-2016-New-Technology/" rel="next" title="WWDC 2016 有哪些新技术">
+                <i class="fa fa-chevron-left"></i> WWDC 2016 有哪些新技术
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/13/learnYYModelSomeGain/" rel="prev" title="看 YYModel 源码的一些收获">
+                看 YYModel 源码的一些收获 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="李剑飞" />
+          <p class="site-author-name" itemprop="name">李剑飞</p>
+           
+              <p class="site-description motion-element" itemprop="description">本站没有添加评论，扫二维码加我微信好友，咨询文章的疑问点。本站只发布原创内容，我的学习笔记会记录在下面的 Wiki 链接中。</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lijianfeigeek" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/1855052150" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/lijianfei_" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lijianfeigeek/lijianfeigeek.github.io/wiki" target="_blank" title="Wiki">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Wiki
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://lijianfei.deercv.com/" target="_blank" title="Resume">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Resume
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Blcok-底层解析"><span class="nav-number">1.</span> <span class="nav-text">Blcok 底层解析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是block"><span class="nav-number">1.1.</span> <span class="nav-text">什么是block?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#block编译转换结构"><span class="nav-number">1.1.1.</span> <span class="nav-text">block编译转换结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#block的实际结构"><span class="nav-number">1.1.2.</span> <span class="nav-text">block的实际结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#block的类型"><span class="nav-number">1.2.</span> <span class="nav-text">block的类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NSConcreteGlobalBlock和NSConcreteStackBlock"><span class="nav-number">1.2.1.</span> <span class="nav-text">NSConcreteGlobalBlock和NSConcreteStackBlock</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSConcreteMallocBlock"><span class="nav-number">1.2.2.</span> <span class="nav-text">NSConcreteMallocBlock</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三种类型block测试-MRC"><span class="nav-number">1.2.3.</span> <span class="nav-text">三种类型block测试(MRC)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#捕捉变量对block结构的影响"><span class="nav-number">1.3.</span> <span class="nav-text">捕捉变量对block结构的影响</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#局部变量"><span class="nav-number">1.3.1.</span> <span class="nav-text">局部变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全局变量"><span class="nav-number">1.3.2.</span> <span class="nav-text">全局变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#局部静态变量"><span class="nav-number">1.3.3.</span> <span class="nav-text">局部静态变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#block修饰的变量"><span class="nav-number">1.3.4.</span> <span class="nav-text">__block修饰的变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#self隐式循环引用"><span class="nav-number">1.3.5.</span> <span class="nav-text">self隐式循环引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ObjC对象-MRC"><span class="nav-number">1.3.6.</span> <span class="nav-text">ObjC对象(MRC)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Block中使用的ObjC对象的行为"><span class="nav-number">1.3.7.</span> <span class="nav-text">Block中使用的ObjC对象的行为</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不同类型block的复制"><span class="nav-number">1.4.</span> <span class="nav-text">不同类型block的复制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Block的copy、retain、release操作-MRC"><span class="nav-number">1.4.1.</span> <span class="nav-text">Block的copy、retain、release操作(MRC)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ARC中的block"><span class="nav-number">1.5.</span> <span class="nav-text">ARC中的block</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#block-实验"><span class="nav-number">1.5.1.</span> <span class="nav-text">block 实验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#block作为参数传递"><span class="nav-number">1.5.2.</span> <span class="nav-text">block作为参数传递</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#block作为返回值"><span class="nav-number">1.5.3.</span> <span class="nav-text">block作为返回值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#block属性"><span class="nav-number">1.5.4.</span> <span class="nav-text">block属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ARC与非ARC-MRC-下的Weak-Strong-Dance"><span class="nav-number">1.6.</span> <span class="nav-text">ARC与非ARC(MRC)下的Weak-Strong Dance</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ARC"><span class="nav-number">1.6.1.</span> <span class="nav-text">ARC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非ARC-MRC"><span class="nav-number">1.6.2.</span> <span class="nav-text">非ARC(MRC)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.6.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试Demo工程地址"><span class="nav-number">2.</span> <span class="nav-text">测试Demo工程地址</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李剑飞</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

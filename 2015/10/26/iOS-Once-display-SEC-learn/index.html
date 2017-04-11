@@ -1,0 +1,892 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="李剑飞" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/avatar2.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="最近做的一个性能优化上的问题，对iOS的一个视图是如何显示到屏幕上的过程产生疑问。 先来基础知识回顾。 UIView 与 CALayer继承关系 UIView 继承结构 UIView:UIResponder:NSObejet 我们都知道UIResponder是用来响应事件的，也就是说UIView可以响应事件。  CALayer 继承结构为NSObject 直接从NSObject继承，而不是继承于U">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS一次显示性能优化中学到的">
+<meta property="og:url" content="http://www.lijianfei.cn/2015/10/26/iOS-Once-display-SEC-learn/index.html">
+<meta property="og:site_name" content="李剑飞的博客">
+<meta property="og:description" content="最近做的一个性能优化上的问题，对iOS的一个视图是如何显示到屏幕上的过程产生疑问。 先来基础知识回顾。 UIView 与 CALayer继承关系 UIView 继承结构 UIView:UIResponder:NSObejet 我们都知道UIResponder是用来响应事件的，也就是说UIView可以响应事件。  CALayer 继承结构为NSObject 直接从NSObject继承，而不是继承于U">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/CoreAnimation_guide/Art/ca_architecture_2x.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/46804CoreAnimationPipeline.png">
+<meta property="og:updated_time" content="2016-08-15T13:27:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS一次显示性能优化中学到的">
+<meta name="twitter:description" content="最近做的一个性能优化上的问题，对iOS的一个视图是如何显示到屏幕上的过程产生疑问。 先来基础知识回顾。 UIView 与 CALayer继承关系 UIView 继承结构 UIView:UIResponder:NSObejet 我们都知道UIResponder是用来响应事件的，也就是说UIView可以响应事件。  CALayer 继承结构为NSObject 直接从NSObject继承，而不是继承于U">
+<meta name="twitter:image" content="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/CoreAnimation_guide/Art/ca_architecture_2x.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.lijianfei.cn/2015/10/26/iOS-Once-display-SEC-learn/"/>
+
+
+
+
+
+  <title> iOS一次显示性能优化中学到的 | 李剑飞的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1260409211&web_id=1260409211" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李剑飞的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://www.lijianfei.cn/2015/10/26/iOS-Once-display-SEC-learn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李剑飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李剑飞的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS一次显示性能优化中学到的
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-10-26T00:04:02+08:00">
+                2015-10-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近做的一个性能优化上的问题，对iOS的一个视图是如何显示到屏幕上的过程产生疑问。</p>
+<p>先来基础知识回顾。</p>
+<h1 id="UIView-与-CALayer"><a href="#UIView-与-CALayer" class="headerlink" title="UIView 与 CALayer"></a>UIView 与 CALayer</h1><h2 id="继承关系"><a href="#继承关系" class="headerlink" title="继承关系"></a>继承关系</h2><ol>
+<li><p>UIView 继承结构<br> UIView:UIResponder:NSObejet<br> 我们都知道UIResponder是用来响应事件的，也就是说UIView可以响应事件。</p>
+</li>
+<li><p>CALayer 继承结构为NSObject<br> 直接从NSObject继承，而不是继承于UIResponder，所以CALayer不能响应事件。</p>
+</li>
+</ol>
+<h2 id="所属框架"><a href="#所属框架" class="headerlink" title="所属框架"></a>所属框架</h2><ol>
+<li><p>UIView是在 /System/Library/Frameworks/UIKit.framework中定义的。</p>
+<blockquote>
+<p>The UIView class defines a rectangular area on the screen and the interfaces for managing the content in that area.<br> UIView类定义了一个矩形区域在屏幕上和管理内容的接口。</p>
+</blockquote>
+</li>
+<li><p>CALayer是在/System/Library/Frameworks/QuartzCore.framework定义的。并且：</p>
+<blockquote>
+<p>The CALayer class manages image-based content and allows you to perform animations on that content.<br> CALayer类管理基于图像内容,并允许你执行动画内容。</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="UIView-与-CALayer-的关系"><a href="#UIView-与-CALayer-的关系" class="headerlink" title="UIView 与 CALayer 的关系"></a>UIView 与 CALayer 的关系</h2><p>官方解释<a href="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/CoreAnimation_guide/CoreAnimationBasics/CoreAnimationBasics.html#//apple_ref/doc/uid/TP40004514-CH2-SW3" target="_blank" rel="external">The Relationship Between Layers and Views</a></p>
+<p>看下第一段，大概就知道什么意思了。</p>
+<blockquote>
+<p>Layers are not a replacement for your app’s views—that is, you cannot create a visual interface based solely on layer objects. Layers provide infrastructure for your views. Specifically, layers make it easier and more efficient to draw and animate the contents of views and maintain high frame rates while doing so. However, there are many things that layers do not do. Layers do not handle events, draw content, participate in the responder chain, or do many other things. For this reason, every app must still have one or more views to handle those kinds of interactions.</p>
+</blockquote>
+<ol>
+<li><p>首先layer不能取代view的。不可以创建一个完全基于layer对象的可视化界面</p>
+</li>
+<li><p>layer为view 提供了一些基础设施。具体来说，layer使view的绘制和动画更加简单和高效</p>
+</li>
+<li><p>layer不处理事件,layer不绘画内容,layer不参与响应者链（2015年12月29日更新）<br>(2015年12月31日补充：CALayer并不关心任何响应链事件，所以不能直接处理触摸事件或者手势。但是它有一系列的方法帮你处理事件：<code>-containsPoint:</code>和<code>-hitTest:</code>。<code>-containsPoint:</code>接受一个在本图层坐标系下的CGPoint，如果这个点在图层frame范围内就返回YES。<code>-hitTest:</code>方法同样接受一个CGPoint类型参数，而不是BOOL类型，它返回图层本身，或者包含这个坐标点的叶子节点图层。这意味着不再需要像使用<code>-containsPoint:</code>那样，人工地在每个子图层变换或者测试点击的坐标。如果这个点在最外面图层的范围之外，则返回nil。)</p>
+</li>
+</ol>
+<p>UIView 中提供了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@property(class, nonatomic, readonly) Class layerClass;</div></pre></td></tr></table></figure></p>
+<p>和<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@property(nonatomic, readonly, strong) CALayer *layer;</div></pre></td></tr></table></figure></p>
+<p>这两个属性</p>
+<h1 id="总结一下："><a href="#总结一下：" class="headerlink" title="总结一下："></a>总结一下：</h1><ol>
+<li><p>UIView 是什么，做什么<br> UIView是用来显示内容的，可以处理用户事件</p>
+</li>
+<li><p>CALayer是什么，做什么<br> CALayer是用来绘制内容的，对内容进行动画处理依赖与UIView来进行显示，不能处理用户事件</p>
+</li>
+<li><p>两者什么关系<br> UIView和CALayer是相互依赖的关系。UIView依赖与CALayer提供的内容，CALayer依赖UIView提供  的容器来显示绘制的内容。归根到底CALayer是这一切的基础，如果没有CALayer，UIView自身也不会  存在，UIView是一个特殊的CALayer实现，添加了响应事件的能力。<br> 那么<a href="http://supermao.cn/ni-gei-wo-jie-xi-qing-chu-du-you-liao-calayerliao-wei-shi-yao-huan-yao-uiview/" target="_blank" rel="external">你给我解析清楚，都有了CALayer了，为什么还要UIView</a>这文章篇确实分析的不错。</p>
+<ul>
+<li><p>机制与策略分离</p>
+<p>  Unix内核设计的一个主要思想是——提供机制(Mechanism)而不是策略(Policy)。编程问题都可以抽离    出机制和策略部分。机制一旦实现，就会很少更改，但策略会经常得到优化。例如原子可以看做是机制，  而各种原子的组成就是一种策略。CALayer也可以看做是一种机制，提供图层绘制，你们可以翻开  CALayer的头文件看看，基本上是没怎么变过的，而UIView可以看做是策略，变动很多。越是底层，越 是机制，越是机制就越是稳定。机制与策略分离，可以使得需要修改的代码更少，特别是底层代码，这样  可以提高系统的稳定性</p>
+</li>
+<li><p>更多的不可变</p>
+<p>  稳定给你的是什么感觉？坚固？不可形变？稳定其实就是不可变。一个系统不可变的东西越多，越是稳   定。所以机制恰是满足这个不可变的因素的。构建一个系统有一个指导思想就是尽量抽取不可变的东西和  可变的东西分离。水是成不了万丈高楼的，坚固的混凝土才可以。更少的修改，意味着更少的bug的几  率</p>
+</li>
+<li><p>各司其职</p>
+<p>  即使能力再大也不能把说有事情都干了，万一哪一天不行了呢，那就是突然什么都不能干了。所以仅仅是  基于分散风险原则也不应该出现全能类。各司其职，相互合作，把可控粒度降到最低，这样也可以是系统  更稳定，更易修改</p>
+</li>
+<li><p>漏的更少</p>
+<p>  接口应该面向大众的，按照八二原则，其实20%的接口就可以满足80%的需求，剩下的80%应该隐藏在背   后。因为漏的少总是安全的，不是吗。剩下的80%专家接口可以隐藏与深层次。比如UIView遮蔽了大部分  的CALayer接口，抽取构造出更易用的frame和动画实现，这样上手更容易。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h1 id="iOS图形绘制框架"><a href="#iOS图形绘制框架" class="headerlink" title="iOS图形绘制框架"></a>iOS图形绘制框架</h1><p><img src="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/CoreAnimation_guide/Art/ca_architecture_2x.png" alt="图形绘制框架图"></p>
+<p>我们知道了，UIView并不负责图形的绘制和渲染，从框架的结构上也能看得出，图形的绘制是由UIkit的底层 Core Animation 还有更底层的 OpenGL ES/ OpenGL ，Core Graphics 负责。</p>
+<h2 id="Core-Animation-Pipeline"><a href="#Core-Animation-Pipeline" class="headerlink" title="Core Animation Pipeline"></a>Core Animation Pipeline</h2><p><img src="http://7xraw1.com1.z0.glb.clouddn.com/46804CoreAnimationPipeline.png" alt="46804CoreAnimationPipeline.png"></p>
+<p>从这张图上我们能够看出，一个视图从开始到显示到屏幕上的一个过程。</p>
+<p>纵向：iOS中，最理想的动画是1秒60帧，那么1帧就是16.76毫秒。</p>
+<p>横向：第一根横线上方标示的是CPU的操作，第一根横线下方是GPU的操作。最后是显示器的操作。</p>
+<ol>
+<li>系统接受到事件，创建出UIView后，就会向Render Server 打包提交事物 Commit Transaction，把所有的CALayer打包发给Render Server</li>
+<li>Render Server 接收到后首先做的是等待，等待下1帧，下一个循环。然后下一帧开始网格化，再拆分成三角形，然后生成相应OpenGL绘制的代码，调用绘制的代码，但不是真正的绘制，只是把绘制的命令发了出去</li>
+<li><p>GUP开始渲染。</p>
+</li>
+<li><p>显示在显示器上。</p>
+<p> 从接受到事件开始，到显示到显示器上，经过了3帧的时间。这其实是一个流水线的过程，iOS在这每一部分的每一帧都会做相应的工作。</p>
+</li>
+</ol>
+<h2 id="GPU屏幕渲染"><a href="#GPU屏幕渲染" class="headerlink" title="GPU屏幕渲染"></a>GPU屏幕渲染</h2><p>在OpenGL中，GPU屏幕渲染有两种方式：</p>
+<ul>
+<li>On-Screen Renderin<br>  当前屏幕渲染，指的是GPU的渲染操作是在当前用于显示的屏幕缓冲区中进行</li>
+<li>Off-Screen Renderin<br>  离屏渲染，指的是GPU在当前屏幕缓冲区以外新开辟一个缓冲区进行渲染操作。</li>
+</ul>
+<h3 id="离屏渲染"><a href="#离屏渲染" class="headerlink" title="离屏渲染"></a>离屏渲染</h3><p>相比于当前屏幕渲染，离屏渲染的代价是很高的，主要体现在两个方面：</p>
+<ul>
+<li>创建新缓冲<br>  要想进行离屏渲染，首先要创建一个新的缓冲区</li>
+<li>上下文切<br>  离屏渲染的整个过程，需要多次切换上下文环境：先是从当前屏幕（On-Screen）切换到离屏（Off-  Screen）；等到离屏渲染结束以后，将离屏缓冲区的渲染结果显示到屏幕上有需要将上下文环境从离屏切   换到当前屏幕。而上下文环境的切换是要付出很大代价的。</li>
+</ul>
+<h3 id="离屏渲染触发方式"><a href="#离屏渲染触发方式" class="headerlink" title="离屏渲染触发方式"></a>离屏渲染触发方式</h3><p>设置了以下属性时，都会触发离屏绘制：</p>
+<ul>
+<li>Any layer with a mask (layer.mask)</li>
+<li>Any layer with layer.masksToBounds / view.clipsToBounds being true</li>
+<li>Any layer with layer.allowsGroupOpacity set to YES and layer.opacity is less than 1.0</li>
+<li>Any layer with a drop shadow (layer.shadow*).</li>
+<li>Any layer with layer.shouldRasterize being true</li>
+<li>Any layer with layer.cornerRadius, layer.edgeAntialiasingMask, layer.allowsEdgeAntialiasing</li>
+<li>Text (any kind, including UILabel, CATextLayer, Core Text, etc).</li>
+<li>Most of the drawing you do with CGContext in drawRect:. Even an empty implementation will be rendered offscreen.</li>
+</ul>
+<p>需要注意的是，如果shouldRasterize被设置成YES，在触发离屏绘制的同时，会将光栅化后的内容缓存起来，如果对应的layer及其sublayers没有发生改变，在下一帧的时候可以直接复用。这将在很大程度上提升渲染性能。但是：</p>
+<ul>
+<li>避免在经常变动的图层上应用光栅</li>
+<li>尺寸不超过2.5倍屏</li>
+<li>100ms 之内不使用不会在绘存(0.1秒的缓存)<br>而其它属性如果是开启的，就不会有缓存，离屏绘制会在每一帧都发生。</li>
+</ul>
+<h1 id="遇到的问题：在列表中大量设置了圆角视图"><a href="#遇到的问题：在列表中大量设置了圆角视图" class="headerlink" title="遇到的问题：在列表中大量设置了圆角视图"></a>遇到的问题：在列表中大量设置了圆角视图</h1><h2 id="视图实现圆角效果的四种方法及比较"><a href="#视图实现圆角效果的四种方法及比较" class="headerlink" title="视图实现圆角效果的四种方法及比较"></a>视图实现圆角效果的四种方法及比较</h2><ol>
+<li><p>layer.cornerRadiu<br> 第一种方法最简单，通过层对象的cornerRadius属性实现圆角效果，代码如下</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">view.layer.cornerRadius = 8.0</div><div class="line">view.layer.masksToBounds = YES</div></pre></td></tr></table></figure>
+<p> 缺点是会有2次rending passes。首先off-screen画出带圆角的图，然后在视图上画第二次</p>
+<p> 我们知道了相比于当前屏幕渲染，离屏渲染的代价是很高的。鄙人就是图方便，之前知道这个方法会导致  列表滑动卡顿，但是还是试了一试，结果卡成狗了</p>
+<p> 虽然也设置了光栅化，这个视图也不是经常变化的，认为光栅化后这个视图会缓存起来，但是不知这个缓  存也只有0.1秒的时间啊</p>
+</li>
+<li><p>这种方法的好处是只有一次rending pass，是三种方法中效率最高的。缺点是需要override视图。代码如下</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">   - (void)drawRect:(CGRect)rect </div><div class="line">   &#123;</div><div class="line">	CGRect bounds = self.bounds;</div><div class="line">	</div><div class="line">	[[UIColor whiteColor] set];</div><div class="line">	</div><div class="line">	UIRectFill(bounds);</div><div class="line"></div><div class="line">	[[UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:8.0] addClip];</div><div class="line"></div><div class="line">	[self.image drawInRect:bounds];</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>通过另一张mask图创建新图<br> 首先需要一张mask图，然后将这张mask图和原图合成，得到带圆角的新图。效率和方法一类似，合成新图等同于在off-screen作图。该方法的优点是可以不局限于圆角，全屏mask图控制。</p>
+</li>
+<li><p>UI妹纸辛苦下，图片直接给切成圆角<br> 这中方法的效率有待调研。- -</p>
+</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>如果要效率（例如要提高table view的滚动帧数），就多用方法二。要方便，自然是方法一。如果需要的特殊形状UIBezierPath对象无法构成，则考虑方法三。实在不行，上杀手锏，麻烦UI妹纸吧~</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/jianfeishuo.jpg" alt="李剑飞 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎订阅我的微信公众号"剑飞说"！</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.png" alt="李剑飞 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.png" alt="李剑飞 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      李剑飞
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://www.lijianfei.cn/2015/10/26/iOS-Once-display-SEC-learn/" title="iOS一次显示性能优化中学到的">http://www.lijianfei.cn/2015/10/26/iOS-Once-display-SEC-learn/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/05/learn-Cocoapod-up/" rel="next" title="学习使用CocoaPods后涨的姿势">
+                <i class="fa fa-chevron-left"></i> 学习使用CocoaPods后涨的姿势
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/08/28/1yearQunar/" rel="prev" title="在Qunar一年的职业生涯成长">
+                在Qunar一年的职业生涯成长 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="李剑飞" />
+          <p class="site-author-name" itemprop="name">李剑飞</p>
+           
+              <p class="site-description motion-element" itemprop="description">本站没有添加评论，扫二维码加我微信好友，咨询文章的疑问点。本站只发布原创内容，我的学习笔记会记录在下面的 Wiki 链接中。</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lijianfeigeek" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/1855052150" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/lijianfei_" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lijianfeigeek/lijianfeigeek.github.io/wiki" target="_blank" title="Wiki">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Wiki
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://lijianfei.deercv.com/" target="_blank" title="Resume">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Resume
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#UIView-与-CALayer"><span class="nav-number">1.</span> <span class="nav-text">UIView 与 CALayer</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#继承关系"><span class="nav-number">1.1.</span> <span class="nav-text">继承关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#所属框架"><span class="nav-number">1.2.</span> <span class="nav-text">所属框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UIView-与-CALayer-的关系"><span class="nav-number">1.3.</span> <span class="nav-text">UIView 与 CALayer 的关系</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结一下："><span class="nav-number">2.</span> <span class="nav-text">总结一下：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iOS图形绘制框架"><span class="nav-number">3.</span> <span class="nav-text">iOS图形绘制框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Core-Animation-Pipeline"><span class="nav-number">3.1.</span> <span class="nav-text">Core Animation Pipeline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GPU屏幕渲染"><span class="nav-number">3.2.</span> <span class="nav-text">GPU屏幕渲染</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#离屏渲染"><span class="nav-number">3.2.1.</span> <span class="nav-text">离屏渲染</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#离屏渲染触发方式"><span class="nav-number">3.2.2.</span> <span class="nav-text">离屏渲染触发方式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#遇到的问题：在列表中大量设置了圆角视图"><span class="nav-number">4.</span> <span class="nav-text">遇到的问题：在列表中大量设置了圆角视图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#视图实现圆角效果的四种方法及比较"><span class="nav-number">4.1.</span> <span class="nav-text">视图实现圆角效果的四种方法及比较</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李剑飞</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

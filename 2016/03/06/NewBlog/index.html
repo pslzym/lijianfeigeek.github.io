@@ -1,0 +1,830 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="李剑飞" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/avatar2.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="写在前面的话终于还是把博客迁移了，在新浪云搭建的个人博客，用心写了一年多，但是总是觉得不踏实，包括服务，访问速度，收费状况，再加上最近对前端也是十分感冒，索性就把博客搬了出来，折腾了一阵子，可以安安心心的写博客了。 关于写博客关于写博客，其实刚刚开始写的时候，我也不知道写什么，反正就把自己的总结，或者某个需求是怎么实现的说出来就行了，其实无论写的好坏，只要用心写就可以，如果你不想靠这个出名，搞自媒">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="博客搬迁，新的开始">
+<meta property="og:url" content="http://www.lijianfei.cn/2016/03/06/NewBlog/index.html">
+<meta property="og:site_name" content="李剑飞的博客">
+<meta property="og:description" content="写在前面的话终于还是把博客迁移了，在新浪云搭建的个人博客，用心写了一年多，但是总是觉得不踏实，包括服务，访问速度，收费状况，再加上最近对前端也是十分感冒，索性就把博客搬了出来，折腾了一阵子，可以安安心心的写博客了。 关于写博客关于写博客，其实刚刚开始写的时候，我也不知道写什么，反正就把自己的总结，或者某个需求是怎么实现的说出来就行了，其实无论写的好坏，只要用心写就可以，如果你不想靠这个出名，搞自媒">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/myDomain.png">
+<meta property="og:updated_time" content="2016-08-02T08:11:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="博客搬迁，新的开始">
+<meta name="twitter:description" content="写在前面的话终于还是把博客迁移了，在新浪云搭建的个人博客，用心写了一年多，但是总是觉得不踏实，包括服务，访问速度，收费状况，再加上最近对前端也是十分感冒，索性就把博客搬了出来，折腾了一阵子，可以安安心心的写博客了。 关于写博客关于写博客，其实刚刚开始写的时候，我也不知道写什么，反正就把自己的总结，或者某个需求是怎么实现的说出来就行了，其实无论写的好坏，只要用心写就可以，如果你不想靠这个出名，搞自媒">
+<meta name="twitter:image" content="http://7xraw1.com1.z0.glb.clouddn.com/myDomain.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.lijianfei.cn/2016/03/06/NewBlog/"/>
+
+
+
+
+
+  <title> 博客搬迁，新的开始 | 李剑飞的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1260409211&web_id=1260409211" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李剑飞的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://www.lijianfei.cn/2016/03/06/NewBlog/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李剑飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李剑飞的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                博客搬迁，新的开始
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-03-06T00:52:18+08:00">
+                2016-03-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="写在前面的话"><a href="#写在前面的话" class="headerlink" title="写在前面的话"></a>写在前面的话</h1><p>终于还是把博客迁移了，在新浪云搭建的个人博客，用心写了一年多，但是总是觉得不踏实，包括服务，访问速度，收费状况，再加上最近对前端也是十分感冒，索性就把博客搬了出来，折腾了一阵子，可以安安心心的写博客了。</p>
+<h1 id="关于写博客"><a href="#关于写博客" class="headerlink" title="关于写博客"></a>关于写博客</h1><p>关于写博客，其实刚刚开始写的时候，我也不知道写什么，反正就把自己的总结，或者某个需求是怎么实现的说出来就行了，其实无论写的好坏，只要用心写就可以，如果你不想靠这个出名，搞自媒体，那你的博客就是你的地盘，用心记录自己成长的点滴，帮助和你遇到同样困难的人，或者诉说你自己的一些看法，写给别人，更重要的是写给自己。</p>
+<h1 id="之前的博客"><a href="#之前的博客" class="headerlink" title="之前的博客"></a>之前的博客</h1><p>我之前的博客地址的 <a href="http://lijianfei.sinaapp.com" target="_blank" rel="external">lijianfei.sinaapp.com</a>，是一个搭建在新浪云上基于WordPress的技术博客。由于是新浪云比较早的一批使用者，新浪云刚刚推出的时候，在大学里就注册了，刚刚开始嘛，新浪云也送了特别多的云豆，我记得刚刚开始博客访问量少的时候，我的云豆还可以用70多年，那时就想，这个博客基本不用动了，70多年也差不多了。后来随着访问量的增加，月访问量到了10W多，这云豆基本扛不住了，也就只能用一年多的时间。其实对这个博客感情还蛮深刻的，也对WordPress折腾了一阵子，主题、插件、网站优化，总体来说还是学到了不少。</p>
+<h1 id="新的博客"><a href="#新的博客" class="headerlink" title="新的博客"></a>新的博客</h1><p>在想把博客搬出来后，我就开始找了一些方案。主要有以下几个方案：</p>
+<ol>
+<li>farbox；</li>
+<li>githubissues；</li>
+<li>hexo+gitpage；</li>
+</ol>
+<h2 id="farbox"><a href="#farbox" class="headerlink" title="farbox"></a>farbox</h2><p><a href="https://www.farbox.com/" target="_blank" rel="external">farbox</a> 确实是一个很省心的博客解决方案。farbox对个人博客是平台级的搭建，让你不必因为建站，优化等问题阻碍个人博客的搭建，它甚至为你提供了更加贴合farbox产品的博客编辑器。而且对于图片较多的博客，也有它自身的解决方案，包括图片的图像自动增强，让图片看起来渲染的更加出色。更多精彩还去各位客官移步farbox的官网查看。</p>
+<h2 id="githubissues"><a href="#githubissues" class="headerlink" title="githubissues"></a>githubissues</h2><p>githubissues这种方式来写博客，确实很省事儿，而且也自带了回复功能，更重要的是它直接是在你自己的github上，与自己的开源项目在一起，方便代码的开源和分享。如果真的对自己的博客没什么要求，真是就想找个更geek的地方写写自己的文章，那这种方式也可以。像<a href="https://github.com/lifesinger/blog/issues" target="_blank" rel="external">玉伯</a>大牛说的，方便，懒，皮肤功能太多，折腾时间太久，最后就是一篇文章，技术文章，内容，seo什么的，都是表象，内容持久的保存才是王道，n年后回味起那些冲动的岁月，泪湿衣衫，感动常在。</p>
+<p>如果想使用国内的多说评论的话，或者想 用一个稍微简单一点的页面来展示githubissues博客，也可以参考这个项目<a href="https://github.com/wuhaoworld/github-issues-blog" target="_blank" rel="external">基于 Github issues 的单页面静态博客</a>，很方便的使用gitpage搭建一个简单页面的带有多说评论的博客。</p>
+<h2 id="Hexo-gitpage"><a href="#Hexo-gitpage" class="headerlink" title="Hexo+gitpage"></a>Hexo+gitpage</h2><p>如果不是为了学习一下前端知识，我就在githubissues上写博客了。但是看过由<a href="https://hexo.io/zh-cn/" target="_blank" rel="external">Hexo</a> 驱动的快速、简洁且高效的博客框架后，还是决定折腾一下，学点新东西。</p>
+<h3 id="安装环境及-Hexo"><a href="#安装环境及-Hexo" class="headerlink" title="安装环境及 Hexo"></a>安装环境及 Hexo</h3><ol>
+<li>node.js</li>
+<li>git</li>
+</ol>
+<p>Mac OSX 用户在终端里用<code>npm</code>命令安装 Hexo：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install -g hexo-cli</div></pre></td></tr></table></figure>
+<p>若写入权限不够，加<code>sudo</code> 。</p>
+<h3 id="初始化-Hexo"><a href="#初始化-Hexo" class="headerlink" title="初始化 Hexo"></a>初始化 Hexo</h3><p>Hexo 安装好后，打开终端，想好 Hexo 的初始化位置，比如：/Users/lijianfei/hexo，执行一下命令行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">hexo init /Users/lijianfei/hexo</div><div class="line">cd /Users/lijianfei/hexo</div><div class="line">npm install</div></pre></td></tr></table></figure>
+<p>若写入权限不够，加<code>sudo</code> 。Hexo就初始化完成。</p>
+<h3 id="配置-Hexo"><a href="#配置-Hexo" class="headerlink" title="配置 Hexo"></a>配置 Hexo</h3><p>初始化完成后，有三个文件是我们以后主要要了解的：</p>
+<h3 id="config-yml"><a href="#config-yml" class="headerlink" title="_config.yml"></a>_config.yml</h3><p>大部分配置都在这个文件中设置，可以使用编辑器打开编辑。其中，Site、theme、deploy是比较重要的属性。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">#Site</div><div class="line">title: 李剑飞的技术博客</div><div class="line">subtitle: 重要的不是堆砌了多少知识，而是学以致用。</div><div class="line">description: </div><div class="line">author: 李剑飞的技术博客</div><div class="line">language: zh-CN</div><div class="line">timezone: Asia/Shanghai</div><div class="line"></div><div class="line"># Extensions</div><div class="line">## Plugins: https://hexo.io/plugins/</div><div class="line">## Themes: https://hexo.io/themes/</div><div class="line">theme: yelee</div><div class="line"></div><div class="line"># Deployment</div><div class="line">## Docs: https://hexo.io/docs/deployment.html</div><div class="line">deploy:</div><div class="line">  type: git</div><div class="line">  repository: git@github.com:lijianfeigeek/lijianfeigeek.github.io.git</div><div class="line">  branch: master</div></pre></td></tr></table></figure>
+<p>git中<code>repository</code> 必须是<code>SSH</code>形式的，且建立的<code>repository</code>名字必须是以<code>用户名.github.io</code>这样的格式，默认是<code>master</code>分支。这个是gitpage的搭建要求。</p>
+<h4 id="themes"><a href="#themes" class="headerlink" title="themes"></a>themes</h4><p>主题文件夹，用来管理博客主题。我用的是<a href="http://moxfive.xyz/" target="_blank" rel="external">MOxFIVE</a>写的<a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" rel="external">yelee</a>主题。</p>
+<p>终端 cd 到 Hexo 根目录，即 /Users/lijianfei/hexo，执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/MOxFIVE/hexo-theme-yelee.git themes/yelee</div></pre></td></tr></table></figure>
+<p>将<code>Hexo</code>根目录<code>_config.yml</code>中相关的配置改为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">theme: yelee</div></pre></td></tr></table></figure>
+<p>这里的冒号后有一个空格。</p>
+<p>频繁切换不同的主题，可能会有一些 Bug，执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo clean</div></pre></td></tr></table></figure>
+<p>清除缓存，再重新生成静态网站就ok了。</p>
+<h4 id="public"><a href="#public" class="headerlink" title="public"></a>public</h4><p>生成的静态页面会在该文件夹里。</p>
+<h3 id="生成静态网站"><a href="#生成静态网站" class="headerlink" title="生成静态网站"></a>生成静态网站</h3><p>执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo g // 生成</div></pre></td></tr></table></figure>
+<p>然后再</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo s // 启动本地服务</div></pre></td></tr></table></figure>
+<p>就可以在本地<a href="http://localhost:4000" target="_blank" rel="external">http://localhost:4000</a>访问生成的网站了。</p>
+<p>Ctrl + C 可以关闭本地服务器。</p>
+<h3 id="发布"><a href="#发布" class="headerlink" title="发布"></a>发布</h3><p>在本地修改完必要的样式后，就可以将其发布到 Github 上了。根据之前在 _config.yml 中 deploy 部分的设置，就可以执行以下命令行将其发布了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo d // 发布</div></pre></td></tr></table></figure>
+<p>如果不能上传的话，可能是没有安装<code>hexo-deployer-git</code>，在终端里用 npm 安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-deployer-git --save</div></pre></td></tr></table></figure>
+<h3 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h3><p>访问 <code>用户名.github.io</code>就可以了。</p>
+<h3 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h3><p>我是在<a href="http://wanwang.aliyun.com/" target="_blank" rel="external">万网</a>上购买的<a href="lijianfei.cn">lijianfei.cn</a>这个域名。</p>
+<p>在<code>gitpage</code>的文件目录下，创建一个CNAME文件，内容是你的域名 比如lijianfei.cn</p>
+<p>进入到自己的域名管理下边(我的万网域名账户下)进行域名解析 </p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/myDomain.png" alt=""></p>
+<p>解析后<code>不是立刻就生效的</code>需要等一段时间。</p>
+<h3 id="图床"><a href="#图床" class="headerlink" title="图床"></a>图床</h3><p>图床使用的是七牛云，注册后有免费10G的空间和10G下载流量，一般情况下完全够用了。而且还有图片处理，可以加水印等功能，基本满足图片使用的需求。</p>
+<h1 id="新的开始"><a href="#新的开始" class="headerlink" title="新的开始"></a>新的开始</h1><p>作为博客新的开始，我会坚持写原创博客文章，技术类的自己不仅限于tips级别的文章，跟要往深度挖掘，理解技术的本质原理，再转换为自己的语言输出。还会写一些读书心得和感悟，加强自己的阅读。之所以叫技术博客，还是希望它能记录自己的职业生涯的一些进程吧。加油！</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/jianfeishuo.jpg" alt="李剑飞 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎订阅我的微信公众号"剑飞说"！</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.png" alt="李剑飞 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.png" alt="李剑飞 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      李剑飞
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://www.lijianfei.cn/2016/03/06/NewBlog/" title="博客搬迁，新的开始">http://www.lijianfei.cn/2016/03/06/NewBlog/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/22/ReadFrom0to1/" rel="next" title="重新认识商业-读《从0到1》">
+                <i class="fa fa-chevron-left"></i> 重新认识商业-读《从0到1》
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/02/21/ReadLearningHowtoQuestion/" rel="prev" title="装备批判性思维-读《学会提问》">
+                装备批判性思维-读《学会提问》 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="李剑飞" />
+          <p class="site-author-name" itemprop="name">李剑飞</p>
+           
+              <p class="site-description motion-element" itemprop="description">本站没有添加评论，扫二维码加我微信好友，咨询文章的疑问点。本站只发布原创内容，我的学习笔记会记录在下面的 Wiki 链接中。</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lijianfeigeek" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/1855052150" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/lijianfei_" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lijianfeigeek/lijianfeigeek.github.io/wiki" target="_blank" title="Wiki">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Wiki
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://lijianfei.deercv.com/" target="_blank" title="Resume">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Resume
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写在前面的话"><span class="nav-number">1.</span> <span class="nav-text">写在前面的话</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于写博客"><span class="nav-number">2.</span> <span class="nav-text">关于写博客</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#之前的博客"><span class="nav-number">3.</span> <span class="nav-text">之前的博客</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#新的博客"><span class="nav-number">4.</span> <span class="nav-text">新的博客</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#farbox"><span class="nav-number">4.1.</span> <span class="nav-text">farbox</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#githubissues"><span class="nav-number">4.2.</span> <span class="nav-text">githubissues</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hexo-gitpage"><span class="nav-number">4.3.</span> <span class="nav-text">Hexo+gitpage</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装环境及-Hexo"><span class="nav-number">4.3.1.</span> <span class="nav-text">安装环境及 Hexo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化-Hexo"><span class="nav-number">4.3.2.</span> <span class="nav-text">初始化 Hexo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置-Hexo"><span class="nav-number">4.3.3.</span> <span class="nav-text">配置 Hexo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#config-yml"><span class="nav-number">4.3.4.</span> <span class="nav-text">_config.yml</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#themes"><span class="nav-number">4.3.4.1.</span> <span class="nav-text">themes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#public"><span class="nav-number">4.3.4.2.</span> <span class="nav-text">public</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成静态网站"><span class="nav-number">4.3.5.</span> <span class="nav-text">生成静态网站</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发布"><span class="nav-number">4.3.6.</span> <span class="nav-text">发布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问"><span class="nav-number">4.3.7.</span> <span class="nav-text">访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#域名"><span class="nav-number">4.3.8.</span> <span class="nav-text">域名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图床"><span class="nav-number">4.3.9.</span> <span class="nav-text">图床</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#新的开始"><span class="nav-number">5.</span> <span class="nav-text">新的开始</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李剑飞</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

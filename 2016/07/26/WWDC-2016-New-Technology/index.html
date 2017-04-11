@@ -1,0 +1,914 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="李剑飞" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/avatar2.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="New API语音识别@see SFSpeechRecognizer 新的 SFSpeechRecognizer 框架，可以分析语音内容，支持语音转文字。 SirKit@see Programming Guide@see Intents.framework@see IntentsUI.framework@see 使用 Swift 在 iOS 10 中集成 Siri —— SiriKit 教程">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WWDC 2016 有哪些新技术">
+<meta property="og:url" content="http://www.lijianfei.cn/2016/07/26/WWDC-2016-New-Technology/index.html">
+<meta property="og:site_name" content="李剑飞的博客">
+<meta property="og:description" content="New API语音识别@see SFSpeechRecognizer 新的 SFSpeechRecognizer 框架，可以分析语音内容，支持语音转文字。 SirKit@see Programming Guide@see Intents.framework@see IntentsUI.framework@see 使用 Swift 在 iOS 10 中集成 Siri —— SiriKit 教程">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/WWDC2016.PNG">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/iOS10_Notes_app.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/Objective-C_Class%20Properties_1.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/Objective-C_Class%20Properties_2.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/NSTimer_in_iOS10.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/UITableView_in_iOS10_AddFunc.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/UITabBar_in_iOS10_change.png">
+<meta property="og:updated_time" content="2016-09-13T03:30:02.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WWDC 2016 有哪些新技术">
+<meta name="twitter:description" content="New API语音识别@see SFSpeechRecognizer 新的 SFSpeechRecognizer 框架，可以分析语音内容，支持语音转文字。 SirKit@see Programming Guide@see Intents.framework@see IntentsUI.framework@see 使用 Swift 在 iOS 10 中集成 Siri —— SiriKit 教程">
+<meta name="twitter:image" content="http://7xraw1.com1.z0.glb.clouddn.com/WWDC2016.PNG">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.lijianfei.cn/2016/07/26/WWDC-2016-New-Technology/"/>
+
+
+
+
+
+  <title> WWDC 2016 有哪些新技术 | 李剑飞的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1260409211&web_id=1260409211" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李剑飞的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://www.lijianfei.cn/2016/07/26/WWDC-2016-New-Technology/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李剑飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李剑飞的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                WWDC 2016 有哪些新技术
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-07-26T11:29:11+08:00">
+                2016-07-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/WWDC2016.PNG" alt=""></p>
+<hr>
+<h1 id="New-API"><a href="#New-API" class="headerlink" title="New API"></a>New API</h1><h2 id="语音识别"><a href="#语音识别" class="headerlink" title="语音识别"></a>语音识别</h2><p>@see <a href="https://developer.apple.com/reference/speech/sfspeechrecognizer?language=objc" target="_blank" rel="external">SFSpeechRecognizer</a></p>
+<p>新的 <code>SFSpeechRecognizer</code> 框架，可以分析语音内容，支持语音转文字。</p>
+<h2 id="SirKit"><a href="#SirKit" class="headerlink" title="SirKit"></a>SirKit</h2><p>@see <a href="https://developer.apple.com/library/prerelease/content/documentation/Intents/Conceptual/SiriIntegrationGuide/index.html##//apple_ref/doc/uid/TP40016875" target="_blank" rel="external">Programming Guide</a><br>@see <a href="https://developer.apple.com/reference/intents" target="_blank" rel="external">Intents.framework</a><br>@see <a href="https://developer.apple.com/reference/intentsui" target="_blank" rel="external">IntentsUI.framework</a><br>@see <a href="http://swift.gg/2016/06/28/adding-siri-to-ios-10-apps-in-swift-tutorial/" target="_blank" rel="external">使用 Swift 在 iOS 10 中集成 Siri —— SiriKit 教程（Part 1）</a><br>@see <a href="http://jamesonquave.com/blog/sirikit-swift-3-resolutions-sirikit-tutorial-part-2/" target="_blank" rel="external">使用 Swift 在 iOS 10 中集成 Siri —— SiriKit 教程（Part 2）</a></p>
+<p>借助<code>SiriKit</code>，应用能够识别具体的静态或者动态的词汇。借助 interpreted meta-data（Intent）Siri 能够调用你的应用，使用一些功能。</p>
+<h2 id="New通知框架"><a href="#New通知框架" class="headerlink" title="New通知框架"></a>New通知框架</h2><p>@see <a href="https://developer.apple.com/reference/usernotifications?language=objc" target="_blank" rel="external">UserNotifications</a>和 <a href="https://developer.apple.com/reference/usernotificationsui" target="_blank" rel="external">UserNotificationsUI</a><br>@see <a href="http://www.jianshu.com/p/f9fa71325a7d" target="_blank" rel="external">WWDC2016-session707 Introduction to Notifications(简书Neal)</a><br>@see <a href="http://www.cnblogs.com/xilifeng/p/5589576.html" target="_blank" rel="external">wwdc2016-session707 Notifications(淅沥枫)</a><br>@see <a href="http://www.jianshu.com/p/9b720efe3779" target="_blank" rel="external">WWDC2016 Session笔记 - iOS 10 推送Notification新特性(一缕殇流化隐半边冰霜)</a></p>
+<ul>
+<li>统一本地和远程通知</li>
+<li>在通知里可以加入多媒体内容，比如图片和 GIF 图片</li>
+<li>当用户禁止通知时，你会收到告知</li>
+<li>能够获得你应用里的通知清单，能够控制触发时间，能更新这些通知，甚至具备删除旧通知的能力</li>
+<li><a href="https://twitter.com/NatashaTheRobot/status/744506324696760320" target="_blank" rel="external">通过代码可以获取用户的通知设置情况</a></li>
+</ul>
+<h2 id="CloudKit"><a href="#CloudKit" class="headerlink" title="CloudKit"></a>CloudKit</h2><p>@see <a href="https://developer.apple.com/reference/cloudkit?language=objc" target="_blank" rel="external">CloudKit</a><br>支持 <code>CloudKit</code> 的分享操作，会显示一个界面让用户浏览和修改参与者、开始分享和结束分享。<br>@see <code>UICloudSharingController</code> 和 <code>UICloudSharingControllerDelegate</code><br>还可以在 iOS 10 的 Notes.app 看到<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/iOS10_Notes_app.png" width="320"></p>
+<h2 id="Foundation"><a href="#Foundation" class="headerlink" title="Foundation"></a>Foundation</h2><p>@see <a href="https://developer.apple.com/library/prerelease/content/releasenotes/Miscellaneous/RN-Foundation-OSX10.12/" target="_blank" rel="external">Foundation Release Notes for OS X v10.12 and iOS 10</a><br>这个版本带来了许多持续API改进基础上,利用新的API特性在objective - c中,使API在Swift更自然。</p>
+<h3 id="String-类型的枚举"><a href="#String-类型的枚举" class="headerlink" title="String 类型的枚举"></a>String 类型的枚举</h3><p>@see <a href="https://developer.apple.com/library/prerelease/content/documentation/Swift/Conceptual/BuildingCocoaApps/InteractingWithCAPIs.html" target="_blank" rel="external">Using Swift with Cocoa and Objective-C (Swift 3)</a></p>
+<ul>
+<li><p>NS_STRING_ENUM</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">typedef NSString * TrafficLightColor NS_STRING_ENUM;</div><div class="line"></div><div class="line">TrafficLightColor const TrafficLightColorRed;</div><div class="line">TrafficLightColor const TrafficLightColorYellow;</div><div class="line">TrafficLightColor const TrafficLightColorGreen;</div></pre></td></tr></table></figure>
+</li>
+<li><p>NS_EXTENSIBLE_STRING_ENUM</p>
+</li>
+</ul>
+<h3 id="Objective-C-Class-Properties"><a href="#Objective-C-Class-Properties" class="headerlink" title="Objective-C Class Properties"></a>Objective-C Class Properties</h3><p><img src="http://7xraw1.com1.z0.glb.clouddn.com/Objective-C_Class%20Properties_1.png" width="500"><br><img src="http://7xraw1.com1.z0.glb.clouddn.com/Objective-C_Class%20Properties_2.png" width="500"></p>
+<h3 id="单位转换"><a href="#单位转换" class="headerlink" title="单位转换"></a>单位转换</h3><p>新的 API，能够转换各种不同的测量单位。</p>
+<ul>
+<li>NSUnit - The abstract superclass of units, such as miles, km/h, degrees Fahrenheit. </li>
+<li>NSDimension - Subclass of NSUnit representing unit families, such as length, speed, temperature. This class has many subclasses such as NSUnitLength, representing the different unit families.</li>
+<li>NSUnitConverter - Helper class to make it easy to convert between units in a unit value.</li>
+<li>NSMeasurement - A unit and a value, representing a measured quantity. For instance 10 miles, 42 km/h, 72 degrees Fahrenheit.</li>
+<li>NSMeasurementFormatter - A new formatter to display measurements in localized fashion.</li>
+</ul>
+<h3 id="NSURL"><a href="#NSURL" class="headerlink" title="NSURL"></a>NSURL</h3><p>NSURL对象是不可变的,必须有一个URL字符串。所以[NSURL init]没有意义,因为没有提供URL字符串。之前的版本中,[NSURL init]会released self ,返nil。</p>
+<p>新版本中[NSURL init],回返回一个空字符串。[NSURL new]也是一样的。</p>
+<h3 id="运行多个iOS模拟器可以导致NSUserDefaults不起作用"><a href="#运行多个iOS模拟器可以导致NSUserDefaults不起作用" class="headerlink" title="运行多个iOS模拟器可以导致NSUserDefaults不起作用"></a>运行多个iOS模拟器可以导致NSUserDefaults不起作用</h3><p>模拟器运行iOS 8或9其次是iOS 10模拟器将导致模拟器NSUserDefaults停止工作。需要重启Mac来解决。</p>
+<h3 id="日期"><a href="#日期" class="headerlink" title="日期"></a>日期</h3><ul>
+<li>NSISO8601DateFormatter 出现在 Foundation 里了</li>
+<li>有了新的 NSDateInterval 类型</li>
+</ul>
+<h3 id="对-API-做去字符串化（De-stringification）"><a href="#对-API-做去字符串化（De-stringification）" class="headerlink" title="对 API 做去字符串化（De-stringification）"></a>对 API 做去字符串化（De-stringification）</h3><ul>
+<li><p>NSCalendarIdentifier 现在已经是一个专门的类型了（代替了 NSString）</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">typedef NSString * NSCalendarIdentifier NS_EXTENSIBLE_STRING_ENUM;</div></pre></td></tr></table></figure>
+</li>
+<li><p>NSError.domain 现在是一个 NSErrorDomain，代替了 NSString</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">typedef NSString *NSErrorDomain NS_EXTENSIBLE_STRING_ENUM;</div></pre></td></tr></table></figure>
+</li>
+<li><p>通知里使用 NSNotificationName 代替 NSString</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">+ (instancetype)notificationWithName:(NSNotificationName)aName object:(nullable id)anObject;</div></pre></td></tr></table></figure>
+</li>
+<li><p>stringByApplyingTransform:reverse: 使用 NSStringTransform 类型代替 NSString</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">typedef NSString *NSStringTransform NS_EXTENSIBLE_STRING_ENUM;</div></pre></td></tr></table></figure>
+</li>
+<li><p>NSRunLoop.mode 现在是一个 NSRunLoopMode</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">FOUNDATION_EXPORT NSRunLoopMode const NSDefaultRunLoopMode;</div><div class="line">FOUNDATION_EXPORT NSRunLoopMode const NSRunLoopCommonModes NS_AVAILABLE(10_5, 2_0);</div><div class="line"></div><div class="line">- (BOOL)runMode:(NSRunLoopMode)mode beforeDate:(NSDate *)limitDate;</div></pre></td></tr></table></figure>
+</li>
+<li><p>NSHTTPCookie 属性现在是 [NSHTTPCookiePropertyKey: AnyObject]，代替了 [NSString: AnyObject]</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">typedef NSString * NSHTTPCookiePropertyKey NS_EXTENSIBLE_STRING_ENUM;</div></pre></td></tr></table></figure>
+</li>
+<li><p>等等</p>
+</li>
+</ul>
+<h3 id="新的日志-API"><a href="#新的日志-API" class="headerlink" title="新的日志 API"></a>新的日志 API</h3><blockquote>
+<p>NSLog is now just a shim to os_log in most circumstances.</p>
+</blockquote>
+<h3 id="New-timer-API"><a href="#New-timer-API" class="headerlink" title="New timer API"></a>New timer API</h3><p><img src="http://7xraw1.com1.z0.glb.clouddn.com/NSTimer_in_iOS10.png" alt=""><br>现在可以传入block（Xcode 8 的 Swift 还不支持这个功能，会在 Swift 3 加入。）<br>这个需求在开源社区中早已广为流传，这次苹果将其吸收。</p>
+<h3 id="NSURLSession"><a href="#NSURLSession" class="headerlink" title="NSURLSession"></a>NSURLSession</h3><p>新的委托方法允许你获取一些网络相关的数据。提供了很多元数据，比如不同场景的开始和结束时间（DNS 查询、连接……）<br>@see <code>NSURLSessionTaskMetrics</code> 和 <code>NSURLSessionTaskTransactionMetrics</code><br>@see <a href="https://developer.apple.com/videos/play/wwdc2016/711/" target="_blank" rel="external">WWDC 2016 session 711 NSURLSession new features and best practices</a></p>
+<h2 id="UITableView-和-UICollectionView-预加载"><a href="#UITableView-和-UICollectionView-预加载" class="headerlink" title="UITableView 和 UICollectionView 预加载"></a>UITableView 和 UICollectionView 预加载</h2><p>@see <a href="https://developer.apple.com/videos/play/wwdc2016/219/" target="_blank" rel="external">WWDC 2016 session 219 What’s New in UICollectionView in iOS 10</a><br>@see <a href="http://www.jianshu.com/p/c961dd8127a6" target="_blank" rel="external">WWDC16笔记：What’s new in UICollectionView(ynboh)</a><br>@see <a href="http://www.jianshu.com/p/e97780a24224" target="_blank" rel="external">WWDC2016 Session笔记 - iOS 10 UICollectionView新特性</a><br><img src="http://7xraw1.com1.z0.glb.clouddn.com/UITableView_in_iOS10_AddFunc.png" alt=""></p>
+<ul>
+<li>预加载：在到达滑动区域的边缘之前预先下载数据，更轻松地实现多页内容。</li>
+<li><code>UIRefreshControl</code> 目前已经可以在 <code>UIScrollView</code> 上使用了（之前只能在 <code>UITableViewController</code> 上使用）。</li>
+<li>新的 <code>UICollectionViewFlowLayoutAutomaticSize CollectionView</code> 约束条件。</li>
+</ul>
+<h2 id="GCD"><a href="#GCD" class="headerlink" title="GCD"></a>GCD</h2><p>@see <a href="https://developer.apple.com/videos/play/wwdc2016/720/" target="_blank" rel="external">WWDC 2016 session 720 Concurrent Programming With GCD in Swift 3</a></p>
+<p>新的 <code>Dispatch API</code> 出现在 Swift 3 里，用于 <code>GCD（Grand Central Dispatch）</code>。在 Swift 3 里操作 GCD 更容易也更美观</p>
+<h2 id="UUID-值类型"><a href="#UUID-值类型" class="headerlink" title="UUID 值类型"></a>UUID 值类型</h2><p>@see <a href="https://developer.apple.com/reference/foundation/nsuuid?language=objc" target="_blank" rel="external">NSUUID</a><br>在 Swift 3 里出现了一个新的类型 UUID，是一个值类型（估计和 Objective-C 里的 NSUUID 类似）。</p>
+<h2 id="UIViewPropertyAnimator"><a href="#UIViewPropertyAnimator" class="headerlink" title="UIViewPropertyAnimator"></a>UIViewPropertyAnimator</h2><p>@see <a href="https://developer.apple.com/reference/uikit/uiviewpropertyanimator?language=objc" target="_blank" rel="external">UIViewPropertyAnimator - UIKit</a></p>
+<p>新的 UIViewPropertyAnimator 类可以更好地使用 UIView.animatedWithDuration API，借此可以实现很多功能，比如：</p>
+<ul>
+<li>中途中断动画</li>
+<li>动画开始后改变值</li>
+<li>改变 <code>percentComplete</code> 属性让动画更具交互性</li>
+<li>或者甚至可以把 percentComplete 和 UIGestureRecognizer 结合在一起使用</li>
+</ul>
+<h2 id="UIPasteboard"><a href="#UIPasteboard" class="headerlink" title="UIPasteboard"></a>UIPasteboard</h2><p>@see <a href="https://developer.apple.com/reference/uikit/uipasteboard?language=objc" target="_blank" rel="external">UIPasteboard - UIKit</a></p>
+<p><code>UIPasteboard</code> 现在能够 在不同的设备之间共享同一个剪贴板，例如：你在 Mac 上复制了一段话，然后粘贴到你的 iPhone/iPad 上，反过来也可以。</p>
+<h2 id="UITabBar"><a href="#UITabBar" class="headerlink" title="UITabBar"></a>UITabBar</h2><p><img src="http://7xraw1.com1.z0.glb.clouddn.com/UITabBar_in_iOS10_change.png" alt=""></p>
+<p>能够控制一个 <code>tab bar item</code> 的样式，比如背景颜色和文字属性。</p>
+<h2 id="ApplePay"><a href="#ApplePay" class="headerlink" title="ApplePay"></a>ApplePay</h2><p>@see <a href="https://developer.apple.com/videos/play/wwdc2016/703/" target="_blank" rel="external">WWDC 2016 - Session 703 Apple Pay on the Web</a></p>
+<ul>
+<li>苹果支付现在支持网页支付（仅限 Safari 10）</li>
+<li>支持更多新的国家</li>
+</ul>
+<h2 id="Xcode-里的新工具"><a href="#Xcode-里的新工具" class="headerlink" title="Xcode 里的新工具"></a>Xcode 里的新工具</h2><p>@see <a href="https://developer.apple.com/videos/play/wwdc2016/410/" target="_blank" rel="external">Visual Debugging with Xcode</a><br>@see <a href="http://mp.weixin.qq.com/s?__biz=MzIwMTYzMzcwOQ==&amp;mid=2650948410&amp;idx=1&amp;sn=c48375a832b8769a0f43a293a3f09fe3&amp;scene=2&amp;srcid=0622wBT7phLy4h5oDj6x1nEh&amp;from=timeline&amp;isappinstalled=0" target="_blank" rel="external">Visual Debugging With Xcode - txx 出品</a></p>
+<ul>
+<li>新的可视化调试工具（Visual Debugging Tools），特别是内存和线程工具</li>
+<li>新的代码签名机制</li>
+<li>Xcode 扩展</li>
+<li>在 Xcode 8 里允许你选择使用 Swift 2.3 还是 Swift 3.0</li>
+<li>图片名字自动补全，代码中可以对颜色和图片文字化</li>
+<li>提高了 <code>Inspector</code>(获取iOS APP中各个控件元素的层级结构) 的可访问性，以及检查可访问性</li>
+</ul>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
+<li>iPad 上会有一个 Playground App</li>
+<li>新的苹果文件系统（APFS）</li>
+<li>iOS 10 开始用户能够删除苹果的内置应用（股票应用，等等）</li>
+<li>苹果开源了加密算法库和 CLI <a href="https://github.com/lzfse/lzfse" target="_blank" rel="external">LZFSE</a></li>
+</ul>
+<h2 id="安全相关"><a href="#安全相关" class="headerlink" title="安全相关"></a>安全相关</h2><p>@see <a href="https://developer.apple.com/videos/play/wwdc2016/706/" target="_blank" rel="external">WWDC 2016 session 706 whats new in security</a></p>
+<ul>
+<li>到 2016 年末，苹果会强制要求所有应用使用 ATS。</li>
+<li>现在你 必须 在 <code>Info.plist</code> 里声明 <code>XXXUsageDescription</code>，来获取保护的数据（例如：<code>NSCalendarUsageDescription</code>），如果你不这么做，你的应用在获取数据的时候会自动退出。</li>
+</ul>
+<h2 id="等等"><a href="#等等" class="headerlink" title="等等"></a>等等</h2><ul>
+<li>Messages API</li>
+<li>watchOS 3</li>
+<li>tvOS</li>
+</ul>
+<h1 id="感受"><a href="#感受" class="headerlink" title="感受"></a>感受</h1><ul>
+<li>更加亲近Swift；</li>
+<li>更加开放；</li>
+<li>努力吸收开源社区的优点；</li>
+</ul>
+<h1 id="Resources"><a href="#Resources" class="headerlink" title="Resources"></a>Resources</h1><ul>
+<li><a href="https://developer.apple.com/ios/human-interface-guidelines/overview/whats-new/" target="_blank" rel="external">What’s New in iOS 10</a></li>
+<li><a href="https://developer.apple.com/library/prerelease/content/releasenotes/General/iOS10APIDiffs/index.html" target="_blank" rel="external">iOS 9.3 to iOS 10.0 API Differences</a></li>
+<li><a href="https://developer.apple.com/library/prerelease/content/releasenotes/General/iOS10APIDiffs/Objective-C/Foundation.html" target="_blank" rel="external">iOS 10.0 API diffs Foundation Changes for Objective-C</a></li>
+<li><a href="https://developer.apple.com/library/prerelease/content/releasenotes/General/iPhoneSeedAPIDiffs/index.html" target="_blank" rel="external">iOS 10.0 Beta 1 to iOS 10.0 Beta 2 API Differences</a></li>
+<li><a href="http://asciiwwdc.com/" target="_blank" rel="external"> Full-text transcripts of WWDC sessions</a></li>
+<li><a href="https://github.com/ChenYilong/iOS10AdaptationTips" target="_blank" rel="external">ChenYilong/iOS10AdaptationTips</a></li>
+<li><a href="http://www.jianshu.com/p/72dd8306c817" target="_blank" rel="external">WWDC 2016 盛宴</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/jianfeishuo.jpg" alt="李剑飞 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎订阅我的微信公众号"剑飞说"！</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.png" alt="李剑飞 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.png" alt="李剑飞 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      李剑飞
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://www.lijianfei.cn/2016/07/26/WWDC-2016-New-Technology/" title="WWDC 2016 有哪些新技术">http://www.lijianfei.cn/2016/07/26/WWDC-2016-New-Technology/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/02/iOS10-Notifications-Translation/" rel="next" title="iOS10 推送通知开发【译】">
+                <i class="fa fa-chevron-left"></i> iOS10 推送通知开发【译】
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/21/objective-block-learning/" rel="prev" title="Objective-C中block实现和技巧学习">
+                Objective-C中block实现和技巧学习 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="李剑飞" />
+          <p class="site-author-name" itemprop="name">李剑飞</p>
+           
+              <p class="site-description motion-element" itemprop="description">本站没有添加评论，扫二维码加我微信好友，咨询文章的疑问点。本站只发布原创内容，我的学习笔记会记录在下面的 Wiki 链接中。</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lijianfeigeek" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/1855052150" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/lijianfei_" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lijianfeigeek/lijianfeigeek.github.io/wiki" target="_blank" title="Wiki">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Wiki
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://lijianfei.deercv.com/" target="_blank" title="Resume">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Resume
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#New-API"><span class="nav-number">1.</span> <span class="nav-text">New API</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#语音识别"><span class="nav-number">1.1.</span> <span class="nav-text">语音识别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SirKit"><span class="nav-number">1.2.</span> <span class="nav-text">SirKit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#New通知框架"><span class="nav-number">1.3.</span> <span class="nav-text">New通知框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CloudKit"><span class="nav-number">1.4.</span> <span class="nav-text">CloudKit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Foundation"><span class="nav-number">1.5.</span> <span class="nav-text">Foundation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#String-类型的枚举"><span class="nav-number">1.5.1.</span> <span class="nav-text">String 类型的枚举</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Objective-C-Class-Properties"><span class="nav-number">1.5.2.</span> <span class="nav-text">Objective-C Class Properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单位转换"><span class="nav-number">1.5.3.</span> <span class="nav-text">单位转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSURL"><span class="nav-number">1.5.4.</span> <span class="nav-text">NSURL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行多个iOS模拟器可以导致NSUserDefaults不起作用"><span class="nav-number">1.5.5.</span> <span class="nav-text">运行多个iOS模拟器可以导致NSUserDefaults不起作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#日期"><span class="nav-number">1.5.6.</span> <span class="nav-text">日期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对-API-做去字符串化（De-stringification）"><span class="nav-number">1.5.7.</span> <span class="nav-text">对 API 做去字符串化（De-stringification）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新的日志-API"><span class="nav-number">1.5.8.</span> <span class="nav-text">新的日志 API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#New-timer-API"><span class="nav-number">1.5.9.</span> <span class="nav-text">New timer API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSURLSession"><span class="nav-number">1.5.10.</span> <span class="nav-text">NSURLSession</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UITableView-和-UICollectionView-预加载"><span class="nav-number">1.6.</span> <span class="nav-text">UITableView 和 UICollectionView 预加载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GCD"><span class="nav-number">1.7.</span> <span class="nav-text">GCD</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UUID-值类型"><span class="nav-number">1.8.</span> <span class="nav-text">UUID 值类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UIViewPropertyAnimator"><span class="nav-number">1.9.</span> <span class="nav-text">UIViewPropertyAnimator</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UIPasteboard"><span class="nav-number">1.10.</span> <span class="nav-text">UIPasteboard</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UITabBar"><span class="nav-number">1.11.</span> <span class="nav-text">UITabBar</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ApplePay"><span class="nav-number">1.12.</span> <span class="nav-text">ApplePay</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Xcode-里的新工具"><span class="nav-number">1.13.</span> <span class="nav-text">Xcode 里的新工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">1.14.</span> <span class="nav-text">其他</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安全相关"><span class="nav-number">1.15.</span> <span class="nav-text">安全相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#等等"><span class="nav-number">1.16.</span> <span class="nav-text">等等</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#感受"><span class="nav-number">2.</span> <span class="nav-text">感受</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Resources"><span class="nav-number">3.</span> <span class="nav-text">Resources</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李剑飞</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

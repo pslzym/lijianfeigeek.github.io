@@ -1,0 +1,876 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="李剑飞" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/avatar2.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="标题为《 标题党： iOS 开发兵器进阶 》，叫 iOS 开发兵器进阶 其实说的有点大了，其实也就是总结一下平时工作中常用的一些工具。哈哈~ 开篇 悟空道：“我自生身之后，出家修行，得一个无生无灭之体。近因教演儿孙，守护山洞，奈何没件兵器。久闻贤邻享乐瑶宫贝阙，必有多余神器，特来告求一件。” – 《西游记》第三回  四海千山皆拱伏 九幽十类尽除名  常言道：“工欲善其事，必先利其器。”各位看官，今">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="标题党： iOS 开发兵器进阶">
+<meta property="og:url" content="http://www.lijianfei.cn/2016/10/08/ios-tools-up/index.html">
+<meta property="og:site_name" content="李剑飞的博客">
+<meta property="og:description" content="标题为《 标题党： iOS 开发兵器进阶 》，叫 iOS 开发兵器进阶 其实说的有点大了，其实也就是总结一下平时工作中常用的一些工具。哈哈~ 开篇 悟空道：“我自生身之后，出家修行，得一个无生无灭之体。近因教演儿孙，守护山洞，奈何没件兵器。久闻贤邻享乐瑶宫贝阙，必有多余神器，特来告求一件。” – 《西游记》第三回  四海千山皆拱伏 九幽十类尽除名  常言道：“工欲善其事，必先利其器。”各位看官，今">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016100833703iOS 开发兵器进阶.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016100863146屏幕快照 2016-10-08 下午1.31.06.png">
+<meta property="og:updated_time" content="2016-10-08T06:04:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="标题党： iOS 开发兵器进阶">
+<meta name="twitter:description" content="标题为《 标题党： iOS 开发兵器进阶 》，叫 iOS 开发兵器进阶 其实说的有点大了，其实也就是总结一下平时工作中常用的一些工具。哈哈~ 开篇 悟空道：“我自生身之后，出家修行，得一个无生无灭之体。近因教演儿孙，守护山洞，奈何没件兵器。久闻贤邻享乐瑶宫贝阙，必有多余神器，特来告求一件。” – 《西游记》第三回  四海千山皆拱伏 九幽十类尽除名  常言道：“工欲善其事，必先利其器。”各位看官，今">
+<meta name="twitter:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016100833703iOS 开发兵器进阶.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.lijianfei.cn/2016/10/08/ios-tools-up/"/>
+
+
+
+
+
+  <title> 标题党： iOS 开发兵器进阶 | 李剑飞的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1260409211&web_id=1260409211" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李剑飞的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://www.lijianfei.cn/2016/10/08/ios-tools-up/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李剑飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李剑飞的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                标题党： iOS 开发兵器进阶
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-08T14:04:06+08:00">
+                2016-10-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>标题为《 标题党： iOS 开发兵器进阶 》，叫 iOS 开发兵器进阶 其实说的有点大了，其实也就是总结一下平时工作中常用的一些工具。哈哈~</p>
+<h1 id="开篇"><a href="#开篇" class="headerlink" title="开篇"></a>开篇</h1><blockquote>
+<p>悟空道：“我自生身之后，出家修行，得一个无生无灭之体。近因教演儿孙，守护山洞，奈何没件兵器。久闻贤邻享乐瑶宫贝阙，必有多余神器，特来告求一件。” – 《西游记》第三回  四海千山皆拱伏 九幽十类尽除名</p>
+</blockquote>
+<p>常言道：“工欲善其事，必先利其器。”各位看官，今天咱们就介绍几件在 iOS 开发中几件趁手的兵器。</p>
+<h1 id="Mac-兵器谱"><a href="#Mac-兵器谱" class="headerlink" title="Mac 兵器谱"></a>Mac 兵器谱</h1><p><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016100833703iOS 开发兵器进阶.png" alt="2016100833703iOS 开发兵器进阶.png"></p>
+<h2 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h2><h3 id="Reveal"><a href="#Reveal" class="headerlink" title="Reveal"></a>Reveal</h3><ul>
+<li>教程：<a href="http://blog.devzeng.com/blog/ios-reveal-integrating.html" target="_blank" rel="external">iOS开发中集成Reveal</a></li>
+<li>破解版用于学习途径，请自行搜索。</li>
+</ul>
+<h3 id="Charles"><a href="#Charles" class="headerlink" title="Charles"></a>Charles</h3><ul>
+<li>教程：<a href="http://blog.devtang.com/2015/11/14/charles-introduction/" target="_blank" rel="external">Charles 从入门到精通</a></li>
+<li>下载：<a href="https://www.charlesproxy.com/" target="_blank" rel="external">Charles 官网</a></li>
+<li>破解版用于学习途径，请自行搜索。</li>
+</ul>
+<h3 id="SimPholders"><a href="#SimPholders" class="headerlink" title="SimPholders"></a>SimPholders</h3><p>SimPholders 是一款Mac上的iOS开发辅助工具，能够在菜单栏上快速的访问iPhone Simulator中的应用的文件夹，从而帮助我们进行应用开发。</p>
+<ul>
+<li>下载：<a href="https://simpholders.com/" target="_blank" rel="external">Simpholders</a></li>
+</ul>
+<h3 id="PaintCode"><a href="#PaintCode" class="headerlink" title="PaintCode"></a>PaintCode</h3><ul>
+<li>教程：<a href="http://www.jianshu.com/p/5e75408812df" target="_blank" rel="external">PaintCode 教程 (1)</a> | <a href="http://www.jianshu.com/p/8fe3595f7435" target="_blank" rel="external">PaintCode 教程 (2)</a></li>
+<li>下载：<a href="http://www.paintcodeapp.com/" target="_blank" rel="external">PaintCode 官网</a></li>
+</ul>
+<h3 id="Conerstone"><a href="#Conerstone" class="headerlink" title="Conerstone"></a>Conerstone</h3><ul>
+<li>教程：<a href="https://my.oschina.net/joanfen/blog/194491" target="_blank" rel="external">用CornerStone配置SVN，HTTP及svn简单使用说明</a></li>
+<li>破解版用于学习途径，请自行搜索。</li>
+</ul>
+<h3 id="iFunBox"><a href="#iFunBox" class="headerlink" title="iFunBox"></a>iFunBox</h3><p>iFunBox是一款小巧的iPhone文件管理软件，界面类似于windows资源管理器，以简练时尚的窗口方式浏览和管理iPhone、iPad、iPod touch上的文件和目录。既可以在手机与电脑之间同步传递数据，使你轻松上传电影、音乐、电子书、桌面、照片以及应用程序。</p>
+<ul>
+<li>下载：<a href="http://www.i-funbox.com/" target="_blank" rel="external">iFunBox 官网</a></li>
+</ul>
+<h3 id="iTerm"><a href="#iTerm" class="headerlink" title="iTerm"></a>iTerm</h3><ul>
+<li><a href="http://wulfric.me/2015/08/iterm2/" target="_blank" rel="external">你应该知道的 iTerm2 使用方法–MAC终端工具</a></li>
+<li><a href="https://www.iterm2.com/" target="_blank" rel="external">iTerm2 - macOS Terminal Replacement 官网</a></li>
+</ul>
+<h3 id="zsh"><a href="#zsh" class="headerlink" title="zsh"></a>zsh</h3><ul>
+<li><a href="http://wdxtub.com/2016/02/18/oh-my-zsh/" target="_blank" rel="external">zsh 全程指南</a></li>
+<li><a href="http://ohmyz.sh/" target="_blank" rel="external">zsh 官网</a></li>
+</ul>
+<h3 id="VisualDiffer"><a href="#VisualDiffer" class="headerlink" title="VisualDiffer"></a>VisualDiffer</h3><p>VisualDiffer比较文件夹和文件并排侧使用颜色直观地显示差异。</p>
+<h3 id="防火墙-Little-Snitch"><a href="#防火墙-Little-Snitch" class="headerlink" title="防火墙 Little Snitch"></a>防火墙 Little Snitch</h3><p>主要用途，阻止 Mac 内具体哪个应用联网，实时查看电脑流量是否有异常。</p>
+<ul>
+<li>介绍：<a href="http://sspai.com/28669" target="_blank" rel="external">你的隐私看门人：Mac 双向防火墙 Little Snitch</a></li>
+</ul>
+<h3 id="flux"><a href="#flux" class="headerlink" title="flux"></a>flux</h3><p>长期看电脑屏幕，护眼软件。</p>
+<ul>
+<li><a href="https://justgetflux.com/news/pages/mac/" target="_blank" rel="external">flux 官网</a></li>
+</ul>
+<h2 id="效率"><a href="#效率" class="headerlink" title="效率"></a>效率</h2><h3 id="有道词典"><a href="#有道词典" class="headerlink" title="有道词典"></a>有道词典</h3><p>不多说，阅读英文文档和翻译的辅助。全球 Mac Appstore 均有销售。</p>
+<h3 id="Dash"><a href="#Dash" class="headerlink" title="Dash"></a>Dash</h3><p>全栈工程师开发文档大全。全球 Mac Appstore 均有销售。</p>
+<h3 id="MindNode-Pro"><a href="#MindNode-Pro" class="headerlink" title="MindNode Pro"></a>MindNode Pro</h3><p>思维导图，帮助梳理逻辑。</p>
+<h3 id="StarUML"><a href="#StarUML" class="headerlink" title="StarUML"></a>StarUML</h3><p>画UML，类图的工具。<a href="http://staruml.io/" target="_blank" rel="external">StarUML 官网</a></p>
+<h3 id="OmniGraffle"><a href="#OmniGraffle" class="headerlink" title="OmniGraffle"></a>OmniGraffle</h3><p>画UML，类图的工具，与StarUML比较看个人爱好了。</p>
+<h2 id="知识输入"><a href="#知识输入" class="headerlink" title="知识输入"></a>知识输入</h2><h3 id="印象笔记"><a href="#印象笔记" class="headerlink" title="印象笔记"></a>印象笔记</h3><p>印象笔记，有道笔记，为知笔记，笔记是一定要有的，那么多东西谁天天记在脑子了，关键的东西记笔记里，如果实在忘了，Google一下。</p>
+<h3 id="Reeder"><a href="#Reeder" class="headerlink" title="Reeder"></a>Reeder</h3><p>常看的blog记得订阅。</p>
+<h2 id="知识输出"><a href="#知识输出" class="headerlink" title="知识输出"></a>知识输出</h2><h3 id="Markdown-Quiver-坚果云"><a href="#Markdown-Quiver-坚果云" class="headerlink" title="Markdown + Quiver + 坚果云"></a>Markdown + Quiver + 坚果云</h3><ul>
+<li><a href="http://blog.rainy.im/2016/01/19/quiver-programmers-notebook/" target="_blank" rel="external">程序员专用笔记软件Quiver</a></li>
+<li><a href="https://www.zhihu.com/question/20767341" target="_blank" rel="external">坚果云怎么样？ - 网盘 - 知乎</a></li>
+</ul>
+<h3 id="U图床-七牛云"><a href="#U图床-七牛云" class="headerlink" title="U图床 + 七牛云"></a>U图床 + 七牛云</h3><ul>
+<li><a href="https://itunes.apple.com/cn/app/u-tu-chuang-tu-chuang-shen/id1135023555?mt=12" target="_blank" rel="external">U 图床：MacAppStore 下载</a></li>
+<li><a href="https://github.com/chenxtdo/UPImageMacApp" target="_blank" rel="external">U 图床：Github 开源</a></li>
+</ul>
+<p>搭配 Markdown 书写，够了。</p>
+<h3 id="Licecap"><a href="#Licecap" class="headerlink" title="Licecap"></a>Licecap</h3><p>Licecap 是一款屏幕录制工具，支持导出 GIF 动画图片格式，轻量级、使用简单，录制过程中可以随意改变录屏范围。</p>
+<ul>
+<li><a href="http://www.cockos.com/licecap/" target="_blank" rel="external">官方主页</a></li>
+</ul>
+<h3 id="GitHub"><a href="#GitHub" class="headerlink" title="GitHub"></a>GitHub</h3><p>最好的开源项目集散地(没有“之一”)。同样是你的作品得到认可的地方。</p>
+<h3 id="Blog"><a href="#Blog" class="headerlink" title="Blog"></a>Blog</h3><p>技术blog非常棒，好的技术或方案应该记录下并传播出去，坚持做下去。<a href="http://www.lijianfei.cn/2016/03/06/NewBlog/">Hexo+gitpage 搭建个人技术博客</a></p>
+<h3 id="简书"><a href="#简书" class="headerlink" title="简书"></a>简书</h3><p>大牛都在简书上写博客，你不跟着节奏么？</p>
+<h3 id="开发者头条"><a href="#开发者头条" class="headerlink" title="开发者头条"></a>开发者头条</h3><p>技术自媒体发散渠道，同时也是好的知识输入渠道。</p>
+<h3 id="掘金"><a href="#掘金" class="headerlink" title="掘金"></a>掘金</h3><p>技术自媒体发散渠道，同时也是好的知识输入渠道。</p>
+<h2 id="科学上网"><a href="#科学上网" class="headerlink" title="科学上网"></a>科学上网</h2><p>科学上网用于学习途径，关于 ShadowsockesX 的内容，来自 <a href="http://www.devtalking.com/articles/shadowsocks-guide/index.html" target="_blank" rel="external">使用ShadowSocks科学上网及突破公司内网</a> 这篇文章。</p>
+<h3 id="ShadowsockesX"><a href="#ShadowsockesX" class="headerlink" title="ShadowsockesX"></a>ShadowsockesX</h3><p>ShadowSocks是基于Socks5协议，使用类似SSH隧道的方式收发网络请求的一款开源软件，该软件由 <a href="https://twitter.com/clowwindy" target="_blank" rel="external">@clowwindy</a> 开发，最初只有Python版本，随后出现C++、C#、Go等多语言版本。ShadowSocks最大的特点是可以保护网络流量、加密数据传输，可有效防止GFW（Great Firewall of China）封杀网络请求。</p>
+<ul>
+<li><a href="https://github.com/shadowsocks/ShadowsocksX-NG/releases" target="_blank" rel="external">ShadowsocksX-NG:Github</a></li>
+</ul>
+<h3 id="Proxifier"><a href="#Proxifier" class="headerlink" title="Proxifier"></a>Proxifier</h3><p>该工具的作用就是接管运行中的所有应用发出的所有请求，然后通过代理进行转发，这样就可以让不支持代理的应用也可以走代理了。</p>
+<ul>
+<li><a href="https://www.proxifier.com/" target="_blank" rel="external">Proxifier 官网</a></li>
+<li>破解和使用教程看这篇：<a href="http://gooday.xyz/proxifier%E6%B3%A8%E5%86%8C%E7%A0%81%E4%BB%A5%E5%8F%8A%E9%85%8D%E5%90%88shadowsocks%E4%B8%8A%E7%BD%91/" target="_blank" rel="external">proxifier注册码以及配合shadowsocks上网 - 科学上网</a></li>
+</ul>
+<h3 id="其他姿势科学上网，有需要请私信我。"><a href="#其他姿势科学上网，有需要请私信我。" class="headerlink" title="其他姿势科学上网，有需要请私信我。"></a>其他姿势科学上网，有需要请私信我。</h3><h2 id="Chrome-插件"><a href="#Chrome-插件" class="headerlink" title="Chrome 插件"></a>Chrome 插件</h2><p><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016100863146屏幕快照 2016-10-08 下午1.31.06.png" alt="2016100863146屏幕快照 2016-10-08 下午1.31.06.png"><br>翻墙后，全球 Chrome 商店均有销售。</p>
+<h3 id="Proxy-SwitchyOmega"><a href="#Proxy-SwitchyOmega" class="headerlink" title="Proxy SwitchyOmega"></a>Proxy SwitchyOmega</h3><p>Chrome 浏览器 配合 Proxy SwitchyOmega 插件 + 代理服务器，轻松登陆Google。</p>
+<h3 id="FireShot"><a href="#FireShot" class="headerlink" title="FireShot"></a>FireShot</h3><p>截取整个网页的截屏工具</p>
+<h3 id="有道词典-1"><a href="#有道词典-1" class="headerlink" title="有道词典"></a>有道词典</h3><p>不多说，网页浏览英文随时翻译。</p>
+<h3 id="开发者头条-1"><a href="#开发者头条-1" class="headerlink" title="开发者头条"></a>开发者头条</h3><p>第一时间掌握技术圈最新自媒体动态。</p>
+<h3 id="掘金-1"><a href="#掘金-1" class="headerlink" title="掘金"></a>掘金</h3><p>第一时间掌握技术圈最新自媒体动态，和github每日更新仓库。</p>
+<h3 id="Copy-as-Markdown"><a href="#Copy-as-Markdown" class="headerlink" title="Copy as Markdown"></a>Copy as Markdown</h3><p>配合 Markdown 图片、链接跳转方便粘贴。</p>
+<h3 id="AdBlock"><a href="#AdBlock" class="headerlink" title="AdBlock"></a>AdBlock</h3><p>去除广告，专注网页内容。</p>
+<h3 id="印象笔记·剪藏"><a href="#印象笔记·剪藏" class="headerlink" title="印象笔记·剪藏"></a>印象笔记·剪藏</h3><p>配合印象笔记，知识输入重要来源，点击一下，直接将网页正文存入印象笔记。</p>
+<h3 id="新浪微博图床"><a href="#新浪微博图床" class="headerlink" title="新浪微博图床"></a>新浪微博图床</h3><p>免费开源的微博图床。</p>
+<ul>
+<li><a href="https://github.com/Suxiaogang/WeiboPicBed" target="_blank" rel="external">新浪微博图床：Github</a></li>
+</ul>
+<h1 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h1><blockquote>
+<p>悟空笑道：“古人云：‘愁海龙王没宝哩！’你再去寻寻看。若有可意的，一一奉价。”</p>
+</blockquote>
+<p>这是小生工作中常用的几件工具介绍给大家，也欢迎有好的工具咱们奔走相告，提高工作效率的同时，也学习工具开发者的设计思想。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/jianfeishuo.jpg" alt="李剑飞 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎订阅我的微信公众号"剑飞说"！</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.png" alt="李剑飞 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.png" alt="李剑飞 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      李剑飞
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://www.lijianfei.cn/2016/10/08/ios-tools-up/" title="标题党： iOS 开发兵器进阶">http://www.lijianfei.cn/2016/10/08/ios-tools-up/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/09/ios-programer-selfrelax/" rel="next" title="iOS 程序员的自我修养 — 读《程序员的自我修养-链接、装载与库》">
+                <i class="fa fa-chevron-left"></i> iOS 程序员的自我修养 — 读《程序员的自我修养-链接、装载与库》
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/02/iOS10-Notifications-Translation/" rel="prev" title="iOS10 推送通知开发【译】">
+                iOS10 推送通知开发【译】 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="李剑飞" />
+          <p class="site-author-name" itemprop="name">李剑飞</p>
+           
+              <p class="site-description motion-element" itemprop="description">本站没有添加评论，扫二维码加我微信好友，咨询文章的疑问点。本站只发布原创内容，我的学习笔记会记录在下面的 Wiki 链接中。</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lijianfeigeek" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/1855052150" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/lijianfei_" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lijianfeigeek/lijianfeigeek.github.io/wiki" target="_blank" title="Wiki">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Wiki
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://lijianfei.deercv.com/" target="_blank" title="Resume">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Resume
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#开篇"><span class="nav-number">1.</span> <span class="nav-text">开篇</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mac-兵器谱"><span class="nav-number">2.</span> <span class="nav-text">Mac 兵器谱</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#开发"><span class="nav-number">2.1.</span> <span class="nav-text">开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Reveal"><span class="nav-number">2.1.1.</span> <span class="nav-text">Reveal</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Charles"><span class="nav-number">2.1.2.</span> <span class="nav-text">Charles</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SimPholders"><span class="nav-number">2.1.3.</span> <span class="nav-text">SimPholders</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PaintCode"><span class="nav-number">2.1.4.</span> <span class="nav-text">PaintCode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Conerstone"><span class="nav-number">2.1.5.</span> <span class="nav-text">Conerstone</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iFunBox"><span class="nav-number">2.1.6.</span> <span class="nav-text">iFunBox</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iTerm"><span class="nav-number">2.1.7.</span> <span class="nav-text">iTerm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#zsh"><span class="nav-number">2.1.8.</span> <span class="nav-text">zsh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VisualDiffer"><span class="nav-number">2.1.9.</span> <span class="nav-text">VisualDiffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#防火墙-Little-Snitch"><span class="nav-number">2.1.10.</span> <span class="nav-text">防火墙 Little Snitch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#flux"><span class="nav-number">2.1.11.</span> <span class="nav-text">flux</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#效率"><span class="nav-number">2.2.</span> <span class="nav-text">效率</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#有道词典"><span class="nav-number">2.2.1.</span> <span class="nav-text">有道词典</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dash"><span class="nav-number">2.2.2.</span> <span class="nav-text">Dash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MindNode-Pro"><span class="nav-number">2.2.3.</span> <span class="nav-text">MindNode Pro</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StarUML"><span class="nav-number">2.2.4.</span> <span class="nav-text">StarUML</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OmniGraffle"><span class="nav-number">2.2.5.</span> <span class="nav-text">OmniGraffle</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#知识输入"><span class="nav-number">2.3.</span> <span class="nav-text">知识输入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#印象笔记"><span class="nav-number">2.3.1.</span> <span class="nav-text">印象笔记</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reeder"><span class="nav-number">2.3.2.</span> <span class="nav-text">Reeder</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#知识输出"><span class="nav-number">2.4.</span> <span class="nav-text">知识输出</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Markdown-Quiver-坚果云"><span class="nav-number">2.4.1.</span> <span class="nav-text">Markdown + Quiver + 坚果云</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#U图床-七牛云"><span class="nav-number">2.4.2.</span> <span class="nav-text">U图床 + 七牛云</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Licecap"><span class="nav-number">2.4.3.</span> <span class="nav-text">Licecap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GitHub"><span class="nav-number">2.4.4.</span> <span class="nav-text">GitHub</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Blog"><span class="nav-number">2.4.5.</span> <span class="nav-text">Blog</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简书"><span class="nav-number">2.4.6.</span> <span class="nav-text">简书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发者头条"><span class="nav-number">2.4.7.</span> <span class="nav-text">开发者头条</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#掘金"><span class="nav-number">2.4.8.</span> <span class="nav-text">掘金</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#科学上网"><span class="nav-number">2.5.</span> <span class="nav-text">科学上网</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ShadowsockesX"><span class="nav-number">2.5.1.</span> <span class="nav-text">ShadowsockesX</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Proxifier"><span class="nav-number">2.5.2.</span> <span class="nav-text">Proxifier</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他姿势科学上网，有需要请私信我。"><span class="nav-number">2.5.3.</span> <span class="nav-text">其他姿势科学上网，有需要请私信我。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chrome-插件"><span class="nav-number">2.6.</span> <span class="nav-text">Chrome 插件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Proxy-SwitchyOmega"><span class="nav-number">2.6.1.</span> <span class="nav-text">Proxy SwitchyOmega</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FireShot"><span class="nav-number">2.6.2.</span> <span class="nav-text">FireShot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#有道词典-1"><span class="nav-number">2.6.3.</span> <span class="nav-text">有道词典</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发者头条-1"><span class="nav-number">2.6.4.</span> <span class="nav-text">开发者头条</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#掘金-1"><span class="nav-number">2.6.5.</span> <span class="nav-text">掘金</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Copy-as-Markdown"><span class="nav-number">2.6.6.</span> <span class="nav-text">Copy as Markdown</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AdBlock"><span class="nav-number">2.6.7.</span> <span class="nav-text">AdBlock</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#印象笔记·剪藏"><span class="nav-number">2.6.8.</span> <span class="nav-text">印象笔记·剪藏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新浪微博图床"><span class="nav-number">2.6.9.</span> <span class="nav-text">新浪微博图床</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结尾"><span class="nav-number">3.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李剑飞</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,870 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="李剑飞" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/avatar2.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="正式投入React-Native开发今年年初的时候，调研了一下RN，写了篇博客 《ReactNative学习技术的三部曲》发布在之前的博客上，主要是RN开发的一些基础入门知识和学习文档。进入4月份，继续进行AppSize瘦身，我们Native的代码已经精简到了一定的地步，可以说是黔驴技穷了，在Native开发层面上，很难再做进一步的瘦身(除非砍功能了，产品拿着刀说：“你砍一个试试” - -)。对于">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="近期 React-Native  With Redux  开发的一点心得">
+<meta property="og:url" content="http://www.lijianfei.cn/2016/04/20/RN-Rudex-Exp/index.html">
+<meta property="og:site_name" content="李剑飞的博客">
+<meta property="og:description" content="正式投入React-Native开发今年年初的时候，调研了一下RN，写了篇博客 《ReactNative学习技术的三部曲》发布在之前的博客上，主要是RN开发的一些基础入门知识和学习文档。进入4月份，继续进行AppSize瘦身，我们Native的代码已经精简到了一定的地步，可以说是黔驴技穷了，在Native开发层面上，很难再做进一步的瘦身(除非砍功能了，产品拿着刀说：“你砍一个试试” - -)。对于">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/redux-2.png">
+<meta property="og:updated_time" content="2016-08-02T08:11:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="近期 React-Native  With Redux  开发的一点心得">
+<meta name="twitter:description" content="正式投入React-Native开发今年年初的时候，调研了一下RN，写了篇博客 《ReactNative学习技术的三部曲》发布在之前的博客上，主要是RN开发的一些基础入门知识和学习文档。进入4月份，继续进行AppSize瘦身，我们Native的代码已经精简到了一定的地步，可以说是黔驴技穷了，在Native开发层面上，很难再做进一步的瘦身(除非砍功能了，产品拿着刀说：“你砍一个试试” - -)。对于">
+<meta name="twitter:image" content="http://7xraw1.com1.z0.glb.clouddn.com/redux-2.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.lijianfei.cn/2016/04/20/RN-Rudex-Exp/"/>
+
+
+
+
+
+  <title> 近期 React-Native  With Redux  开发的一点心得 | 李剑飞的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1260409211&web_id=1260409211" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李剑飞的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://www.lijianfei.cn/2016/04/20/RN-Rudex-Exp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李剑飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李剑飞的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                近期 React-Native  With Redux  开发的一点心得
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-20T21:58:00+08:00">
+                2016-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="正式投入React-Native开发"><a href="#正式投入React-Native开发" class="headerlink" title="正式投入React-Native开发"></a>正式投入React-Native开发</h1><p>今年年初的时候，调研了一下RN，写了篇博客 <a href="http://lijianfei.sinaapp.com/?p=888" target="_blank" rel="external">《ReactNative学习技术的三部曲》</a>发布在之前的博客上，主要是RN开发的一些基础入门知识和学习文档。进入4月份，继续进行AppSize瘦身，我们Native的代码已经精简到了一定的地步，可以说是黔驴技穷了，在Native开发层面上，很难再做进一步的瘦身(除非砍功能了，产品拿着刀说：“你砍一个试试” - -)。对于新技术的使用真的到了如饥似渴的地步。</p>
+<p>目前使用RN开发iOS主要有以下两点好处(对于我们而言)：</p>
+<ul>
+<li>AppSize 得到迅速下降（在用户体验不受较大影响下）；</li>
+<li>iOS支持热发功能模块（尽管JSPatch真的很棒，但是上架功能模块还是有点费力）；</li>
+</ul>
+<p>那么为毛Android不那么迫切呢？</p>
+<p>对比iOS，Android的AppSize不是那么大，Android已经支持很好的热发功能模块，所有Android的开发不是很急切，但是当RN统一技术栈的时候，就：”是时候表演真正的技术了”。</p>
+<p>作为一个Native开发，转战React-Native开发，使用JavaScript来写代码，真的想说：”JavaScript从入门到头疼”。</p>
+<p>在对RN有了一定认识和基础下，看了一下React的数据流管理，因为React是使用了组件化和状态机的思想，一切都为状态。state 来操纵 views 的变化。</p>
+<p>然而，因为页面的组件化，导致每个组件都必须维护自身的一套状态，对于小型应用还好。但是对于比较大的应用来说，过多的状态显得错综复杂，到最后难以维护，很难清晰地组织所有的状态，在多人开发中也是如此，导致经常会出现一些不明所以的变化，越到后面调试上也是越麻烦，很多时候 state 的变化已经不受控制。</p>
+<p>对于组件间通信、页面渲染，我们很需要一套机制来清晰的组织整个应用的状态，这时候<code>Redux</code>应然而生。</p>
+<h1 id="Redux"><a href="#Redux" class="headerlink" title="Redux"></a>Redux</h1><blockquote>
+<p>Redux is a predictable state container for JavaScript apps.</p>
+</blockquote>
+<p>官方介绍 Redux 是 JavaScript 状态容器，提供可预测化的状态管理。可以跟大部分的 View 层框架配合使用，不限于 React。</p>
+<h2 id="Part"><a href="#Part" class="headerlink" title="Part"></a>Part</h2><p>Redux 分为三大部分，Store ， Action ，Reducer 。</p>
+<p>简单理解为：</p>
+<ul>
+<li>Store：统一存储所有组件的状态；</li>
+<li>Action：定义操作，和传递操作数据；</li>
+<li>Reducer：根据Action类型和传递数据改变组件State；</li>
+</ul>
+<h3 id="Action"><a href="#Action" class="headerlink" title="Action"></a>Action</h3><p>在 Redux 中，action 主要用来传递操作 State 的信息，以 Javascript Plain Object 的形式存在，如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  type: &apos;ByFlightNo_SelectedDate&apos;,</div><div class="line">  netWorkDate:&apos;2016-04-20&apos;,</div><div class="line">  date:&apos;4月20日&apos;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在上面的 Plain Object 中，type 属性是必要的，除了 type 字段外，action 对象的结构完全取决于你，建议尽可能简单。type 一般用来表达处理 state 数据的方式。如上面的 ‘ByFlightNo_SelectedDate’ 表达的是航班日期的修改，<code>netWorkDate</code>是用于网络请求的字段，<code>date</code>是用于展示的字段。</p>
+<p>上面写法没有任何问题，但细想，这种直接声明的 Plain Object 将越来越多，不好组织。实际上，我们可以通过创建函数来生产 action，这类函数统称为 Action Creator，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">export function byFlightNoSearchSelectedDate(callback) &#123;</div><div class="line">	return&#123;</div><div class="line">		type: ActionConstants.ByFlightNo.SelectedDate,</div><div class="line">		netWorkDate:callback[0],</div><div class="line">		date:callback[1]</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样，通过调用 byFlightNoSearchSelectedDate(callback) 就可以得到对应的 Action，非常直接。</p>
+<h3 id="Reducer"><a href="#Reducer" class="headerlink" title="Reducer"></a>Reducer</h3><p>有了 Action 来传达需要操作的信息，那么就需要有根据这个信息来做对应操作的方法，这就是 Reducer。 Reducer 一般为简单的处理函数，通过传入旧的 state 和指示操作的 action 来更新 state，如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">function flightNoSearch(state = &#123;date:&quot;4月18日&quot;,netWorkDate:&quot;2016-04-18&quot;,flightNumber:&quot;ZH9949&quot;&#125;,action) &#123;</div><div class="line">    switch (action.type)&#123;</div><div class="line">        case ActionConstants.ByFlightNo.SelectedDate:</div><div class="line">            return &#123;</div><div class="line">                ...state,</div><div class="line">                date: action.date,</div><div class="line">                netWorkDate: action.netWorkDate</div><div class="line">            &#125;;</div><div class="line">        case ActionConstants.ByFlightNo.onChangeTextFlightNo:</div><div class="line">            return&#123;</div><div class="line">                ...state,</div><div class="line">                flightNumber:action.flightNumber</div><div class="line">            &#125;;</div><div class="line">        default:</div><div class="line">            return state;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面代码展示了 Reducer 根据传入的 action.type 来匹配 case 进行不同的 state 更新。<br>显然，当项目中存在越来越多的 action.type 时，上面的函数（ Reducer ）将变得越来越大，越来越多的 case 将导致代码不够清晰。所以在代码组织上，通常会将 Reducer 拆分成一个个小的 Reducer，每个 Reducer 分别处理 state 中的一部分数据，最终将处理后的数据合并成为整个 state。</p>
+<p>我们可以把所有action.type都写在一个Reducer，但是一个项目那么多操作，写一个Reducer，这是要累死的节奏。我们可以写不同的Reducer，然后通过combineReducers()这个函数，将几个Reducer组合起来，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">function flightNoSearch(state = &#123;date:&quot;4月18日&quot;,netWorkDate:&quot;2016-04-18&quot;,flightNumber:&quot;ZH9949&quot;&#125;,action) &#123;</div><div class="line">    switch (action.type)&#123;</div><div class="line">        case ActionConstants.ByFlightNo.SelectedDate:</div><div class="line">            return &#123;</div><div class="line">                ...state,</div><div class="line">                date: action.date,</div><div class="line">                netWorkDate: action.netWorkDate</div><div class="line">            &#125;;</div><div class="line">        case ActionConstants.ByFlightNo.onChangeTextFlightNo:</div><div class="line">            return&#123;</div><div class="line">                ...state,</div><div class="line">                flightNumber:action.flightNumber</div><div class="line">            &#125;;</div><div class="line">        default:</div><div class="line">            return state;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">function flightCitySearch(state = &#123;date: &quot;4月18日&quot;, netWorkDate: &quot;2016-04-18&quot;, depCity: &quot;北京&quot;, arrCity: &quot;上海&quot;&#125;, action) &#123;</div><div class="line">    switch (action.type) &#123;</div><div class="line">        case ActionConstants.ByDepArrCity.SelectedDate:</div><div class="line">            return &#123;</div><div class="line">                ...state,</div><div class="line">                date: action.date,</div><div class="line">                netWorkDate: action.netWorkDate</div><div class="line">            &#125;;</div><div class="line">        case ActionConstants.ByDepArrCity.SelectedDepCity:</div><div class="line">            return &#123;</div><div class="line">                ...state,</div><div class="line">                depCity: action.depCity</div><div class="line">            &#125;;</div><div class="line">        case ActionConstants.ByDepArrCity.SelectedArrCity:</div><div class="line">            return &#123;</div><div class="line">                ...state,</div><div class="line">                arrCity: action.arrCity</div><div class="line">            &#125;;</div><div class="line"></div><div class="line">        default:</div><div class="line">            return state;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">let rootReducers = combineReducers(&#123;</div><div class="line">    flightNoSearch,</div><div class="line">    flightCitySearch,</div><div class="line">&#125;)</div><div class="line">export default rootReducers;</div></pre></td></tr></table></figure>
+<p>上面的 rootReducer 将不同部分的 state 传给对应的 reducer 处理，最终合并所有 Reducer 的返回值，组成整个state。</p>
+<p>在 Redux 中，一个 action 可以触发多个 reducer，一个 reducer 中也可以包含多种 action.type 的处理。属于多对多的关系。</p>
+<h3 id="Store"><a href="#Store" class="headerlink" title="Store"></a>Store</h3><p>在 Redux 项目中，Store 是单一的。维护着一个全局的 State，并且根据 Action 来进行事件分发处理 State。可以看出 Store 是一个把 Action 和 Reducer 结合起来的对象。</p>
+<p>Redux 提供了 createStore() 方法来 生产 Store，并提供三个 API，如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var store = createStore(rootReducer);  //rootReducer 为根 Reducer</div></pre></td></tr></table></figure>
+<p><code>store.getState()</code>用来获取 state 数据。</p>
+<p><code>store.subscribe(listener)</code> 用于注册监听函数。每当 state 数据更新时，将会触发监听函数。</p>
+<p>而<code>store.dispatch(action)</code>是用于将一个 action 对象发送给 reducer 进行处理。</p>
+<p>store 对象使得我们可以通过 store.dispatch(action) 来减少对 reducer 的直接调用，并且能够更好地对 state 进行统一管理。没有 store，可能会出现 reducer(currentState, action) 这样的频繁地传入 state 参数的更新形式。</p>
+<h3 id="bindActionCreators"><a href="#bindActionCreators" class="headerlink" title="bindActionCreators"></a>bindActionCreators</h3><p>从上面的 Action 相关介绍中可知，我们使用了 ActionCreator 来生产 action。所以在实际的 store.dispatch(action) 中，我们需要这样调用 store.dispatch(actionCreator(…args))。<br>借鉴 Store 对 reducer 的封装（减少传入 state 参数）。可以对 store.dispatch 进行再一层封装，将多参数转化为单参数的形式。 Redux 提供的 bindActionCreators 就做了这件事。如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var actionCreators = bindActionCreators(actionCreators, dispatch)</div></pre></td></tr></table></figure>
+<p>现在，经 bindActionCreators 包装过后的 action Creator 形成了具有改变全局 state 数据的多个函数，将这些函数分发到各个地方，即能通过调用这些函数来改变全局的 state。</p>
+<h1 id="React-Redux"><a href="#React-Redux" class="headerlink" title="React-Redux"></a>React-Redux</h1><p>Redux 并不依赖于 React，它支持多种框架 Ember、Angular、jQuery 甚至纯 JavaScript。但实际上，它更合适由 数据更新 UI 的框架。</p>
+<p>上面最终通过 bindActionCreators 得到具有操作全局 state 的函数集合，在与 React 搭配时，就会将这些函数分发到各个对应的组件中，从而组件具备了操作全局的 state 的功能。在上节中可以得到，调用操作全局 state 的函数，最终将更新 state。当 redux 与 react 结合，在更新 state 时，将会触发 重新渲染 组件的函数，进而组件得到更新。<br>React-Redux 主要提供两个组件来实现上述功能。</p>
+<h2 id="Connect"><a href="#Connect" class="headerlink" title="Connect"></a>Connect</h2><p>Connect 组件主要为 React 组件提供 store 中的部分 state 数据 及 dispatch 方法，这样 React 组件就可以通过 dispatch 来更新全局 state。在 React 组件中，如果你希望让组件通过调用函数来更新 state，可以通过使用 const actions = bindActionCreators(actions, dispatch); 将 actions 和 dispatch 揉在一起，成为具备操作 store.state 的 actions。最终将 actions 和 state 以 props 形式传入子组件中。如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">function mapStateToProps(state) &#123;</div><div class="line">    return state;</div><div class="line">&#125;</div><div class="line"></div><div class="line">function mapDispatchToProps(dispatch) &#123;</div><div class="line">    return &#123;</div><div class="line">        actions: bindActionCreators(Actions, dispatch)</div><div class="line">    &#125;;</div><div class="line">&#125;</div><div class="line">// 最终暴露 经 connect 处理后的组件</div><div class="line">export default connect(mapStateToProps, mapDispatchToProps)(MainPage);</div></pre></td></tr></table></figure>
+<p>这样子组件就不必关心自己的state，只需要从Props中读取对应的Reducer函数中的state即可，弱化了组件自身维护state的机制。将双数据流Props和State整合为了单一数据流Props。</p>
+<p><strong>备注</strong>：</p>
+<ul>
+<li>Props理解为父组件向子组件传递的参数，子组件不可修改Props；</li>
+<li>state理解为子组件自身用与展示或者自己可以修改的数据；</li>
+</ul>
+<h2 id="Provider"><a href="#Provider" class="headerlink" title="Provider"></a>Provider</h2><p>Connect 组件需要 store。这个需求由 Redux 提供的另一个组件 Provider 来提供。源码中，Provider 继承了 React.Component，所以可以以 React 组件的形式来为 Provider 注入 store，从而使得其子组件能够在上下文中得到 store 对象。如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;Provider store=&#123;store&#125;&gt;</div><div class="line">    &lt;MainPageContainer /&gt;</div><div class="line">&lt;/Provider&gt;</div></pre></td></tr></table></figure>
+<h1 id="Redux-thunk"><a href="#Redux-thunk" class="headerlink" title="Redux-thunk"></a>Redux-thunk</h1><p>Redux 中使用 Redux-thunk 做异步操作(Async Actions)。</p>
+<p>首先理解一下”中间件（middleware）”的概念。</p>
+<p>通常来说中间件是在某个应用中 A 和 B 部分中间的那一块，<br>中间件可以把 A 发送数据到 B 的形式从</p>
+<p><code>A -----&gt; B</code></p>
+<p>变成:</p>
+<p><code>A ---&gt; middleware 1 ---&gt; middleware 2 ---&gt; middleware 3 --&gt; ... ---&gt; B</code></p>
+<p>Redux 并不能自动处理 action creator 中返回的异步函数。<br>但如果在 action creator 和 reducer 之间增加一个中间件，就可以把这个函数转成<br>适合 Redux 处理的内容：</p>
+<p><code>action ---&gt; dispatcher ---&gt; middleware 1 ---&gt; middleware 2 ---&gt; reducers</code></p>
+<p>每当一个 action（或者其他诸如异步 action creator 中的某个函数）被分发时，中间件就会被调用，并且在需要的时候协助 action creator 分发真正的 action。</p>
+<p>异步 action creator 提供的中间件叫 thunk middleware 即Redux-thunk这个库干的事儿。</p>
+<p>为了让 Redux 知道我们有一个或多个中间件，我们使用 Redux 的辅助函数：<code>applyMiddleware</code>。<br>applyMiddleware 接收所有中间件作为参数，返回一个供 Redux createStore 调用的函数。<br>当最后这个函数被调用时，它会产生一个 Store 增强器，用来将所有中间件应用到 Store 的 dispatch 上。</p>
+<p>下面就是如何将一个中间件应用到 Redux store：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">import &#123; createStore, applyMiddleware &#125; from &apos;redux&apos;;</div><div class="line">import thunkMiddleware from &apos;redux-thunk&apos;;</div><div class="line"></div><div class="line">export default function configureGenericStore(reducer, initialState) &#123;</div><div class="line">    let createStoreWithMiddleware = applyMiddleware(thunkMiddleware)(createStore);</div><div class="line">    return createStoreWithMiddleware(reducer, initialState);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如何使用的呢？</p>
+<p>在我们写ActionCreator时，如果返回一个正常的包含type的字面量对象时，就认为这是一个同步的。例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">export function byFlightNoSearchSelectedDate(callback) &#123;</div><div class="line">	return&#123;</div><div class="line">		type: ActionConstants.ByFlightNo.SelectedDate,</div><div class="line">		netWorkDate:callback[0],</div><div class="line">        // 展示使用的日期</div><div class="line">		date:callback[1]</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果我们我们返回了一个函数，那么就认为这是一个异步的Action，而且只要返回的是函数，那么就回异步下去，直到返回了一个包含type的字面量对象。例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">export function myFocusConfirmUnfocusFlight(itemData) &#123;</div><div class="line">	return dispatch =&gt; &#123;</div><div class="line">		Alert.alert(</div><div class="line">			null,</div><div class="line">			&apos;确定要取消关注吗?&apos;,</div><div class="line">			[</div><div class="line">				&#123;text: &apos;确定&apos;, onPress: () =&gt; dispatch(myFocusBeginUnfocusFlight(itemData))&#125;,</div><div class="line">				&#123;text: &apos;取消&apos;, onPress: () =&gt; &#123;&#125;&#125;,</div><div class="line">			]</div><div class="line">		)</div><div class="line">	&#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里又返回了一个异步action</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">export function myFocusBeginUnfocusFlight(itemData) &#123;</div><div class="line">	return dispatch =&gt; &#123;</div><div class="line">	    // 网络请求返回，传入</div><div class="line">		return dispatch(myFocusUnfocusFlight(itemData));</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">export function myFocusUnfocusFlight(itemData) &#123;</div><div class="line">	return &#123;</div><div class="line">		type: ActionConstants.MyFocus.UnfocusFlight,</div><div class="line">		data: itemData,</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>直到返回了包含type的字面量对象，这个异步操作就算完成了。</p>
+<h1 id="完整的-Redux-数据流"><a href="#完整的-Redux-数据流" class="headerlink" title="完整的 Redux 数据流"></a>完整的 Redux 数据流</h1><p>最后串一下完整的<code>Redux</code>数据流图，清晰的控制了数据流，毕竟数据驱动界面，妈妈再也不用担心数据流乱了。<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/redux-2.png" alt=""></p>
+<h1 id="从-MVC-到-Redux-开发"><a href="#从-MVC-到-Redux-开发" class="headerlink" title="从 MVC 到 Redux 开发"></a>从 MVC 到 Redux 开发</h1><h2 id="基于-MVC-的目录结构-主目录按照模块分类，内目录按照业务分类"><a href="#基于-MVC-的目录结构-主目录按照模块分类，内目录按照业务分类" class="headerlink" title="基于 MVC 的目录结构 (主目录按照模块分类，内目录按照业务分类)"></a>基于 MVC 的目录结构 (主目录按照模块分类，内目录按照业务分类)</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">.</div><div class="line">├── 业务目录                 </div><div class="line">|   |</div><div class="line">|   ├──业务1        </div><div class="line">|   |    |</div><div class="line">|   |    ├──Model</div><div class="line">|   |    ├──View</div><div class="line">|   |    ├──Controller</div><div class="line">|   |    |</div><div class="line">|   ├──业务2 </div><div class="line">|   |    |</div><div class="line">|   |    ├──Model</div><div class="line">|   |    ├──View</div><div class="line">|   |    ├──Controller</div><div class="line">|   | </div><div class="line">|   ├──Expand(扩展)          </div><div class="line">|   |</div><div class="line">|   ├──Vender(第三方)</div><div class="line">|   |   </div><div class="line">|   ├──Resource(资源)</div><div class="line">.   .</div><div class="line">.   .</div><div class="line">└──</div></pre></td></tr></table></figure>
+<p>在刚开始学习Redex时，我总是试图将这种数据流思想映射到Native开发的MVC或者MVVM上，之前我们Native开发大概是这么个流程：</p>
+<p><code>与后端定义接口 -----&gt; 封装网络Model -----&gt; 写界面-----&gt; Controller -----&gt; View -----&gt; ViewModel -----&gt; Action操作 -----&gt; ViewModel -----&gt; Model -----&gt; 网络请求 or 本地存储 -----&gt; ...</code></p>
+<p>这么个流程中Action其实不是核心，或是Action并不像是进攻发动机 - - 。</p>
+<h2 id="基于Redux的RN目录结构"><a href="#基于Redux的RN目录结构" class="headerlink" title="基于Redux的RN目录结构"></a>基于Redux的RN目录结构</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">.</div><div class="line">├── src                 #开发目录</div><div class="line">|   |</div><div class="line">|   ├──constants        #ActionTypes和Urls</div><div class="line">|   |</div><div class="line">|   ├──actions          #actions的文件</div><div class="line">|   |</div><div class="line">|   ├──components       #内部组件</div><div class="line">|   |   </div><div class="line">|   ├──containers       #容器组件</div><div class="line">|   |   </div><div class="line">|   ├──reducers         #reducer文件</div><div class="line">|   |   </div><div class="line">|   ├──stores           #store配置文件</div><div class="line">|   |</div><div class="line">|   └──utils            #工具</div><div class="line">|      </div><div class="line">├── node_modules        #包文件夹</div><div class="line">├── .gitignore     </div><div class="line">├── index.js            #入口文件    </div><div class="line">└── package.json</div></pre></td></tr></table></figure>
+<p>在RN开发中，我们会省去封装网络Model这个过程，在新增模块的时候，也会按部就班的来：在ActionTypes中添加动作定义，在actions中定义Action，在reducers中定义reducer，然后在containers中写好容器外壳，最后在components中写组件。</p>
+<p><code>与后端定义接口 -----&gt; 定义ActionType -----&gt; ActioCreator函数 -----&gt; reducer函数 -----&gt; container 容器外壳 -----&gt;  components组件 -----&gt; ...</code></p>
+<p>这样看来，Action 位置提到了进攻发动机的位置 - -。</p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>其实总体感觉下来，Redux 和 MVC 根本目的是类似的，都是为了解耦。</p>
+<p>从一个Native开发人员转向web开发确实略显痛苦，前端东西很多，而且很多思维方式和Native开发不同，主要有两个：</p>
+<ul>
+<li>由静态类型语言转型动态类型语言，代码规范，和调试方面需要过渡；</li>
+<li>由MVC or MVVM 思想 过渡到Redux这类 数据流管理思想；</li>
+</ul>
+<p>RN目前是解决跨平台和迅速迭代的一种方案，值得深入研究。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/jianfeishuo.jpg" alt="李剑飞 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎订阅我的微信公众号"剑飞说"！</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.png" alt="李剑飞 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.png" alt="李剑飞 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      李剑飞
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://www.lijianfei.cn/2016/04/20/RN-Rudex-Exp/" title="近期 React-Native  With Redux  开发的一点心得">http://www.lijianfei.cn/2016/04/20/RN-Rudex-Exp/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/13/learnYYModelSomeGain/" rel="next" title="看 YYModel 源码的一些收获">
+                <i class="fa fa-chevron-left"></i> 看 YYModel 源码的一些收获
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/22/ReadFrom0to1/" rel="prev" title="重新认识商业-读《从0到1》">
+                重新认识商业-读《从0到1》 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="李剑飞" />
+          <p class="site-author-name" itemprop="name">李剑飞</p>
+           
+              <p class="site-description motion-element" itemprop="description">本站没有添加评论，扫二维码加我微信好友，咨询文章的疑问点。本站只发布原创内容，我的学习笔记会记录在下面的 Wiki 链接中。</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lijianfeigeek" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/1855052150" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/lijianfei_" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lijianfeigeek/lijianfeigeek.github.io/wiki" target="_blank" title="Wiki">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Wiki
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://lijianfei.deercv.com/" target="_blank" title="Resume">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Resume
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#正式投入React-Native开发"><span class="nav-number">1.</span> <span class="nav-text">正式投入React-Native开发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redux"><span class="nav-number">2.</span> <span class="nav-text">Redux</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Part"><span class="nav-number">2.1.</span> <span class="nav-text">Part</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Action"><span class="nav-number">2.1.1.</span> <span class="nav-text">Action</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reducer"><span class="nav-number">2.1.2.</span> <span class="nav-text">Reducer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Store"><span class="nav-number">2.1.3.</span> <span class="nav-text">Store</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bindActionCreators"><span class="nav-number">2.1.4.</span> <span class="nav-text">bindActionCreators</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#React-Redux"><span class="nav-number">3.</span> <span class="nav-text">React-Redux</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Connect"><span class="nav-number">3.1.</span> <span class="nav-text">Connect</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Provider"><span class="nav-number">3.2.</span> <span class="nav-text">Provider</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redux-thunk"><span class="nav-number">4.</span> <span class="nav-text">Redux-thunk</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#完整的-Redux-数据流"><span class="nav-number">5.</span> <span class="nav-text">完整的 Redux 数据流</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#从-MVC-到-Redux-开发"><span class="nav-number">6.</span> <span class="nav-text">从 MVC 到 Redux 开发</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于-MVC-的目录结构-主目录按照模块分类，内目录按照业务分类"><span class="nav-number">6.1.</span> <span class="nav-text">基于 MVC 的目录结构 (主目录按照模块分类，内目录按照业务分类)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于Redux的RN目录结构"><span class="nav-number">6.2.</span> <span class="nav-text">基于Redux的RN目录结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最后"><span class="nav-number">7.</span> <span class="nav-text">最后</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李剑飞</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

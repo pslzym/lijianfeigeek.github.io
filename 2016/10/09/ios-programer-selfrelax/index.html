@@ -1,0 +1,1419 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="李剑飞" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/avatar2.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="2016年国庆假期终于把此书过完，整理笔记和体会于此。 关于书名 书名源于俄罗斯的演员斯坦尼斯拉夫斯基创作的《演员的自我修养》，作者为了写这本书前前后后修改了三十年之久，临终前才同意不在修改，拿去出版。使用这个书名一方面书单内容的确不是介绍一门新的编程语言或是展示一些实用的编程技术，而是介绍程序运行背后的机制和由来，可以看做是程序员的一种“修养”；另一方面是向斯坦尼斯拉夫斯基致敬，向他对作品精益求">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS 程序员的自我修养 — 读《程序员的自我修养-链接、装载与库》">
+<meta property="og:url" content="http://www.lijianfei.cn/2016/10/09/ios-programer-selfrelax/index.html">
+<meta property="og:site_name" content="李剑飞的博客">
+<meta property="og:description" content="2016年国庆假期终于把此书过完，整理笔记和体会于此。 关于书名 书名源于俄罗斯的演员斯坦尼斯拉夫斯基创作的《演员的自我修养》，作者为了写这本书前前后后修改了三十年之久，临终前才同意不在修改，拿去出版。使用这个书名一方面书单内容的确不是介绍一门新的编程语言或是展示一些实用的编程技术，而是介绍程序运行背后的机制和由来，可以看做是程序员的一种“修养”；另一方面是向斯坦尼斯拉夫斯基致敬，向他对作品精益求">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016090617511ComputerSoftwareArchitecture.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016091265404ThreadsWithinTheProcess.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016091435675Threads and processes data.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016091477250Thread state switch.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016091483051lock_benchmark.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016091444276One to one thread model.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016091487869More of a process model.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016091439628More for multithreaded model.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016091428338GCC compiler process decomposition.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016091652955The build process.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016091665800Link process.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/AUPE.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016091941627Program and the target file.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016092063938Other segments.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016092093390EFL structure.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016092091451Space allocation.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016092173427Static library link.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016092197064Mapping and the pages load.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016092346799The ELF executable file with the process of virtual space mapping relation.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016092374781The ELF executable file with the process of virtual space mapping relation.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016092638493Period of unincorporated situation for executable files.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016092655277The ELF file section of mergers.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016092812881Dynamic linking process.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016092821717Four kinds of addressing mode.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016092880002The data access between modules.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016092872480Call and jump between modules.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016092867796Various ways to address references.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/201609295828Linux process address space layout.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016100616640The distribution of free list.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016100612103The distribution of free list 2.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016100612565Figure bit allocation.png">
+<meta property="og:updated_time" content="2016-10-09T01:06:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS 程序员的自我修养 — 读《程序员的自我修养-链接、装载与库》">
+<meta name="twitter:description" content="2016年国庆假期终于把此书过完，整理笔记和体会于此。 关于书名 书名源于俄罗斯的演员斯坦尼斯拉夫斯基创作的《演员的自我修养》，作者为了写这本书前前后后修改了三十年之久，临终前才同意不在修改，拿去出版。使用这个书名一方面书单内容的确不是介绍一门新的编程语言或是展示一些实用的编程技术，而是介绍程序运行背后的机制和由来，可以看做是程序员的一种“修养”；另一方面是向斯坦尼斯拉夫斯基致敬，向他对作品精益求">
+<meta name="twitter:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2016090617511ComputerSoftwareArchitecture.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.lijianfei.cn/2016/10/09/ios-programer-selfrelax/"/>
+
+
+
+
+
+  <title> iOS 程序员的自我修养 — 读《程序员的自我修养-链接、装载与库》 | 李剑飞的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1260409211&web_id=1260409211" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李剑飞的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://www.lijianfei.cn/2016/10/09/ios-programer-selfrelax/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李剑飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李剑飞的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS 程序员的自我修养 — 读《程序员的自我修养-链接、装载与库》
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-09T09:01:24+08:00">
+                2016-10-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>2016年国庆假期终于把此书过完，整理笔记和体会于此。</p>
+<h1 id="关于书名"><a href="#关于书名" class="headerlink" title="关于书名"></a>关于书名</h1><blockquote>
+<p>书名源于俄罗斯的演员斯坦尼斯拉夫斯基创作的《演员的自我修养》，作者为了写这本书前前后后修改了三十年之久，临终前才同意不在修改，拿去出版。使用这个书名一方面书单内容的确不是介绍一门新的编程语言或是展示一些实用的编程技术，而是介绍程序运行背后的机制和由来，可以看做是程序员的一种“修养”；另一方面是向斯坦尼斯拉夫斯基致敬，向他对作品精益求精的精神致敬。 – 本书的序言三·余甲子</p>
+</blockquote>
+<h1 id="本书的组织"><a href="#本书的组织" class="headerlink" title="本书的组织"></a>本书的组织</h1><p>本书分为4大部分，分别如下。</p>
+<blockquote>
+<h2 id="第一部分-简介"><a href="#第一部分-简介" class="headerlink" title="第一部分 简介"></a>第一部分 简介</h2></blockquote>
+<h3 id="第1章-温故而知新"><a href="#第1章-温故而知新" class="headerlink" title="第1章 温故而知新"></a>第1章 温故而知新</h3><p>介绍基本的背景知识，包括硬件、操作系统、线程等。</p>
+<blockquote>
+<h2 id="第二部分-静态连接"><a href="#第二部分-静态连接" class="headerlink" title="第二部分 静态连接"></a>第二部分 静态连接</h2></blockquote>
+<h3 id="第2章-编译和链接"><a href="#第2章-编译和链接" class="headerlink" title="第2章 编译和链接"></a>第2章 编译和链接</h3><p>介绍编译和链接的基本概念和步骤。</p>
+<h3 id="第3章-目标文件里有什么"><a href="#第3章-目标文件里有什么" class="headerlink" title="第3章 目标文件里有什么"></a>第3章 目标文件里有什么</h3><p>介绍 COFF 目标文件格式和源代码编译后如何在目标文件中存储。</p>
+<h3 id="第4章-静态链接"><a href="#第4章-静态链接" class="headerlink" title="第4章 静态链接"></a>第4章 静态链接</h3><p>介绍静态链接与静态链接库的过程和步骤。</p>
+<h3 id="第5章-Windows-PE-COFF"><a href="#第5章-Windows-PE-COFF" class="headerlink" title="第5章 Windows PE/COFF"></a>第5章 Windows PE/COFF</h3><p>介绍Windows平台下的目标文件和可支持文件格式</p>
+<blockquote>
+<h2 id="第三部分-装载与动态链接"><a href="#第三部分-装载与动态链接" class="headerlink" title="第三部分 装载与动态链接"></a>第三部分 装载与动态链接</h2></blockquote>
+<h3 id="第6章-可执行文件的装载过程"><a href="#第6章-可执行文件的装载过程" class="headerlink" title="第6章 可执行文件的装载过程"></a>第6章 可执行文件的装载过程</h3><p>介绍进程的概念、进程地址空间的分布和可执行文件映射装载过程。</p>
+<h3 id="第7章-动态链接"><a href="#第7章-动态链接" class="headerlink" title="第7章 动态链接"></a>第7章 动态链接</h3><p>以Linux下的.so共享库为基础详细分析了动态链接的过程。</p>
+<h3 id="第8章-Linux共享库的组织"><a href="#第8章-Linux共享库的组织" class="headerlink" title="第8章 Linux共享库的组织"></a>第8章 Linux共享库的组织</h3><p>介绍Linux下共享文件的分布和组织</p>
+<h3 id="第9章-Windows下的动态链接"><a href="#第9章-Windows下的动态链接" class="headerlink" title="第9章 Windows下的动态链接"></a>第9章 Windows下的动态链接</h3><p>介绍Windows系统下的DLL动态链接机制</p>
+<blockquote>
+<h2 id="第四部分-库与运行时"><a href="#第四部分-库与运行时" class="headerlink" title="第四部分 库与运行时"></a>第四部分 库与运行时</h2></blockquote>
+<h3 id="第10章-内存"><a href="#第10章-内存" class="headerlink" title="第10章 内存"></a>第10章 内存</h3><p>主要介绍堆与栈，堆的分配算法，函数调用栈分布。</p>
+<h3 id="第11章-运行库"><a href="#第11章-运行库" class="headerlink" title="第11章 运行库"></a>第11章 运行库</h3><p>主要介绍运行库的概念、C/C++运行库、Glibc 和 MSVC CRT、运行库如何实现C++全局构造和析构以及fread()库函数为例对运行库进行剖析。</p>
+<h3 id="第12章-系统调用与API"><a href="#第12章-系统调用与API" class="headerlink" title="第12章 系统调用与API"></a>第12章 系统调用与API</h3><p>主要介绍Linux和Windows的系统调用以及Windows的API。</p>
+<h3 id="第13章-运行库的实现"><a href="#第13章-运行库的实现" class="headerlink" title="第13章 运行库的实现"></a>第13章 运行库的实现</h3><p>主要实现了一个支持堆、基本文件操作、格式化字符串、基本输入输出、C++new/delete、C++string、C++全局构造和析构的Mini CRT。</p>
+<h1 id="重点阅读章节"><a href="#重点阅读章节" class="headerlink" title="重点阅读章节"></a>重点阅读章节</h1><ul>
+<li>第1章 温故而知新</li>
+<li>第2章 编译和链接</li>
+<li>第3章 目标文件里有什么</li>
+<li>第4章 静态链接</li>
+<li>第6章 可执行文件的装载过程</li>
+<li>第7章 动态链接</li>
+<li>第10章 内存</li>
+</ul>
+<h2 id="读书笔记"><a href="#读书笔记" class="headerlink" title="读书笔记"></a>读书笔记</h2><h3 id="温故而知新"><a href="#温故而知新" class="headerlink" title="温故而知新"></a>温故而知新</h3><p>正如第一章的标题一样，温故而知新，本章主要讲述了计算机硬件和软件的历史发展背景。主要有几点：</p>
+<blockquote>
+<ul>
+<li>CPU的频率目前的“天花板”是4GHz，从2004年后就不再按照摩尔定律增长，因为CPU的制造工艺没有本质的突破。</li>
+<li>理论上讲，增加CPU的数量就可以提高运算速度，并且理想情况下，速度的提高与CPU的数量成正比。但实际上并非如此，因为我们的程序不都能分解成若干个完全不相干的子问题。就如一个女人可以花10个月生出一个孩子，但是10个女人并不能在一个月生出一个孩子。</li>
+</ul>
+</blockquote>
+<p>在第二节中，书中讲计算机系统软件的体系结构，有一句至理名言：“计算机科学领域的任何问题都可以通过增加一个间接的中间层来解决”，洋文是：“Any problem in conputer science can be solved by anther layer of indirection.”</p>
+<p>看下计算机软件体系结构图，理解下这句话的魅力。<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016090617511ComputerSoftwareArchitecture.png" alt="2016090617511ComputerSoftwareArchitecture.png"></p>
+<blockquote>
+<p>每个层次之间都须要相互通信，既然须要通信就必须有一个通信的协议，我们一般称为<strong>接口（Inerface）</strong>，接口的下面那层是接口的提供者，又它定义接口；接口的上面那层是接口的使用者，它使用该接口来实习所需要的功能。在层次体系中，接口是被精心设计过的，尽量保持稳定不变，那么理论上层次之间只要遵循这个接口，任何一个层都可以被修改或被替换。除了硬件和应用程序，其他都是所谓的中间层，每个中间层都是对它下面那层的包装和扩展。</p>
+</blockquote>
+<p>书中归纳了功能，操作系统做什么？</p>
+<ul>
+<li>提供抽象接口；</li>
+<li>管理硬件资源；</li>
+</ul>
+<p>书中以不要让CPU打盹这样一个标题，引出了CPU发展过程中的几种程序协作模式：</p>
+<ul>
+<li>多道程序；</li>
+<li>分时系统；</li>
+<li>多任务系统；</li>
+</ul>
+<p>关于内存不够，书中提出了一个问题：如何将计算机上有限的物理内存分配给多个程序使用？使用简单的内存分配策略，遇到的几个问题：</p>
+<ul>
+<li>地址空间不隔离；</li>
+<li>内存使用率低；</li>
+<li>程序运行的地址不稳定；</li>
+</ul>
+<blockquote>
+<p>解决这个几个问题的思路就是我们使用前文提到过的法宝：增加中间层，即使用一种间接的地址访问方法。整个想法是这样的，我们把程序给出的地址看做是一种虚拟地址（Virtual Address），然后通过某些映射的方法，将这个虚拟地址转换成实际的物理地址。这样只要我们能够妥善地控制这个虚拟地址到物理地址的映射过程，就可以保证任意一个程序所能够访问的物理内存区域跟另外一个程序互相不重叠，已达到地址空间隔离的效果。</p>
+</blockquote>
+<p>虚拟地址是为了解决上面的那三个问题，虚拟地址的发展过中，有两种思路来解决：</p>
+<ul>
+<li>分段；把一段与程序所需要的内存空间大小的虚拟空间映射到某个地址空间。这个方案解决了第一个和第三个问题，但是没有解决第二个问题，内存的使用效率。</li>
+<li>分页；分页的基本方法是吧地址空间人为的等分成固定大小的页，每一页的大小又硬件决定，或硬件支持多种大小的页，由操作系统选择决定页的大小。</li>
+</ul>
+<p>虚拟内存的实现需要依靠硬件的支持，对于不同的CPU来说是不同的，但是几乎所有的硬件都采用了一个MMU(Memory Management Unit)的部件来进行页映射，流程如：<code>CPU-&gt;Virtual Address-&gt;MMU-&gt;Physical Address-&gt;Physical Memory</code>，一般MMU都集成在CPU内部了，不会以单独的部件存在。</p>
+<p>读到这的时候，我想起了看过的一片博客：<a href="http://www.jianshu.com/p/a0b652c77a20" target="_blank" rel="external">alloc、init你弄懂50%了吗?</a></p>
+<p>分页的思想，很像<strong>字节对齐</strong>，apple的文档<a href="https://developer.apple.com/library/mac/documentation/Performance/Conceptual/ManagingMemory/Articles/MemoryAlloc.html" target="_blank" rel="external">Tips for Allocating Memory</a>是这样描述的：</p>
+<blockquote>
+<p>When allocating any small blocks of memory, remember that the granularity for blocks allocated by the malloc library is 16 bytes. Thus, the smallest block of memory you can allocate is 16 bytes and any blocks larger than that are a multiple of 16. For example, if you call malloc and ask for 4 bytes, it returns a block whose size is 16 bytes; if you request 24 bytes, it returns a block whose size is 32 bytes. Because of this granularity, you should design your data structures carefully and try to make them multiples of 16 bytes whenever possible.</p>
+</blockquote>
+<p>意思就是：</p>
+<blockquote>
+<p>当我们分配一块内存的时候，假设需要的内存小于16个字节，操作系统会直接分配16个字节；加入需要的内存大于16个字节，操作系统会分配a*16个字节。举个栗子，如果你调用malloc并且需要4个字节，系统会给你一块16个字节的内存块；如果你调用malloc并且需要24个字节，系统会给你一块32个字节的内存块。</p>
+</blockquote>
+<p>第一章中还讲了一些线程的基础知识。什么是线程？</p>
+<p><strong>线程(Thread)</strong>，有时被称为<strong>轻量级进程(Lightweight Process,LWP)</strong>，是程序执行流程的最小单元。</p>
+<p>进程内的线程如图：<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016091265404ThreadsWithinTheProcess.png" alt="2016091265404ThreadsWithinTheProcess.png"><br>多个线程可以互相不干扰地并并发执行，并共享进程的全局变量和堆的数据，使用多线程的原因有以下几点：</p>
+<ul>
+<li>某个操作可能会陷入长时间等待，等待线程会进入睡眠状态，无法继续执行。多线程执行可以有效利用等待的时间。典型的例子是等待网络响应，这可能要花费数秒甚至数十秒。</li>
+<li>某个操作（常常是计算）会消耗大量时间，如果只有一个线程，程序和用户之间的交互会中断。多线程可以让一个线程负责交互，另一个线程负责计算。</li>
+<li>程序逻辑本身就要求并发操作，例如一个多端下载软件。</li>
+<li>多CPU或多核计算机，本身具备同时执行多个线程的能力，因此单线程程序无法全面的发挥计算机的全部能力。</li>
+<li>相对应多进程应用，多线程在数据共享方面效率要高很多。</li>
+</ul>
+<h3 id="线程的访问权限"><a href="#线程的访问权限" class="headerlink" title="线程的访问权限"></a>线程的访问权限</h3><p>线程的访问非常自由，它可以访问进程内存里的所有数据，甚至包括其他线程的堆栈，但是实际运用中，线程也拥有自己的私有存储空间，包括以下几个方面：</p>
+<ul>
+<li>栈(尽管并非完全无法被其他线程访问，但一般情况下仍然可以认为是私有的数据)</li>
+<li>线程局部存储(Thread Local Stroage,TLS)。线程局部存储是某些操作系统为线程单独提供的私有空间，但通常只具有有限的容量。</li>
+<li>寄存器（包括PC寄存器），寄存器是执行流的基本数据，因此为此线程所有。</li>
+</ul>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016091435675Threads and processes data.png" alt="2016091435675Threads and processes data.png"></p>
+<h3 id="线程的调度与优先级"><a href="#线程的调度与优先级" class="headerlink" title="线程的调度与优先级"></a>线程的调度与优先级</h3><p>还是先说明一下并行和并发的区别</p>
+<p>总线程数 &lt;= CPU数量：<strong>并行</strong>运行<br>总线程数 &gt;  CPU数量：<strong>并发</strong>运行</p>
+<p>并发是一种模拟出来的状态，操作系统会让这些多线程程序轮流执行，这的一个不断在处理器上切换不同的线程的行为称之为<strong>线程调度（Thread Schedule）</strong>，在线程调度中，线程通常拥有至少三种状态，分别是：</p>
+<ul>
+<li><strong>运行（Running）</strong>:此时线程正在执行；</li>
+<li><strong>就绪（Ready）</strong>:此时线程可以立刻执行，但CPU已经被占用。</li>
+<li><strong>等待（Waiting）</strong>:此时线程正在等待某一事件（通常是I/O或同步）发生，无法执行。</li>
+</ul>
+<p>处于运行中的线程拥有一段可以执行的时间，这段时间称之为<strong>时间片（Time Slice）</strong>。<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016091477250Thread state switch.png" alt="2016091477250Thread state switch.png"></p>
+<p>线程调度的方式，主要是以下两种：</p>
+<ul>
+<li>优先级调度（Priority Schedule）</li>
+<li>轮转法（Round Robin）</li>
+</ul>
+<p>线程的优先级改变一般有三种情况：</p>
+<ul>
+<li>用户指定优先级</li>
+<li>根据进入等待状态的频繁程度提升或降低优先级</li>
+<li>长时间得不到执行而被提升优先级</li>
+</ul>
+<p>线程在用尽时间片之后会被强制剥夺继续执行的权利，而进入就绪状态，这个过程叫做<strong>抢占（Preemption）</strong>，即之后执行别的线程抢占了当前线程。</p>
+<h3 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h3><p>我们把单指令的操作称之为<strong>原子的</strong>，因为无论如何，单条指令的执行是不会被打断了。</p>
+<p>为了避免多个线程同时读写一个数据而产生不可预料的后果，我们需要将各个线程对同一个数据的访问<strong>同步（Synchronization）</strong>。所谓同步，既是指在一个线程访问数据未结束的时候，其他线程不得对同一个数据进行访问。如此，对数据的访问被原子化了。</p>
+<p>同步的最常见方法是使用<strong>锁（Lock）</strong>。锁是一种非强制机制。每一个线程在访问数据或资源之前首先试图<strong>获取（Acqurie）</strong>，并在访问结束之后<strong>释放（Release）</strong>锁。在锁已经被占用的时候试图获取锁时，线程会等待，直到锁重新可用。</p>
+<p>这里总结下 iOS 中常用的几种锁：</p>
+<ul>
+<li><p>@synchronized</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">NSObject *obj = [[NSObject alloc] init];</div><div class="line"></div><div class="line">dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</div><div class="line">    @synchronized(obj) &#123;</div><div class="line">        NSLog(@&quot;需要线程同步的操作1 开始&quot;);</div><div class="line">        sleep(3);</div><div class="line">        NSLog(@&quot;需要线程同步的操作1 结束&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line"></div><div class="line">dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</div><div class="line">    sleep(1);</div><div class="line">    @synchronized(obj) &#123;</div><div class="line">        NSLog(@&quot;需要线程同步的操作2&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>  @synchronized(obj)指令使用的obj为该锁的唯一标识，只有当标识相同时，才为满足互斥，如果线程2中的@synchronized(obj)改为@synchronized(self),刚线程2就不会被阻塞，@synchronized指令实现锁的优点就是我们不需要在代码中显式的创建锁对象，便可以实现锁的机制，但作为一种预防措施，@synchronized块会隐式的添加一个异常处理例程来保护代码，该处理例程会在异常抛出的时候自动的释放互斥锁。所以如果不想让隐式的异常处理例程带来额外的开销，你可以考虑使用锁对象。</p>
+<p>  上面结果的执行结果为：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">需要线程同步的操作1 开始</div><div class="line">需要线程同步的操作1 结束</div><div class="line">需要线程同步的操作2</div></pre></td></tr></table></figure>
+</li>
+<li><p>NSLock</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">NSLock *lock = [[NSLock alloc] init];</div><div class="line">dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</div><div class="line">    //[lock lock];</div><div class="line">    [lock lockBeforeDate:[NSDate date]];</div><div class="line">        NSLog(@&quot;需要线程同步的操作1 开始&quot;);</div><div class="line">        sleep(2);</div><div class="line">        NSLog(@&quot;需要线程同步的操作1 结束&quot;);</div><div class="line">    [lock unlock];</div><div class="line"></div><div class="line">&#125;);</div><div class="line"></div><div class="line">dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</div><div class="line">    sleep(1);</div><div class="line">    if ([lock tryLock]) &#123;//尝试获取锁，如果获取不到返回NO，不会阻塞该线程</div><div class="line">        NSLog(@&quot;锁可用的操作&quot;);</div><div class="line">        [lock unlock];</div><div class="line">    &#125;else&#123;</div><div class="line">        NSLog(@&quot;锁不可用的操作&quot;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    NSDate *date = [[NSDate alloc] initWithTimeIntervalSinceNow:3];</div><div class="line">    if ([lock lockBeforeDate:date]) &#123;//尝试在未来的3s内获取锁，并阻塞该线程，如果3s内获取不到恢复线程, 返回NO,不会阻塞该线程</div><div class="line">        NSLog(@&quot;没有超时，获得锁&quot;);</div><div class="line">        [lock unlock];</div><div class="line">    &#125;else&#123;</div><div class="line">        NSLog(@&quot;超时，没有获得锁&quot;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>  NSLock是Cocoa提供给我们最基本的锁对象，这也是我们经常所使用的，除lock和unlock方法外，NSLock还提供了tryLock和lockBeforeDate:两个方法，前一个方法会尝试加锁，如果锁不可用(已经被锁住)，刚并不会阻塞线程，并返回NO。lockBeforeDate:方法会在所指定Date之前尝试加锁，如果在指定时间之前都不能加锁，则返回NO。<br>  上面代码的执行结果为：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">需要线程同步的操作1 开始</div><div class="line">锁不可用的操作</div><div class="line">需要线程同步的操作1 结束</div><div class="line">没有超时，获得锁</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>NSRecursiveLock 递归锁</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">//NSLock *lock = [[NSLock alloc] init];</div><div class="line">NSRecursiveLock *lock = [[NSRecursiveLock alloc] init];</div><div class="line"></div><div class="line">dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</div><div class="line"></div><div class="line">    static void (^RecursiveMethod)(int);</div><div class="line"></div><div class="line">    RecursiveMethod = ^(int value) &#123;</div><div class="line"></div><div class="line">        [lock lock];</div><div class="line">        if (value &gt; 0) &#123;</div><div class="line"></div><div class="line">            NSLog(@&quot;value = %d&quot;, value);</div><div class="line">            sleep(1);</div><div class="line">            RecursiveMethod(value - 1);</div><div class="line">        &#125;</div><div class="line">        [lock unlock];</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    RecursiveMethod(5);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>  NSRecursiveLock实际上定义的是一个递归锁，这个锁可以被同一线程多次请求，而不会引起死锁。这主要是用在循环或递归操作中。</p>
+<p>  这段代码是一个典型的死锁情况。在我们的线程中，RecursiveMethod是递归调用的。所以每次进入这个block时，都会去加一次锁，而从第二次开始，由于锁已经被使用了且没有解锁，所以它需要等待锁被解除，这样就导致了死锁，线程被阻塞住了。调试器中会输出如下信息：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">value = 5</div><div class="line">-[NSLock lock]: deadlock (&lt;NSLock: 0x7fd811d28810&gt; &apos;(null)&apos;)</div><div class="line">Break on _NSLockError() to debug.</div></pre></td></tr></table></figure>
+<p>  在这种情况下，我们就可以使用NSRecursiveLock。它可以允许同一线程多次加锁，而不会造成死锁。递归锁会跟踪它被lock的次数。每次成功的lock都必须平衡调用unlock操作。只有所有达到这种平衡，锁最后才能被释放，以供其它线程使用。</p>
+<p>  如果我们将NSLock代替为NSRecursiveLock，上面代码则会正确执行。</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">value = 5</div><div class="line">value = 4</div><div class="line">value = 3</div><div class="line">value = 2</div><div class="line">value = 1</div></pre></td></tr></table></figure>
+</li>
+<li><p>NSConditionLock 条件锁</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">NSMutableArray *products = [NSMutableArray array];</div><div class="line"></div><div class="line">NSInteger HAS_DATA = 1;</div><div class="line">NSInteger NO_DATA = 0;</div><div class="line"></div><div class="line">dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</div><div class="line">    while (1) &#123;</div><div class="line">        [lock lockWhenCondition:NO_DATA];</div><div class="line">        [products addObject:[[NSObject alloc] init]];</div><div class="line">        NSLog(@&quot;produce a product,总量:%zi&quot;,products.count);</div><div class="line">        [lock unlockWithCondition:HAS_DATA];</div><div class="line">        sleep(1);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;);</div><div class="line"></div><div class="line">dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</div><div class="line">    while (1) &#123;</div><div class="line">        NSLog(@&quot;wait for product&quot;);</div><div class="line">        [lock lockWhenCondition:HAS_DATA];</div><div class="line">        [products removeObjectAtIndex:0];</div><div class="line">        NSLog(@&quot;custome a product&quot;);</div><div class="line">        [lock unlockWithCondition:NO_DATA];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>  当我们在使用多线程的时候，有时一把只会lock和unlock的锁未必就能完全满足我们的使用。因为普通的锁只能关心锁与不锁，而不在乎用什么钥匙才能开锁，而我们在处理资源共享的时候，多数情况是只有满足一定条件的情况下才能打开这把锁：</p>
+<p>  在线程1中的加锁使用了lock，所以是不需要条件的，所以顺利的就锁住了，但在unlock的使用了一个整型的条件，它可以开启其它线程中正在等待这把钥匙的临界地，而线程2则需要一把被标识为2的钥匙，所以当线程1循环到最后一次的时候，才最终打开了线程2中的阻塞。但即便如此，NSConditionLock也跟其它的锁一样，是需要lock与unlock对应的，只是lock,lockWhenCondition:与unlock，unlockWithCondition:是可以随意组合的，当然这是与你的需求相关的。</p>
+<p>  上面代码执行结果如下：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">wait for product</div><div class="line">produce a product,总量:1</div><div class="line">custome a product</div><div class="line">wait for product</div><div class="line">produce a product,总量:1</div><div class="line">custome a product</div><div class="line">wait for product</div><div class="line">produce a product,总量:1</div><div class="line">custome a product</div></pre></td></tr></table></figure>
+</li>
+<li><p>NSCondition</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">NSCondition *condition = [[NSCondition alloc] init];</div><div class="line"></div><div class="line">NSMutableArray *products = [NSMutableArray array];</div><div class="line"></div><div class="line">dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</div><div class="line">    while (1) &#123;</div><div class="line">        [condition lock];</div><div class="line">        if ([products count] == 0) &#123;</div><div class="line">            NSLog(@&quot;wait for product&quot;);</div><div class="line">            [condition wait];</div><div class="line">        &#125;</div><div class="line">        [products removeObjectAtIndex:0];</div><div class="line">        NSLog(@&quot;custome a product&quot;);</div><div class="line">        [condition unlock];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;);</div><div class="line"></div><div class="line">dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</div><div class="line">    while (1) &#123;</div><div class="line">        [condition lock];</div><div class="line">        [products addObject:[[NSObject alloc] init]];</div><div class="line">        NSLog(@&quot;produce a product,总量:%zi&quot;,products.count);</div><div class="line">        [condition signal];</div><div class="line">        [condition unlock];</div><div class="line">        sleep(1);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>  一种最基本的条件锁。手动控制线程wait和signal。</p>
+<p>  [condition lock];一般用于多线程同时访问、修改同一个数据源，保证在同一时间内数据源只被访问、修改一次，其他线程的命令需要在lock 外等待，只到unlock ，才可访问</p>
+<p>  [condition unlock];与lock 同时使用</p>
+<p>  [condition wait];让当前线程处于等待状态</p>
+<p>  condition signal];CPU发信号告诉线程不用在等待，可以继续执行</p>
+<p>  上面代码执行结果如下：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">wait for product</div><div class="line">produce a product,总量:1</div><div class="line">custome a product</div><div class="line">wait for product</div><div class="line">produce a product,总量:1</div><div class="line">custome a product</div><div class="line">wait for product</div><div class="line">produce a product,总量:1</div><div class="line">custome a product</div></pre></td></tr></table></figure>
+</li>
+<li><p>pthread_mutex</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">__block pthread_mutex_t theLock;</div><div class="line">pthread_mutex_init(&amp;theLock, NULL);</div><div class="line"></div><div class="line">dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</div><div class="line">        pthread_mutex_lock(&amp;theLock);</div><div class="line">        NSLog(@&quot;需要线程同步的操作1 开始&quot;);</div><div class="line">        sleep(3);</div><div class="line">        NSLog(@&quot;需要线程同步的操作1 结束&quot;);</div><div class="line">        pthread_mutex_unlock(&amp;theLock);</div><div class="line"></div><div class="line">&#125;);</div><div class="line"></div><div class="line">dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</div><div class="line">        sleep(1);</div><div class="line">        pthread_mutex_lock(&amp;theLock);</div><div class="line">        NSLog(@&quot;需要线程同步的操作2&quot;);</div><div class="line">        pthread_mutex_unlock(&amp;theLock);</div><div class="line"></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>  c语言定义下多线程加锁方式。</p>
+<ol>
+<li>pthread_mutex_init(pthread_mutex_t mutex,const pthread_mutexattr_t attr);<br>初始化锁变量mutex。attr为锁属性，NULL值为默认属性。</li>
+<li>pthread_mutex_lock(pthread_mutex_t mutex);加锁</li>
+<li>pthread_mutex_tylock(<em>pthread_mutex_t </em>mutex);加锁，但是与2不一样的是当锁已经在使用的时候，返回为EBUSY，而不是挂起等待。</li>
+<li>pthread_mutex_unlock(pthread_mutex_t *mutex);释放锁</li>
+<li><p>pthread_mutex_destroy(pthread_mutex_t* mutex);使用完后释放</p>
+<p>代码执行操作结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">需要线程同步的操作1 开始</div><div class="line">需要线程同步的操作1 结束</div><div class="line">需要线程同步的操作2</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>pthread_mutex(recursive)</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">__block pthread_mutex_t theLock;</div><div class="line">//pthread_mutex_init(&amp;theLock, NULL);</div><div class="line"></div><div class="line">pthread_mutexattr_t attr;</div><div class="line">pthread_mutexattr_init(&amp;attr);</div><div class="line">pthread_mutexattr_settype(&amp;attr, PTHREAD_MUTEX_RECURSIVE);</div><div class="line">pthread_mutex_init(&amp;lock, &amp;attr);</div><div class="line">pthread_mutexattr_destroy(&amp;attr);</div><div class="line"></div><div class="line">dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</div><div class="line"></div><div class="line">    static void (^RecursiveMethod)(int);</div><div class="line"></div><div class="line">    RecursiveMethod = ^(int value) &#123;</div><div class="line"></div><div class="line">        pthread_mutex_lock(&amp;theLock);</div><div class="line">        if (value &gt; 0) &#123;</div><div class="line"></div><div class="line">            NSLog(@&quot;value = %d&quot;, value);</div><div class="line">            sleep(1);</div><div class="line">            RecursiveMethod(value - 1);</div><div class="line">        &#125;</div><div class="line">        pthread_mutex_unlock(&amp;theLock);</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    RecursiveMethod(5);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>  这是pthread_mutex为了防止在递归的情况下出现死锁而出现的递归锁。作用和NSRecursiveLock递归锁类似。</p>
+<p>  如果使用pthread_mutex_init(&amp;theLock, NULL);初始化锁的话，上面的代码会出现死锁现象。如果使用递归锁的形式，则没有问题。</p>
+</li>
+<li><p>OSSpinLock</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">__block OSSpinLock theLock = OS_SPINLOCK_INIT;</div><div class="line">dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</div><div class="line">    OSSpinLockLock(&amp;theLock);</div><div class="line">    NSLog(@&quot;需要线程同步的操作1 开始&quot;);</div><div class="line">    sleep(3);</div><div class="line">    NSLog(@&quot;需要线程同步的操作1 结束&quot;);</div><div class="line">    OSSpinLockUnlock(&amp;theLock);</div><div class="line"></div><div class="line">&#125;);</div><div class="line"></div><div class="line">dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</div><div class="line">    OSSpinLockLock(&amp;theLock);</div><div class="line">    sleep(1);</div><div class="line">    NSLog(@&quot;需要线程同步的操作2&quot;);</div><div class="line">    OSSpinLockUnlock(&amp;theLock);</div><div class="line"></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>  OSSpinLock 自旋锁，性能最高的锁。原理很简单，就是一直 do while 忙等。它的缺点是当等待时会消耗大量 CPU 资源，所以它不适用于较长时间的任务。 不过YY在自己的博客<a href="http://blog.ibireme.com/2016/01/16/spinlock_is_unsafe_in_ios/" target="_blank" rel="external">不再安全的 OSSpinLock </a>中说明了OSSpinLock已经不再安全。</p>
+</li>
+</ul>
+<p>关于同步，还有一种二元信号量（Binary Semaphore）是最简单的一种锁，它只有两种状态，占用与非占用。它适合只能被唯一一个线程单独访问的资源。当二元信号量处于非占用状态时，第一个试图获取该二元信号量的线程会获得该锁，并将二元信号量置为占用状态，此后其他所有试图获取该二元信号量的线程将会等待，指导改锁被释放。</p>
+<p>对于允许多个线程并发访问的资源，多元信号量简称信号量（Semaphore），它是一个很好的选择。一个初始值为N的信号量允许N个线程并发访问。线程访问资源的时候首先获取信号量，进行如下操作：</p>
+<ul>
+<li>将信号量的值减1</li>
+<li>如果信号量的值小于0，则进入等待状态，否则继续执行。</li>
+</ul>
+<p>访问完资源之后，线程释放信号量，进行如下操作：</p>
+<ul>
+<li>将信号量的值加1</li>
+<li>如果信号量的值小于1，唤醒一个等待中的线程。</li>
+</ul>
+<p>iOS 中信号量的相关用法为 dispatch_semaphore</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">dispatch_semaphore_t signal = dispatch_semaphore_create(1);</div><div class="line">    dispatch_time_t overTime = dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC);</div><div class="line"></div><div class="line">    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</div><div class="line">        dispatch_semaphore_wait(signal, overTime);</div><div class="line">            NSLog(@&quot;需要线程同步的操作1 开始&quot;);</div><div class="line">            sleep(2);</div><div class="line">            NSLog(@&quot;需要线程同步的操作1 结束&quot;);</div><div class="line">        dispatch_semaphore_signal(signal);</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</div><div class="line">        sleep(1);</div><div class="line">        dispatch_semaphore_wait(signal, overTime);</div><div class="line">            NSLog(@&quot;需要线程同步的操作2&quot;);</div><div class="line">        dispatch_semaphore_signal(signal);</div><div class="line">    &#125;);</div></pre></td></tr></table></figure>
+<p>dispatch_semaphore是GCD用来同步的一种方式，与他相关的共有三个函数，分别是dispatch_semaphore_create，dispatch_semaphore_signal，dispatch_semaphore_wait。</p>
+<ul>
+<li><p>dispatch_semaphore_create</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">dispatch_semaphore_t dispatch_semaphore_create(long value);</div><div class="line">　传入的参数为long，输出一个dispatch_semaphore_t类型且值为value的信号量。</div><div class="line">　值得注意的是，这里的传入的参数value必须大于或等于0，否则dispatch_semaphore_create会返回NULL。</div></pre></td></tr></table></figure>
+</li>
+<li><p>dispatch_semaphore_signal</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">long dispatch_semaphore_signal(dispatch_semaphore_t dsema)</div><div class="line">　这个函数会使传入的信号量dsema的值加1；</div></pre></td></tr></table></figure>
+</li>
+<li><p>dispatch_semaphore_wait</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">long dispatch_semaphore_wait(dispatch_semaphore_t dsema, dispatch_time_t timeout)；</div><div class="line">这个函数会使传入的信号量dsema的值减1；这个函数的作用是这样的，如果dsema信号量的值大于0，该函数所处线程就继续执行下面的语句，并且将信号量的值减1；如果desema的值为0，那么这个函数就阻塞当前线程等待timeout（注意timeout的类型为dispatch_time_t，不能直接传入整形或float型数），如果等待的期间desema的值被dispatch_semaphore_signal函数加1了，且该函数（即dispatch_semaphore_wait）所处线程获得了信号量，那么就继续向下执行并将信号量减1。如果等待期间没有获取到信号量或者信号量的值一直为0，那么等到timeout时，其所处线程自动执行其后语句。</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>dispatch_semaphore 是信号量，但当信号总量设为 1 时也可以当作锁来。在没有等待情况出现时，它的性能比 pthread_mutex 还要高，但一旦有等待情况出现时，性能就会下降许多。相对于 OSSpinLock 来说，它的优势在于等待时不会消耗 CPU 资源。</p>
+<p>如上的代码，如果超时时间overTime设置成&gt;2，可完成同步操作。如果overTime&lt;2的话，在线程1还没有执行完成的情况下，此时超时了，将自动执行下面的代码。</p>
+<p>上面代码的执行结果为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">需要线程同步的操作1 开始</div><div class="line">需要线程同步的操作1 结束</div><div class="line">需要线程同步的操作2</div></pre></td></tr></table></figure></p>
+<p>如果把超时时间设置为<2s的时候，执行的结果就是： <figure="" class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">需要线程同步的操作1 开始</div><div class="line">需要线程同步的操作2</div><div class="line">需要线程同步的操作1 结束</div></pre></td></tr></table></2s的时候，执行的结果就是：></p>
+<p>YY 关于这几种锁的性能测试（定性分析）结果如下图：<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016091483051lock_benchmark.png" alt="2016091483051lock_benchmark.png"></p>
+<p><strong>多线程内部情况</strong></p>
+<p>线程的并发执行是由多处理器或操作系统调度来实现的。但实际情况要更为复杂一些：大多数操作系统，包括windows和Linux，都在内核里提供线程的支持，内核线程也是由多处理器或调度来实现并发。然后用户实际使用的线程并不是内核线程，而是存在于用户态的用户线程。用户线程并不一定在操作系统内核里对应同等数量的内核线程，例如某些轻量级的线程库，对用户来说如果有三个线程同时在执行，对内核来说很可能只有一个线程。</p>
+<p>用户态和内核态的三种线程模型如下：</p>
+<ul>
+<li><p>一对一模型<br>  <img src="http://7xraw1.com1.z0.glb.clouddn.com/2016091444276One to one thread model.png" alt="2016091444276One to one thread model.png"><br>  这样用户线程就具有了和内核线程一致的优点，线程之间的并发是真正的并发，一个线程因为某种原因阻塞时，其他线程执行不会受到影响。</p>
+<p>  一般直接使用API或系统创建的线程均为一对一的线程。</p>
+<p>  一对一线程有两个缺点：</p>
+<ul>
+<li>由于许多操作系统限制了内核线程的数量，因此一对一线程会让用户的线程数量受到限制。</li>
+<li>许多操作系统内核线程调度时，上下文切换的开销较大，导致用户线程的执行效率下降。</li>
+</ul>
+</li>
+<li><p>多对一模型<br>  <img src="http://7xraw1.com1.z0.glb.clouddn.com/2016091487869More of a process model.png" alt="2016091487869More of a process model.png"><br>  多对一模型将多个用户线程映射到一个内核线程上，线程之间的切换由用户态的代码来进行，因此相对于一对一模型，多对一模型的线程切换要快许多。<br>  多对一模型的一大问题是，如果其中一个用户线程阻塞，那么所有的线程都将无法执行，因为此时内核里的线程也随之阻塞了。另外，在多处理器系统上，处理器的增多对多对一模型的线程性能也不会有明显的帮助。但同时，多对一模型得到的好处是高效的上下文切换和几乎无限制的线程数量。</p>
+</li>
+<li><p>多对多模型<br>  <img src="http://7xraw1.com1.z0.glb.clouddn.com/2016091439628More for multithreaded model.png" alt="2016091439628More for multithreaded model.png"><br>  多对多模型结合了多对一模型和一对一模型的特点，将多个用户线程映射到少数但不止一个内核线程上。在多对多模型中，一个用户线程阻塞并不会使得所有用户线程阻塞，因为此时还有别的线程可以被调度来执行。另外，多对多模型对用户线程的数量也没什么限制，在多处理器其他上，多对多模型的线程也能得到一定性能的提升，不过提升的幅度不如一对一模型高。</p>
+</li>
+</ul>
+<h3 id="编译和链接"><a href="#编译和链接" class="headerlink" title="编译和链接"></a>编译和链接</h3><p>对于平常的应用开发，我们很少关注编译和链接的过程，因为通常的开发环境都是流程的集成开发环境（IDE）。IDE 一般都将编译和链接的过程一步执行完成，通常这种编译和链接合并到一起的过程称为<strong>构建（Build）</strong> 即使使用命令行来编译一个源码文件，简单的一句”gcc hello.c”命令就包含了非常复杂的过程。</p>
+<p>IDE和编译器提供的默认配置、编译和链接参数对于大部分的应用程序开发而言已经足够使用了。但是在这样的开发过程中，我们往往会被这些复杂的集成工具提供强大的功能所迷惑，很多系统软件的运行机制与机理被掩盖，其程序的很多莫名其妙的错误让我们无所适从，而对程序运行时种种性能瓶颈我们素手无策。如果能够深入了解这些机制，那么解决这些问题就能够游刃有余，收放自如了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#include &quot;hello.h&quot;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    printf(&quot;Hello World\n&quot;);</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在Linux下，我们使用GCC来编译程序时，只须使用最简单的命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">gcc hello.c</div><div class="line">./a.out</div><div class="line">Hello World</div></pre></td></tr></table></figure></p>
+<p>上述过程可以分解为4步:</p>
+<ul>
+<li>预处理（Prepressing）</li>
+<li>编译（Compilation）</li>
+<li>汇编（Assembly）</li>
+<li>链接（Linking）<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016091428338GCC compiler process decomposition.png" alt="2016091428338GCC compiler process decomposition.png"></li>
+</ul>
+<h3 id="预编译"><a href="#预编译" class="headerlink" title="预编译"></a>预编译</h3><p>预编译过程主要处理那些源码文件中以”#”开头的预编译指令。主要规则如下：</p>
+<ul>
+<li>将所有的 “#define” 删除，并且展开所有的宏定义。</li>
+<li>处理所有条件预编译指令，比如：”#if”,”#ifdef”,”elif”,”#else”,”#endif”。</li>
+<li>处理”#include”预编译指令，将被包含的文件插入到改预编译指令的位置。注意，这个过程是递归进行的，也就是说被包含的文件可能还包含其他文件。</li>
+<li>删除所有的注释 “//“ 和 “/**/“。</li>
+<li>添加行号和文件标识，比如 #2”helloc.c”2，以便于编译时编译器产生试用的行号信息及用于编译时产生便于错误或警告时能够显示的行号。</li>
+<li>保留所有的 #pargma 编译指令，因为编译器需要使用它们。</li>
+</ul>
+<p>经过预编译后的 .i 文件不包含任何宏定义，因为所有的宏已经被展开，并且包含的文件也已经被插入到 .i 文件中。所以当我们无法判断宏定义是否正确或头文件包含是否正确时，可以查看预编译后的文件来确定问题。</p>
+<p>第一步预编译的过程相当于如下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc -E hello.c -o hello.i</div></pre></td></tr></table></figure></p>
+<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><p>编译过程就是把预处理的文件进行一系列词法分析、语法分析、语义分析以及优化后生产相应的汇编代码文件，这个过程往往是我们所说的整个程序构建的核心部分，也是最复杂的部分之一。上面的编译过程相当于如下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc -S hello.i -o hello.s</div></pre></td></tr></table></figure></p>
+<p>最直观的角度，编译器就是将高级语言翻译成机器语言的一个工具。高级语言使得程序员能够更加关注程序逻辑的本身，而尽量少考虑计算机本身的限制。高级编程语言的出现使得程序开发的效率大大提高，据研究，高级语言的开发效率是汇编语言和机器语言的5倍以上。</p>
+<p>编译过程一般可以分为6步：扫描，语法分析，语义分析，源代码优化，代码生成和目标代码优化，整个过程如下：<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016091652955The build process.png" alt="2016091652955The build process.png"></p>
+<h3 id="汇编"><a href="#汇编" class="headerlink" title="汇编"></a>汇编</h3><p>汇编器是将汇编代码转变成机器可以执行的指令，每一个汇编语句几乎都对应一条机器指令。所以汇编器的汇编过程相对于编译器来讲是比较简单，它没有复杂的语法，也没用语法，也没有语义，也不需要做指令优化，只是根据汇编指令和机器指令的对照表一一翻译就可以了，“汇编”这个名字也源于此。</p>
+<p>上面的汇编过程可以调用汇编器as来完成：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">as hello.s -o hello.o</div></pre></td></tr></table></figure></p>
+<p>或者<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc -c hello.s -o hello.o</div></pre></td></tr></table></figure></p>
+<h3 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h3><p>链接通常是一个让人比较费解的过程，为什么汇编器不直接输出可执行文件而是输出一个目标文件呢？链接过程到底包含了什么内容？为什么要链接？</p>
+<p>书中简单的回顾了下计算机发展的历史，简单来讲就是随之软件规模越来越大，每个程序被分成了多个模块，这些模块的拼接过程就叫：链接（Linking）。</p>
+<p>链接过程主要包括了：</p>
+<ul>
+<li>地址和空间的分配（Address and Storage Alloction）</li>
+<li>符号决议（Symbol Resolution）Ps:”决议”更倾向于静态链接，而”绑定”更倾向于动态链接。</li>
+<li>重定位（Relocation）</li>
+</ul>
+<p>最基本的静态链接过程如下图：<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016091665800Link process.png" alt="2016091665800Link process.png"><br>每个模块的源代码文件（如.c）文件经过编译器编译成目标文件（Object File，一般扩展名为.o 或.obj），目标文件和库一起链接形成最终的可执行文件。</p>
+<p><strong>重定位</strong>的过程如下：</p>
+<p>假设有个全局变量叫做var，它在目标文件A里面。我们在目标文件B里面要访问这个全局变量。由于在编译目标文件B的时候，编译器并不知道变量var的目标地址，所以编译器在没法确定的情况下，将目标地址设置为0，等待链接器在目标文件A和B连接起来的时候将其修正。这个地址修正的过程被叫做<strong>重定位</strong>，每个被修正的地方叫一个<strong>重定位入口</strong>。</p>
+<h3 id="目标文件"><a href="#目标文件" class="headerlink" title="目标文件"></a>目标文件</h3><p>编译器编译源代码后生成的文件叫做<strong>目标文件</strong>。</p>
+<p>现在PC平台流行的<strong>可执行文件（Executable）</strong>主要是Windows下的PE（Portable Executable）和Linux的ELF（Executable Linkabel Format）,它们都是COFF（Common file format）格式的变种。</p>
+<p>目标文件就是源代码编译后但未进行链接的那些中间文件（Widdows的.obj和Linux下的.o）。</p>
+<p>从广义上看，目标文件与可执行文件的格式其实几乎一样，所以我们可以统称他们为PE-COFF文件格式。在Linux下，我们可以将他们统称为ELF文件。</p>
+<p><strong>动态链接库（DLL,Dynamic Linking Library）</strong>(Windows的.dll和Linux的.so)以及<strong>静态链接库（Static Linking Library）</strong>(Windows的.lib 和Linux的.a)文件都按照可执行文件格式存储。</p>
+<p>静态链接库稍有不同，它是把很多目标文件的文件捆绑在一起形成一个文件，再加上一些索引，简单的理解：一个包含有很多目标文件的文件包。</p>
+<table>
+<thead>
+<tr>
+<th>ELF 文件类型</th>
+<th>说明</th>
+<th>实例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>可重定位文件（Relocation File）</td>
+<td>这类文件包含了代码和数据，可以被用来链接成可执行文件或共享目标文件，静态链接库也可以归为这一类</td>
+<td>Linux的.o Windows的.obj</td>
+</tr>
+<tr>
+<td>可执行文件（Executable File）</td>
+<td>这类文件包含了可以直接执行的程序，它的代表就是ELF可执行文件，它们一般都是没有扩展名</td>
+<td>比如/bin/bash 文件 Windows 的.exe</td>
+</tr>
+<tr>
+<td>共享目标文件(Shared Object File)</td>
+<td>这种文件包含了代码和数据，可以在以下两种情况下使用。一种是链接器可以使用这种文件跟其他可重定位和共享目标文件链接，产生新的目标文件。第二种是动态链接器可以将几个这种共享目标文件与可执行文件结合，作为进程映像的一部分来运行</td>
+<td>Linux的.so 如/lib/glibc-2.5.so Windows的DLL</td>
+</tr>
+<tr>
+<td>核心转存文件（Core Dump File）</td>
+<td>当进程意外终止时，系统可以将该进程的地址空间的内容以及终止时的一些其他信息转储到核心转储文件</td>
+<td>Linux下的 core dump</td>
+</tr>
+</tbody>
+</table>
+<h3 id="目标文件什么样子"><a href="#目标文件什么样子" class="headerlink" title="目标文件什么样子"></a>目标文件什么样子</h3><p><img src="http://7xraw1.com1.z0.glb.clouddn.com/AUPE.png" alt=""></p>
+<p>这种类型的图在讲block或者其他内存问题时经常能看到的。</p>
+<p>程序源代码编译后的机器指令经常被放在<strong>代码段（Code Section）</strong>，代码段常见的名字有”.code”，或”.text”；全局和局部静态变量数据经常被放在<strong>数据段（Data Section）</strong>，数据段的一般名字都叫”.data”。</p>
+<p>看一个简单的程序被编译成目标文件后的结构。</p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016091941627Program and the target file.png" alt="2016091941627Program and the target file.png"></p>
+<p>其他段大家一看就明白。未初始化的全局变量和局部静态变量一般被放在一个叫”.bss”的段里(BSS - Block Started by Symbol)。未初始化的全局变量和局部静态变量默认值都为0，本来它们也可以被放在.data端里，但是因为它们都是0，所有为它们在.data端分开空间并且存储数据0是没有必要的。程序运行的时候它们的确是要站存储空间的，并且可执行文件必须记录所有未初始化的全局变量和局部静态变量的大小总和，记为.bss段。<strong>所以.bss段只是未初始化的全局变量和局部静态变量预留位置而已，</strong>它并没有内容，所以它在文件中也不占据空间。</p>
+<p><strong>总体来说，程序源代被编译以后主要分成两种段：程序指令和程序数据。代码段属于程序指令，而数据端和.bss段属于程序数据。</strong></p>
+<p>为什么要把程序的指令和数据的存放分开？</p>
+<ul>
+<li><p>当程序被装载后，数据和指令分别被映射到了两个虚存区域。数据区域对于进程来说是可读写的，而指令区域对于进程来说是只读的，所以这两个虚存区域的权限可以被分别设置成可读写和只读。这样可以防止程序指令被有意或无意的改写。</p>
+</li>
+<li><p>现代CPU有这极为强大的缓存体系，所以程序必须尽量提高缓存的命中率。指令区和数据区的分离有利于提高程序的局部性。现代CPU的缓存一般都被设计成数据缓存和指令缓存分离，所以程序的指令和数据被分开存放对CPU的缓存命中率提高有好处。</p>
+</li>
+<li><p>最后一点也是最重要的一点，就是当系统中运行着多个改程序的副本时，它们的指令都是一样的，所有内存中只须要保存一份改程序的指令部分。对于指令这种只读的区域来说是这样的，对于其他的只读数据也是一样。当然每个副本进程的数据区域是不一样的，它们是进程私有的。</p>
+</li>
+</ul>
+<p>除了.text、.data、.bss这三个最常用的段之外，ELF文件也可能含有其他段，用来保存于程序相关的其他信息。<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016092063938Other segments.png" alt="2016092063938Other segments.png"></p>
+<h3 id="ELF文件结构"><a href="#ELF文件结构" class="headerlink" title="ELF文件结构"></a>ELF文件结构</h3><p>省去EFL一些繁琐的结构，把最重要的结构提取出来，形成了下面的EFL文件的基本结构图。<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016092093390EFL structure.png" alt="2016092093390EFL structure.png"><br>EFL目标文件格式的还包含了一下内容：</p>
+<ul>
+<li>EFL头文件（EFL Header）<br>  它包含描述了整个文件的基本属性，比如ELF文件版本、目标机器型号、程序入口地址等。</li>
+<li>各个段</li>
+<li>段表（Sextion Header Tabel）<br>  描述了EFL文件包含的所有段的信息，比如每个段的段名、段的长度、在文件中的偏移、读写权限以及段的其他属性。EFL文件的段结构就是由段表决定的，编译器、链接器和装载器都是依靠段表来定位和访问各个段的属性的。</li>
+<li>重定位表<br>  链接器在处理目标文件时，须要对目标文件中的某些部位进行重定位，即代码段和数据段中那些绝对地址的引用的位置。这些重定位信息都记录在EFL文件的重定位表里，对于每个须要重定位的代码段，都会有一个响应的重定位表。</li>
+<li>字符串表<br>  ELF 文件中用到了很多字符串，比如段名、变量名等。因为字符串的长度往往是不定的，所以用固定的结构来标示它比较困难。一种很常见的做法是把字符串集中起来放到一个表，然后使用字符串在表中的偏移量来引用字符串。一般字符串表分别为字符串表（String Table）和段表字符串表（Section Header String Tabel）。顾名思义，字符串表是用来保存普通的字符串，段表字符串表是用来保存段表中用到的字符串。</li>
+</ul>
+<h3 id="链接的接口–符号"><a href="#链接的接口–符号" class="headerlink" title="链接的接口–符号"></a>链接的接口–符号</h3><p>链接的过程本质就是要把多个不同的目标文件之间相互”粘到一起”，或着说像一个玩具积木一样，可以拼装成一个整体。为了使不同目标文件之间能够相互粘合，这些目标文件之间必须有固定的规则才行，就像积木模块必须有凹凸的部分才能够拼合。</p>
+<p>在链接中目标文件之间互相拼合实际上是目标文件之间对地址的引用，即对函数和变量地址的引用。比如目标文件B要用到目标文件A中的函数“foo”，那么我们就称目标文件A<strong>定义（Define）</strong>了函数“foo”，称目标文件B<strong>引用（Reference）</strong>了目标文件A中的函数“foo”。这样的概念同样适用于变量。每个函数或变量都有自己独特的名字，才能避免链接过程中不同变量和函数之间的混淆。</p>
+<p>在链接中，我们将函数和变量统称为<strong>符号（Symbol）</strong>，函数名或变量名就是<strong>符号名（Symbol Name）</strong>。</p>
+<h3 id="符号修饰和函数签名"><a href="#符号修饰和函数签名" class="headerlink" title="符号修饰和函数签名"></a>符号修饰和函数签名</h3><p>约在20世纪70年代以前，编译器编译源码产生的目标文件时，符号名与相应的变量函数的名字是一样的。为了防止类似的符号名冲突，Unix下的C语言就规定，C语言源代码文件中的所以全局变量和函数经过编译以后，相对于的符号名前加上下划线“_”。当然这也成为了历史。</p>
+<p>简单的例子，两个相同名字的函数func(int)和func(double),尽管函数名称相同，但是参数列表不同，这是C++里面函数重载的最简单的一种情况，那么编译器和链接器在链接过程中如何区分这两个函数呢？为了支持C++这些复杂的特性，人们发明了<strong>符号修饰（Name Decoration）</strong>或<strong>符号改编（Name Mangling）</strong>的机制。</p>
+<p>两个同名函数func，只不过它们的返回类型和参数及所在的名称空间不同。引入了一个术语叫做<strong>函数签名（Function Signature）</strong>，函数签名包含了一个函数的信息，包括函数名、参数、它所在的类和名称空间以及其他信息。在编译器以及链接器处理符号时，使用了名称修饰的方法，使得每个函数签名对应一个修饰后的<strong>名称（Decorated Name）</strong>。</p>
+<h3 id="弱符号和强符号-弱引用和强引用"><a href="#弱符号和强符号-弱引用和强引用" class="headerlink" title="弱符号和强符号 | 弱引用和强引用"></a>弱符号和强符号 | 弱引用和强引用</h3><p>我们经常在编程中碰到了一种情况叫符号重复定义。多个目标文件中含有相同名字全局符号的定义，那么这些目标文件链接的时候将会出现符号重复定义的错误。</p>
+<p>出现冲的符号的定义可以被称为<strong>强符号（Strong Symbol）</strong>。有些符号的定义可以被称为弱符号（Weak Symbol）。对于C/C++语言来说，编译器默认函数和初始化的全局变量为强符号，未初始化的全局变量为弱符号。我们也可以通过GCC的“<strong>attribute</strong>((weak))”来定义任何一盒强符号为弱符号。</p>
+<p>注意：强符号和弱符号都是针对定义来说的，不是针对符号的引用。例如下面这段程序：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">extern int ext;</div><div class="line"></div><div class="line">int weak ;</div><div class="line">int strong = 1;</div><div class="line">__attribute__((weak)) weak2 = 2;</div><div class="line"></div><div class="line">int main() </div><div class="line">&#123;</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>“weak”和”weak2”是弱符号（我测试了下，weak2 改成weak 加了编译属性，不会引起符号重复定义报错），”strong”和”main”是强符号，而”ext”既非强符号也非弱符号，因为他是一个外部变量引用。针对强弱符号的概念，链接器会按如下规则处理与选择被多次定义的符号：</p>
+<ul>
+<li>规则1：不允许强符号被多次定义（即不同的目标文件中不能有同名的强符号）；如果有多个强符号定义，则链接器报符号重复定义的错误；</li>
+<li>规则2：如果一个符号在某个目标文件中是强符号，在其他文件中都是弱符号，那么现在强符号。</li>
+<li>规则3：如果一个符号在所有目标文件中都是弱符号，那么选择其中占用空间最大的一个。</li>
+</ul>
+<p><strong>弱引用和强引用。</strong>目前我们所看到的对外部目标文件的符号引用在目标文件被最终链接成执行文件时，他们需要被正确的决议，如果没有找到该符号的定义，链接器就会报符号未定阅的错误，这种被称为<strong>强引用（Strong Reference）</strong>。与之相对应的还有一种弱引用（Weak Reference），在处理弱引用时，如果该符号有定义，则链接器将该符号的引用决议；如果该符号未被定义，则链接器对于该引用不报错。链接器处理强引用和弱引用的过程几乎一样，只是对于未定义的弱引用，链接器不认为它是一个错误。一般对于未定义的弱引用，链接器默认其为0，或者一个特殊的值，以便于程序代码能够识别。</p>
+<p>使用“<strong>attribute</strong>((weak))”来声明对一个外部函数的引用为弱引用，例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">__attribute__((weakref)) void foo()</div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    foo();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>它可以编译成一个可执行文件，GCC并不会报链接错误。但是当我们运行这个可执行文件时，会发生运行时错误。因为当main函数试图调用foo函数时，foo函数的地址为0，于是发生了非法地址访问的错误。改进后：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">__attribute__((weakref)) void foo()</div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    if(foo) foo();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>弱引用和弱符号主要用于库的链接过程。比如库中定义的弱符号可以被用户定义强符号所覆盖，从而使得程序可以使用自定义版本中的函数库；或者程序可以对某些扩展功能模块的引用定义为弱引用，当我们将扩展模块与程序链接在一起时候，功能模块就可以正常使用；如果我们去掉了某些功能模块，那么程序也可以正常的链接，只是缺少了响应发功能，这使得程序的功能更加容易剪裁和组合。</p>
+<h3 id="调试信息"><a href="#调试信息" class="headerlink" title="调试信息"></a>调试信息</h3><p>目标文件里面还有可能保存的是调试信息。几乎所有的现代编译器都支持源代码级别的调试，比如我们可以在函数里面设置断点，可以监听变量变化，可以单步进行等，前提是编译器必须提前将源代码与目标代码之间的关系等，比如目标代码中的地址对于源代码中的哪一行、函数和变量的类型、结构体的定义、字符串保存到目标文件里面。设置有些高级的编译器和调试器支持查看STL容器的内容。想想xcode在调试时就支持查看各种容器的内容，还有image图像等。</p>
+<p>调试信息在目标文件和可执行文件中占很大的空间，往往比程序和数据本身大好几倍，所以当我们开发完程序并要将它发布的时候，须要吧这些对于用户没有用的调试信息去掉，以节省大量空间。在Linux下，我们可以使用“strip”命令来去掉ELF文件中的调试信息；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">strip foo</div></pre></td></tr></table></figure></p>
+<p>想想Xcode在build Configuration 的时候，也会选择Debug 还是 release，选择release时，在运行的时候，程序crash了，就不会再xcode中提示crash原因和位置。</p>
+<h3 id="静态链接"><a href="#静态链接" class="headerlink" title="静态链接"></a>静态链接</h3><p>由于链接形式的不同，产生了静态链接和动态链接。当我们有两个目标文件时，如何将它们链接起来形成一个可执行文件？这个过程中发生了什么？这基本就是链接的核心内容。</p>
+<p>整个链接过程分为两步：</p>
+<ul>
+<li>第一步：空间与地址的分配 扫描所有的输入目标文件，并获得它们各个段的长度、属性和位置，并且将输入目标文件中的符号表中所有的符号定义和符号引用收集起来，统一放到一个全局符号表。这一步中，链接器将能够获得所有输入目标文件的段长度，并且将它们合并，计算出输出文件中各个段合并后的长度与位置，并建立映射关系。</li>
+<li>第二步：符号解析与重定位 使用上面第一步中收集到的所有信息，读取输入文件中断的数据、重定位信息，并且进行符号解析与重定位、调整代码中的地址等。事实上第二步是链接过程的核心，特别是重定位过程。</li>
+</ul>
+<h3 id="空间与地址的分配"><a href="#空间与地址的分配" class="headerlink" title="空间与地址的分配"></a>空间与地址的分配</h3><p>链接器为目标文件分配地址和空间，实际的空间分配策略是：<strong>相似段合并</strong>，如下图所示：<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016092091451Space allocation.png" alt="2016092091451Space allocation.png"></p>
+<p>链接器为目标文件分配地址和空间，这句话中的“地址和空间”，其实有两个含义：</p>
+<ul>
+<li>输出的可执行文件中的空间；</li>
+<li>装载后的虚拟地址中的虚拟空间。</li>
+</ul>
+<p>对于有实际数据的段，比如“.text”和“.data”来说，它们在文件中和虚拟地址中要分配空间，因为它们在这两者中都存在；而对于“.bss”这样的段来说，分配空间的意义只局限于虚拟地址空间，因为它在文件中并没有内容。<strong>事实上，我们这里谈到的空间分配只关注于虚拟地址的分配</strong>，以为这个关系到链接器后面关于地址计算的步骤，而可执行文件本身的空间分配与链接过程的关系并不是很大。</p>
+<h3 id="符号解析与重定位"><a href="#符号解析与重定位" class="headerlink" title="符号解析与重定位"></a>符号解析与重定位</h3><p>在我们通常的观念里，之所以要链接是因为我们目标文件中用到的符号被定义在其他目标文件中，所以要将它们链接起来。</p>
+<p>符号没有被定义是我们平时在编写程序的时候最常碰见的问题之一，就是链接时符号未定义。导致整个问题的原因很多，最常见的一般都是链接时缺少了某个库，或者输入目标文件路径不正确或符号的声明与定义不一样。所以从普通程序员的角度看，符号的解析占据了链接过程的主要内容。</p>
+<p>其实重定位的过程也伴随着符号解析的过程，每个目标文件都可能定义一些符号，也可能引用到定义在其他目标文件的符号。重定位的过程中，每个重定位的入口都对一个符号引用，那么当链接器须要对某个符号的引用进行重定位是，它就要确定这个符号的目标地址。这时候链接器就会去查找由所有输入目标文件的符号表组成的全局符号表，找到相应的符号进行重定位。</p>
+<h3 id="静态库链接"><a href="#静态库链接" class="headerlink" title="静态库链接"></a>静态库链接</h3><p>一个静态库可以简单地看成<strong>一组目标文件的集合</strong>，即很多目标文件经过压缩打包后形成的一个文件。比如我们在Linux中最常用的C语言静态库libc位于/usr/lib/libc.a它属于glibc项目的一部分。</p>
+<p>静态库的链接如下图所示：<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016092173427Static library link.png" alt="2016092173427Static library link.png"></p>
+<p>为什么的静态运行库里面一个目标文件包含一个函数？比如lib.c里面printf.o只有printf()函数，为什么要这样组装？</p>
+<p>链接器在链接静态库的时候是以目标文件为单位的。比如我们引用了静态库中的printf()函数，那么链接器就会把库中包含printf()函数的那个目标文件链接进来，如果很多函数都放在一个目标文件中，很可能很多没有的函数都被遗弃链接进了输出结果中，由于运行库有成百上千个函数，数量非常庞大，每个函数独立地放在一个目标文件中可以尽量减少空间的浪费，那些没有被用到的目标文件（函数）就不要链接到最终的输出文件中。</p>
+<p>接下来书中也讲了链接过程控制，这部分操作性比较强，我就不一一展开了。</p>
+<p>提示：</p>
+<blockquote>
+<p>很多地方都提到了操作系统内核。从本质上讲，它本身也是一个程序。比如Windows的内核ntokrnl.exe就我我们平常看到的PE文件，它的位置位于\WINDOWS\system32\ntoskrnl.exe。很多人误以为Windows操作系统内核很庞大，由很多文件组成。这是一个误解，其实真正的Windows内核机是这个文件。</p>
+</blockquote>
+<h3 id="可执行文件的装载与进程"><a href="#可执行文件的装载与进程" class="headerlink" title="可执行文件的装载与进程"></a>可执行文件的装载与进程</h3><p>介绍可执行文件的装载与进程开始，有几个问题。</p>
+<ul>
+<li>什么是进程的虚拟地址空间？</li>
+<li>为什么进程要有自己独立的虚拟地址空间？</li>
+<li>装载的方式有哪些？</li>
+<li>进程虚拟地址的分布情况？比如代码段、数据段、BSS段、堆、栈分别在进程地址空间中的怎么分布，它们的位置和长度如何决定？</li>
+</ul>
+<h3 id="进程的虚拟地址空间"><a href="#进程的虚拟地址空间" class="headerlink" title="进程的虚拟地址空间"></a>进程的虚拟地址空间</h3><p>程序和进程的区别什么？<br>程序（或者狭义上讲的可执行文件）是一个静态的概念，它就是一些预先编译好的指令和数据集合的一个文件；进程则是一个动态的概念，它是程序运行时的一个过程，很多时候把动态库叫做运行时（Runtime）也有一定的含义。</p>
+<p>每个程序运行起来以后，它将拥有自己独立的虚拟地址空间（Virtual Address Space）这个虚拟地址空间的大小由计算机的硬件决定，具体地说是由CPU的位数决定。硬件决定了地址空间的最大理论上限，即硬件的寻址空间大小，比如32位的硬件平台决定了虚拟地址的地址为0到【2的32次方】-1,即0x00000000~0xFFFFFFFF，也就是我们常说的4GB虚拟空间大小；而64位的硬件平台具有64位寻址能力，它的虚拟地址空间达到了【2的64次方】字节，即0x0000000000000000~0xFFFFFFFFFFFFFFFF，总共17 179 869 184 GB，这个寻址能力现在来看，几乎是无限的，但是历史总是会嘲弄人，或许有一天我们会觉得64位的地址空间很小，就像我们现在觉得32位地址不够用一样。</p>
+<p>其实从程序的角度看，我们可以通过判断C语言程序中指针的所占空间来计算虚拟地址的大小。一般来说C语言指针大小的位数与虚拟空间的位数相同，如32位平台下的指针为32位，即4字节；64位平台下的指针为64为，即8字节。</p>
+<p>那么32位平台下的4GB虚拟空间，我们的程序是否可以任意使用呢？很遗憾，不行。因为程序在运行的时候处于操作系统的监管下，操作系统为了达到监控程序运行等一系列的目的，进程的虚拟空间都在操作系统的掌控之中。进程只能使用那些系统分配给进程的地址，如果访问了未经运行的空间，那么操作系统就会捕获到这些访问，将进程这种访问当作非法操作，强制结束进程。我们经常在Windows在碰到令人讨厌的“进程因非法操作需要关闭”或Linux下的“Segmentation fault”很多时候是因为进程访问了未经允许的地址。</p>
+<p>32位CPU下，程序使用的空间能不能超过4GB呢？这个问题其实应该从两个角度来看。</p>
+<ul>
+<li>问题里的“空间”如果是指虚拟地址空间，那么答案是“否”。因为32位的CPU只能用32位的指针，它最大的寻址范围是0到4GB。</li>
+<li>如果问题里是“空间”指计算机的内存空间，那么答案是“是”。Intel 自从1995年的Pentium Pro CPU开始采用36为的物理地址，也就是可以访问高达64GB的物理内存。</li>
+</ul>
+<p>从硬件层面上来讲，首先的32位地址线只能访问最多4GB的物理内存。但是自从扩展至36位地址之后，Intel修改了页映射的方式，使得新的映射方式可以访问到更多的物理内存。Intel 把这个地址扩展方式叫做<strong>PAE（Physical Address Extension）</strong>。当然这只是一种补救32位地址空间不够大时的非常规手段，真正的解决方法还是应该使用64位的处理器和操作系统。</p>
+<h3 id="装载的方式"><a href="#装载的方式" class="headerlink" title="装载的方式"></a>装载的方式</h3><p>程序执行时所需要的指令和数据必须在内存中才能够正常运行，最简单的办法就是将程序运行时所需要的指令和数据全部装入内存中，这样程序就可以顺利运行，这是最简单的静态装入的办法。但是很多情况下程序需要的内存数量大于物理内存的数量，当内存的数量不够时，根本的解决办法就是添加内存。相对应磁盘来说，内存是昂贵且稀有的，这种情况自计算机磁盘诞以来一直如此。所以人们想尽各种办法，希望能够在不添加内存的情况下让更多的<br>的程序运行起来，尽可能有效的利用内存。后来研究发现，程序运行时是由局部性原理的，所以我们可以将程序最常用的部分留在内存中，而将一些不太常用的数据存放在磁盘里，这就是动态装入的基本原理。</p>
+<p>装载的方式有哪些？<strong>覆盖装入（overlay）</strong>和<strong>页映射（paging）</strong>是两种很典雅的动态装载方法，它们所采用的思想都差不多，原则上都是利用了程序的局部性原理。<br>动态装入的思想是程序用到了哪个模块，就将那个模块装入内存，如果不用就暂时不装入，存放在磁盘中。</p>
+<ul>
+<li>覆盖装入（overlay）<br>  覆盖装入在没有发明虚拟存储之前使用比较广泛，现在几乎已经被淘汰了。覆盖装入的方法把挖掘内存潜力的任务交给了程序员，程序员在编写程序的时候会必须手工的将程序分割成若干块，然后编写一个辅助代码来管理这些模块何时应该驻留在内存，何时应该被替换掉。这个小的辅助代码就是所谓的覆盖管理器（Overlay Manager）。</li>
+<li>页映射（paging）<br>  页映射是虚拟存储机制的一部分。与覆盖装入的原理相似，页映射也不是一下子就把程序的所有数据和指令都装入内存，而是将内存和所有的磁盘中的数据和指令按照“页（Page）”为单位划分成若干个页，以后所有装载和操作的单位就是页。</li>
+</ul>
+<p>理解页映射：</p>
+<blockquote>
+<p>为了演示页映射的基本机制，假设我们的32位机器有16KB的内存，每个页大小为4096字节，则共有4个页。假设程序所有的指令和数据总和为32KB，那么程序总共被分为了8个页。我们将它们编号为P0~P7。很明显，16KB的内存无法开始同时将32KB的程序装入，那么我们将按照动态装入的原理来进行整个装入的过程。如果程序刚开始执行时的入口地址在P0，这时装载管理器发现程序P0不在内存中，于是将内存F0分配给P0，并且将P0的内容装入F0；运行一段时间以后，程序需要用到P5，于是装载管理器将P5装入F1；就这样，当程序用到P3和P6的时候，它们分别被装入到了F2和F3，它们的映射关系如下图。<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016092197064Mapping and the pages load.png" alt="2016092197064Mapping and the pages load.png"><br>很明显，如果这时候程序只需要P0、P3、P5和P6这个4个页，那么程序就能一直运行下去。但是问题很明显，如果这时候程序要访问P4，那么装载管理器必须做出抉择，它必须放弃目前正在使用的4个内存页中的其中一个来装载P4。至于选择哪个页，我们有很多种算法可以选择，比如可以选择F0，因为它是第一个被分配掉的内存页（这个算法我们可以称之为FIFO，先进先出）；假设装载管理器发现F2很少被访问到，那么我们可以选择F2（这种算法可以称之为LUR，最少使用算法）。假设我们放弃P0，那么这时候F0就装入了P4。程序接着按照这样的方式运行。</p>
+</blockquote>
+<p>其实例子中这个所谓的装载管理器就是现代的操作系统，更加准确地讲就是操作系统的存储管理器。目前几乎所有的主流操作系统都是按照这种方式装载可执行文件的。我们熟悉的Windows对PE文件的装载及Linux对ELF文件的装载都是这样完成的。</p>
+<h3 id="进程的建立"><a href="#进程的建立" class="headerlink" title="进程的建立"></a>进程的建立</h3><p>从操作系统的角度来看，一个进程最关键的特征是它拥有独立的虚拟地址空间，这使得它有别与其他进程。很多时候一个程序被执行同时都伴随着一个新的进程的创建，那么我们就来看看这种最通常的情形：创建一个进程，然后装载响应的可执行文件并且执行。在有虚拟存储的情况下，上述过程最开始只需要做三件事情：</p>
+<ul>
+<li>创建一个独立的虚拟地址空间；<br>  我们知道一个虚拟空间由一组页映射函数将虚拟空间的各个页映射至相应的物理空间，那么创建一个虚拟空间实际上并不是创建空间而是创建映射函数所需要的相应的数据结构。</li>
+<li>读取可执行文件头，并且建立虚拟空间与可执行的映射关系；<br>  上面那一步的页映射关系函数是虚拟空间到物理内存的映射关系，这一步所做的是虚拟空间与可执行文件的映射关系。当程序执行发生页错误时，操作系统将从物理内存中分配一个物理页，然后将该“缺页”从磁盘中读取到内存中，再设置缺页的虚拟页和物理页的映射关系，这样程序才得以正常运行。但是很明显的一点是，当操作系统捕获到缺页错误时，它应该知道程序当前所需要的页在可执行文件中的哪一个位置。这就是虚拟空间与可执行文件之间的映射关系。这一步是是整个装载过程中最重要的一步，页是传统意义上“装载”的过程。<br>  Linux 中进程虚拟空间中的一个段叫做<strong>虚拟内存区域（VMA，Virtual Memory Area）</strong>,Windows中将这个叫做<strong>虚拟段（Virtual Secion）</strong>，其实它们都是同一个概念。比如，操作系统创建进程后，会在进程相应的数据结构中设置一个.text段的 VMA 。VMA 是一个很重要的概念，它对于我们理解程序的装载执行和操作系统如何管理进程的虚拟空间由非常重要的帮助。</li>
+<li>将CPU的指令寄存器设置成可执行文件的入口地址，启动运行。<br>  第三步其实也是最简单的一部，操作系统通过设置CPU的指令寄存器控制权转交给进程，由此进程开始执行。这一步看似简单，实际上是在操作系统层面上比较复杂，它涉及内核推展和用户堆栈的切换、CPU运行权限的切换。不过从进程的角度看这一步可简单地认为操作系统执行了一条跳转指令，直接跳转到可执行文件的入口地址。</li>
+</ul>
+<h3 id="进程虚存空间分布"><a href="#进程虚存空间分布" class="headerlink" title="进程虚存空间分布"></a>进程虚存空间分布</h3><p>在一个正常的进程中，可执行的文件中包含的往往不止代码段，还有数据段、BSS等，所以映射到进程虚拟空间的往往不止一个段。当段的数量增多时，就会产生空间浪费的问。EFL文件被映射时，是系统的页长度作为单位，那么每个段在映射时的长度应该都是系统页长度的整数倍；如果不是，那么多余的部分也将占有一个页。一个EFL文件中往往有几十个段，那么内存空间的浪费是可想而知的。</p>
+<p>当我们站在操作系统装载可执行文件的角度看问题时，可以发现它实际上并不关心可执行文件各个段所包含的实际内容，操作系统只关心一些跟装载相关的问题。最主要的是段的权限（可读、可写、可执行）。ELF文件中，段的权限往往只有为数不多的几种组合，基本上是三种：</p>
+<ul>
+<li>以代码段为代表的权限可读可执行的段。</li>
+<li>以数据段和BSS段为代表的权限可读可写的段。</li>
+<li>以只读数据段为代表的权限为只读段。</li>
+</ul>
+<p>那么我们可以找到一个很简单的方案就是：<strong>对于相同的权限的段，把他们合并到一起当作一个段来进行映射。</strong><br>段合并在一起看作是一个“Segment”，那么装载的时候就可以将它们看作是一个整体一起映射，这样做的好处是可以很明显的减少内部碎片，从而节省了内存空间。</p>
+<p>“Segment”的概念实际上是从装载的角度重新划分了ELF是各个段。在目标文件链接成可执行文件的时候，链接器会进来把相同权限属性的段分配在一个空间。比如可读可执行的段都放在一起，这种段的典型是代码段；可读写的段都放在一起，这种段的典型是数据段。</p>
+<p>那我们在之前理解的.text和.data是不是这里说的”Segment”呢？</p>
+<p>看下图： ELF可执行文件与进程虚拟空间的映射关系<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016092346799The ELF executable file with the process of virtual space mapping relation.png" alt="2016092346799The ELF executable file with the process of virtual space mapping relation.png"></p>
+<p>在ELF文件中的这些段，我们称之为”section”。所以“Segment”和“Section”是从不同的角度来划分同一个ELF文件。这个在ELF中被称为不同的<strong>视图（View）</strong>,从“Section”的角度来看ELF文件就是<strong>链接视图（Linking View）</strong>，从“Segemnt”的角度来看就是执行视图（Execution View）。当我们谈ELF装载时，“段”专门指“Segment”;而在其他情况下“段”指的是“Section”。</p>
+<h3 id="堆和栈"><a href="#堆和栈" class="headerlink" title="堆和栈"></a>堆和栈</h3><p>在操作系统中，VMA除了被用来映射可执行文件中的各个“Segment”以外，它还可以有其他的作用，操作系统通过VMA来对进程的地址空间进行管理。我们知道进程在执行的时候它还需要用到栈（Stack）、堆（Heap）空间，事实上它们在进程虚拟空间也是以VMA的形式存在的，很多情况下，一个进程中中的栈和堆分别都有一个对应的VMA，而且它们没有映射到文件中，这种VMA叫做<strong>匿名虚拟内存区域（Anonymous Virtual Memory Area）</strong>。</p>
+<p>小结一下关于进程虚拟地址空间的概念：操作系统通过给进程空间划分出一个个VMA来管理进程的虚拟空间；基本原则上将相同权限属性的、有相同映像文件的映射成一个VMA；一个进程基本上可以分为如下VMA区域：</p>
+<ul>
+<li>代码VMA，权限只读、可执行；有映像文件；</li>
+<li>数据VMA，权限可读写、可执行；有映像文件；</li>
+<li>堆 VMA，权限可读写，可执行；无映像文件，匿名，可向上扩展。</li>
+<li>栈 VMA，权限可读写，不可执行；无映像文件，匿名，可向下扩展。</li>
+</ul>
+<p>再让我们来看一个常见的进程虚拟空间是怎么样的，如下图：<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016092374781The ELF executable file with the process of virtual space mapping relation.png" alt="2016092374781The ELF executable file with the process of virtual space mapping relation.png"></p>
+<h3 id="堆的最大申请数量"><a href="#堆的最大申请数量" class="headerlink" title="堆的最大申请数量"></a>堆的最大申请数量</h3><p>Linux下虚拟地址空间给进程的本身是3GB（Windows默认是2GB），那么程序真正可以用到的有多少呢？我们知道，一般程序中使用malloc()函数进行地址空间的申请，那么malloc()到底最大可以申请多少内存呢？用下面这个小程序可以测试malloc最大内存的申请数量：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;stdlib.h&gt;</div><div class="line"></div><div class="line">unsigend maximum = 0;</div><div class="line"></div><div class="line">int main(int argc, const char * argv[]) &#123;</div><div class="line">    // insert code here...</div><div class="line">    unsigned blocksize[] = &#123;1024 * 1024,1024,1&#125;;</div><div class="line">    int i,count;</div><div class="line">    for (i = 0; i &lt; 3; i++)&#123;</div><div class="line">        for (count = 1;; count++) &#123;</div><div class="line">            void *block = malloc(maximum + blocksize[i] * count);</div><div class="line">            if (block) &#123;</div><div class="line">                maximum = maximum + blocksize[i] * count;</div><div class="line">                free(block);</div><div class="line">            &#125;else&#123;</div><div class="line">                break;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    printf(&quot;maximum malloc size = %lf GB\n&quot;,maximum*1.0 / 1024.0 / 1024.0 / 1024.0);</div><div class="line">    </div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>作者在Linux机器上，运行上面这个程序的结果大概是2.9GB左右的空间；Windows下运行这个乘车的结果大概是1.5GB。那么malloc的最大申请数量会受到哪些因素的影响？实际上，具体是数值会受到操作系统版本、程序本身大小、用到的动态/共享库数量大小、程序栈数量、大小等，甚至可能每次运行的结果都会不同，因为有些操作系统使用了一种叫做随机地址空间分布的技术（主要是出于安全考虑，防止程序受到恶意攻击），进程的堆空间变小。</p>
+<h3 id="段对齐"><a href="#段对齐" class="headerlink" title="段对齐"></a>段对齐</h3><p>可执行文件最终是要被操作系统装载运行的，这个装载的过程一般是通过虚拟内存页映射机制完成的。在映射的过程中，页是映射的最小单位。一段物理内存和进程地址空间之间建立映射关系，这段内存空间长度必须是页内存的整数倍。由于有着长度和起始地址的限制，对于可执行文件来说，它应该尽量优化自己的空间和地址的安排，以节省空间。</p>
+<p>为了解决这种问题，有些UNIX系统采用了一个很取巧的办法，就是让那些各个段壤接部分共享一个物理页面，然后将该物理页面分别映射两次。这里解释一下，我刚刚看到这里的时候，也没有明白是是什么意思，我们想来看一下图：</p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016092638493Period of unincorporated situation for executable files.png" alt="2016092638493Period of unincorporated situation for executable files.png"></p>
+<p>假设虚拟内存SEG0 page和 虚拟内存SEG1 page，都是未被分配满的内存页，那SEG0和SEG1的接壤部分的那个物理页，系统将它们映射两份到虚拟地址空间。如下图：</p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016092655277The ELF file section of mergers.png" alt="2016092655277The ELF file section of mergers.png"></p>
+<p>因为段地址对齐的关系，各个段的虚拟的虚拟地址往往不是系统页面长度的整数倍了。</p>
+<h3 id="为什么要动态链接"><a href="#为什么要动态链接" class="headerlink" title="为什么要动态链接"></a>为什么要动态链接</h3><p>静态链接使得不同程度程序开发者和部门能够相对独立的开发和测试自己的程序模块，从某种意义上来讲大大促进了程序开发的效率，原先限制程序的模块也随之扩大，但是慢慢地静态链接的诸多缺点也逐步暴漏出来，比如浪费内存和磁盘空间、模块更新困难等问题，使得人们不得不寻找一种更好的方式来组织程序的模块。</p>
+<h3 id="内存和磁盘空间"><a href="#内存和磁盘空间" class="headerlink" title="内存和磁盘空间"></a>内存和磁盘空间</h3><p>静态链接这种方法的确很简单，原理上很容易理解，实践上很难实现，在操作系统和硬件不发达的早期，绝大部分系统采用这种方案。随着计算机软件的发展，这种方法的缺点很快就暴漏出来了，那就是静态链接对于计算机内存和磁盘的空间浪费非常严重。特别是多进程操作系统的情况下，静态链接极大的浪费了内存和空间，想象一下每个程序内部除了都保留着print()函数、scanf()函数、strlen()等这样的公用函数库，还有数量相当可观的其他库以及它们所需要的辅助数据结构。</p>
+<p>比如Program1和Program2分别包含Program1.o和Program2.o两个模块，在静态链接的情况下因为Program1和Program2都用到Lib.o这个模块，所以它们同时在链接输出的可执行文件Program1和Program2有两个副本。当我们同时运行Program1和Program2时，Lib.o在磁盘中和内存中都有两个副本。当系统中存在大量的类似Lib.o的多个程序共享目标文件时，其中很大一部分空间就被浪费了。在静态链接中，C语言的静态库是很典型的浪费空间的例子，还有其他数以千计的库，如果都需要静态链接，那么空间浪费无法想象。</p>
+<h3 id="程序开发和发布"><a href="#程序开发和发布" class="headerlink" title="程序开发和发布"></a>程序开发和发布</h3><p>空间浪费是静态链接的一个问题，另一个问题是静态链接对程序的更新、部署和发布也会带来很多麻烦。比如Program1所使用的Lib.o是由一个第三方厂商提供的，当该厂商更新了Lib.o的时候（比如修复了lib.o里面包含的一个bug）,那么Program1的厂商就需要拿到最新版的Lib.o，然后将其与Program1.o链接后将新的Program1整个发布给用户。这样做的缺点很明显，即一旦程序中有任何模块更新，整个程序就要重新链接、发布给用户。</p>
+<h3 id="动态链接"><a href="#动态链接" class="headerlink" title="动态链接"></a>动态链接</h3><p>要解决空间浪费和更新困难这两个问题的办法就是把程序模块互相分割开来，行程独立的文件，而不再将它他们静态地链接在一起。简单是将，就是不对哪些组成程序的目标文件进行链接，等到程序要运行时才进行链接。也就是说，把链接这个过程推迟到了运行时再进行，这就是动态链接（Dynamic Linking）的基本思想。</p>
+<p>还是Program1和Program2为例，Program1和lib.o都加入了内存，这时如果我们需要运行Program2，那么系统只要加载Program2.o，而不需要重新加载Lib.o，因为内存中已经存在一份Lib.o的副本，系统做的只是将Program2.o和Lib.o链接起来。另外在内存中共享一个目标文件模块的好处不仅仅是节省内存，它还可以减少物理页面的换入和换出，也可以增进CPU缓存的命中率，因为不同进程间的数据和指令都几种在了同一个共享模块上。</p>
+<p>动态链接的方案也可以使程序的升级变动更加容易，当我们要升级程序库或程序共享的某个模块时，理论上只要简单地将旧的目标文件覆盖点，而无需将所有的程序再重新链接一遍，当程序下一次运行的时候，新版本的目标文件会被自动装载到内存并且链接起来，程序就完成了升级的目标。</p>
+<h3 id="程序可扩展性和兼容性"><a href="#程序可扩展性和兼容性" class="headerlink" title="程序可扩展性和兼容性"></a>程序可扩展性和兼容性</h3><p>动态链接还有一个特点就是在程序运行时可以动态的选择加载各种模块程序，这个优点就是后来被人名用来制作程序的<strong>插件（Plug-in）</strong></p>
+<p>动态链接还可以加强程序的兼容性。一个程序在不同平台运行时可以动态链接到有操作系统提供的动态链接库，这些动态链接库相当于在程序和操作系统之间加了一个中间层，从而消除了程序对不同平台之间依赖的差异性。</p>
+<p>动态链接也有诸多的问题令人烦恼和费解。很常见的一个问题是，当程序所依赖的某个模块更新后，由于新的模块与旧的模块之间接口不兼容，导致原有的程序无法运行。</p>
+<h3 id="动态链接的基本实现"><a href="#动态链接的基本实现" class="headerlink" title="动态链接的基本实现"></a>动态链接的基本实现</h3><p>动态链接的基本思想就是把程序模块拆分成各个相对独立的部分，在程序运行时才将它们链接在一起形成一个完整的程序，而不是像静态链接一样把所有的程序模块都链接成一个单独的可执行的文件。</p>
+<p>动态链接涉及运行时的链接及多个文件的装载，必须要有操作系统的支持，因为动态链接的情况下，进程的虚拟地址空间的分布会比静态链接更为复杂，还有存储管理、内存共享、进程线程等机制在动态链接下也会有微妙的变化。在Linux系统中，ELF动态链接文件被称为动态共享对象，简称共享对象，一般以”.so”为扩展名的一些文件。</p>
+<p>在Linux中，常用的C语言的运行库glibc，它的动态链接形式的版本保存在”/lib”目录下，文件名叫做”lib.so”。整个系统只保留一份C语言的动态链接文件”lib.so”，而所有C语言编写的、动态链接的程序都可以在运行时使用它。当程序被装载的时候，系统的<strong>动态链接器</strong>会将程序中所需要的所有动态链接库（最基本的就是libc.so）装载到进程的地址空间，并且将程序中所有未决议的符号绑定到相应的动态链接库中，并进行重定位工作。</p>
+<p>程序与libc.so 之间真正的链接工作是由动态链接器完成的，动态链接把链接这个过程从本来的程序装载前被推迟到了装载的时候。这样的做法的确很灵活，但是程序每次都被装载时都要进行重新链接，是不是很慢？的确，动态链接会导致程序在性能的一些损失，但是对动态链接的链接过程可以进行优化。据估算，动态链接与静态链接相比，性能损失大约5%以下。这点性能用来换取程序在空间上的节省和程序构建升级的灵活性，是相当值得的。</p>
+<h3 id="动态链接过程"><a href="#动态链接过程" class="headerlink" title="动态链接过程"></a>动态链接过程</h3><p><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016092812881Dynamic linking process.png" alt="2016092812881Dynamic linking process.png"><br>Lib.c 被编译成了Lib.so共享文件，Programl1.c被编译成Program1.o之后，链接成可执行文件Program1。图中有一个步骤与静态链接不一样，那就是Program.o被连接这一步链接过程成可执行文件的这一步，在静态链接中会把Program1.o和Lib.o链接到一起，并且产生出输出可执行文件Program1。但是在这里，Lib.o没有被链接进来，链接的输入目标文件只有Program1.o(当然还有C语音的运行库，这里暂时忽略)。但是，Lib.so也参与了链接过程，这是这么回事儿？</p>
+<p>当程序模块Program1.o被编译成Program1.o时，编译器还不知道 foobar() 函数的地址。当链接器将Program1.o链接成可执行文件时，这个时候链接器必须确定Program1.o中所引用的 foobar() 函数的性质。如果 foobar() 是定义与其他静态目标模块中的函数，那么链接器将会按照静态链接的规则，将Program1.o中的foobar()地址引用重定位；如果foobar()是一个定义在某个动态共享对象中的函数，那么链接器就会将这个符号的引用标记为一个动态链接的符号，不对它进行地址重定位，把这个过程留到装载时再进行。</p>
+<p>那么问题又来了，链接器如何知道foobar的引用是一个静态符号还是一个动态符号？这实际上就是我们要用到Lib.so的原因。Lib.so保存了完整的符号信息（因为运行时进行动态链接还须使用符号信息），把Lib.so也作为链接的输入文件之一，链接器在解析符号时就可以知道：foobar()一个定义在Lib.so的动态符号，这样链接器就可以对foobar()用作特殊的处理，使它成为一个对动态符号的引用。</p>
+<h3 id="关于模块"><a href="#关于模块" class="headerlink" title="关于模块"></a>关于模块</h3><p>在静态链接时，整个程序最终只有一个可执行文件，它是一个不可以分割的整体;但是在动态链接下，一个程序被分成了若干个文件，有程序的主要部分，即可执行文件（Program1）和程序所依赖的共享对象(Lib.so)，很多时候我们也把这些部分分称为模块，即动态链接下的可执行文件和共享对象都可以看作是一个程序的模块。</p>
+<h3 id="动态链接程序运行时的地址分布"><a href="#动态链接程序运行时的地址分布" class="headerlink" title="动态链接程序运行时的地址分布"></a>动态链接程序运行时的地址分布</h3><p>共享对象的最终装载地址在编译时是不确定的，而是在装载时，装载器根据当前的地址空间的空闲情况，动态分配一块足够大小的虚拟地址空间给响应的共享对象。</p>
+<h3 id="地址无关代码"><a href="#地址无关代码" class="headerlink" title="地址无关代码"></a>地址无关代码</h3><p>我们知道重定位是根据符号来进行重定位的，装载时重定位是解决动态模块有绝对地址引用的办法之一，但是它有一个很大的缺点，是指令部分无法在多个进程之间共享，这样就失去了动态链接节省内存的一大优势。其实我们的的目的很简单，希望程序模块中共享的指令部分在装载时不需要因为装载地址的改变而改变，所以事先的基本想法就是把指令中那些需要被修改的部分分离出来，跟数据部分放在一起，这样指令部分就可以保持不变，而数据部分可以做在每个进程中拥有副本，这种方案就是目前被称为<strong>地址无关代码的技术（PIC，Position-independent Code）</strong>的技术。</p>
+<p>我们先来分析模块中各种类型地址的引用方式，我们把共享对象模块中的地址引用按照是否为跨模块分为两类：模块内部引用和模块外部引用；按照不同的引用方式又可以分为指令引用和数据访问，这样我们就得到了入下图中的4中情况。</p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016092821717Four kinds of addressing mode.png" alt="2016092821717Four kinds of addressing mode.png"></p>
+<ul>
+<li>第一种是模块内部的函数调用、跳转等。</li>
+<li>第二种是模块外部的数据访问，比如模块中定义的全局变量，静态变量。</li>
+<li>第三种是模块外部的函数调用、跳转等。</li>
+<li>第四种是模块外部的数据访问，比如其他模块中定义的全局变量。</li>
+</ul>
+<p>在编译上面这段代码时，编译器实际上不能确定变量b和函数ext()是模块外部还是模块内部，因为它们有可能被定义在同一个共享对象的其他目标文件中。由于没法确定，编译器只能把它们都当作模块外部的函数和变量来处理。</p>
+<ul>
+<li>模块内部调用或跳转<br>  第一种类型应该是最简单的，那就是模块内部调用。因为被调用的函数与调用者处于同一个模块，它们之间的相对位置是固定的，所以这种情况比较简单。对于现代系统来讲，模块内部的跳转、函数调用都是可以是相对地址调用，或者是基于寄存器的相对调用，所以对于这种指令是不需要重定位的。</li>
+<li>模块内部数据访问<br>  接着来看看第二种类型，模块内部的数据访问。很明显，指令中不能直接包含数据的绝对地址，那么唯一的办法就是寻址。我们知道，一个模块前面一般是若干个页的代码，后面紧跟着若干个页的数据，这些页之间的相对位置是固定的，也就是说，任何一条指令与它需要访问的模块内部数据之间相对位置是固定的，那么只需要相对于当前指令加上固定的偏移量就可以访问模块内部数据了。</li>
+<li><p>模块间数据访问<br>  模块间的数据访问比模块内部稍微麻烦一点，因为模块加的数据访问目标地址要等到装载时才能决定，比如上面例子中的变量b，它被定义在其他模块中，并且该地址在装载时才能确定。我们前面提到要使得代码地址无关，基本思想就是把跟地址相关的部分放到数据段里面，很明显，这些其他模块的全局变量的地址是跟模块装载地址有关的。ELF的做法是在数据段里面建立一个<strong>指向这些变量的指针数组</strong>，也被称为<strong>全局偏移表（Global Offset Table）</strong>，当代码需要引用改全局变量时，可以通过GOT中的相对的项间接引用，它的基本机制如下图：<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016092880002The data access between modules.png" alt="2016092880002The data access between modules.png"><br>当指令中需要访问变量b时，程序会先找到GOT，然后根据GOT中变量所对应的项找到变量的目标地址。每个变量都对应一个4个字节的地址，链接器在装载模块的时候会查找每个变量所在的地址，然后填充GOT中的各个项，以确保每个指针所指向的地址正确。由于GOT本身是放在数据段的，所以它可以在模块装载时被修改，并且每个进程都可以有独立的副本，互相不受影响。</p>
+<p>  那GOT是如何做到指令的地址无关性的呢？从第二种类型的数据访问我们了解到，模块在编译时可以确定模块内部变量相对于当前指令的偏移量，那么我们也可以在编译时确定GOT相对于当前指令的偏移。确定GOT的位置跟上面的访问变量a的方法基本一样，通过得到PC值然后加上一个偏移量，就可以得到GOT的位置。然后我们根据变量地址在GOT中的偏移量就可以得到变量的地址，当然GOT中的每个地址对于哪个变量是由编译器决定的。</p>
+</li>
+<li><p>模块间调用、跳转<br>  对于模块间的调用和跳转，我们也可以采用上面类型四的方法来解决。与上面的类型有所不同的是，GOT中相应的项保存的是目标函数的地址，当模块需要调用目标函数时，可以通过GOT中的项进行间接跳转，基本原理入下图所示：<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016092872480Call and jump between modules.png" alt="2016092872480Call and jump between modules.png"><br>这种方法很简单，但是存在一些性能问题，实际上ELF采用了一种更为复杂和精巧的方法，在动态链接优化中进行介绍。<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016092867796Various ways to address references.png" alt="2016092867796Various ways to address references.png"></p>
+</li>
+</ul>
+<h3 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h3><p>Q:如果一个共享对象的lib.so中定义了一个全局变量G，而进程A和进程B都使用了lib.so,那么当进程A改变了这个全局变量G的值时，进程B中的G会受到影响吗？<br>A:不会。因为当lib.so被两个进程加载时，它的数据段部分在每个进程中都有独立的副本，从这个角度看，共享对象中的全局变量实际上和定义在程序内部的全局变量没有什么区别。任何一个进程访问的只是自己的那个副本，而不会影响其他进程。那么如果我们把这个问题的条件改成同一个进程中的线程A和线程B，它们是否看得到对方对lib.so中全局变量G的修改呢？对于同一个进程的两个线程来说，它们访问的是同一个进程地址空间，也就是同一个lib.so的副本，所以它们对G的修改，对方都是看得见的。</p>
+<p>那么我们可不可以做到跟前面相反的情况呢？比如要求两个进程共享一个共享对象的副本或要求两个线程访问全局变量的不同副本，这两种需求都是存在的，比如多个进行可以共享一个全局变量就可以用来实现进程间的通信；而多个线程访问全局变量的不同副本可以防止不同线程之间对全局变量的干扰。实际上这两种需求都是有相应的解决方法的，多进程共享全局变量又被叫做”共享数据段”。而多个线程访问不同的全局变量副本又被叫做”线程私有存储”（Thread Local Stroage）。</p>
+<h3 id="影响动态链接性能的主要问题"><a href="#影响动态链接性能的主要问题" class="headerlink" title="影响动态链接性能的主要问题"></a>影响动态链接性能的主要问题</h3><ul>
+<li>动态链接下对全局和静态的数据都有进行GOT定位，然后间接寻址；对于模块间的调用也要先定位GOT，然后再进行间接跳转，如此一来，程序的运行速度必然会减慢。；</li>
+<li>动态链接的链接工作在运行时完成，即程序开始执行使，动态链接器都要进行一次链接工作，动态链接器会寻找并装载所需要的共享对象，然后进行符号查找重定位等工作，这些工作势必减慢程序的启动速度。</li>
+</ul>
+<h3 id="延迟绑定（PLT）"><a href="#延迟绑定（PLT）" class="headerlink" title="延迟绑定（PLT）"></a>延迟绑定（PLT）</h3><p>在动态链接下，程序模块之间包含了大量的函数引用（全局变量往往比较少，因为大量全局变量会导致模块间耦合变大）。所以在程序开始执行之前，动态链接会消耗不少时间用于解决模块之间的函数引用的符号查找以及重定位，这也是我们上面提到的减慢动态链接的第二个原因。不过可以想象，在一个程序运行过程中，可能很多函数在程序执行完都不会被用到，比如一些错误处理函数或是一些用户很少用到的功能模块等，如果一开始就把所有的函数都链接好实际上是一种浪费。所以ELF采用了一种叫做<strong>延迟绑定（Lazy Binding）</strong>的做法，<strong>基本的思想就是当函数第一次被用到才进行绑定（符号查找、重定位等）</strong>，如果没有用到则不进行绑定。这样的做法可以大大加快程序的启动速度，特别有利于一些大量函数引用和大量模块的程序。ELF 使用PLT（Procedure Linkage Table）的方法来实现，这种方法使用了一些很精巧的指令程序来完成。</p>
+<p>看到这里想到了iOS 中NSObject类的+load和+initialize这两个方法。</p>
+<p>在程序启动时，Runtime会去加载所有的类。在这一时期，如果类或者类的分类实现了+load方法，则会去调用这个方法。</p>
+<p>而+initialize方法是在类或子类第一次接收消息之前会被调用，这包括类的实例对象或者类对象。如果类一直没有被用到，则这个方法不会被调用。</p>
+<p>基于这两个方法的特殊性，我们可以将类使用时所需要的一些前置条件在这两个方法中处理。不过，如果可能，应该尽量放在+initialize中。因为+load方法是在程序启动时调用，势必会影响到程序的启动时间。而+initialize方法可以说是懒加载调用，只有用到才会去执行。</p>
+<h3 id="动态链接器"><a href="#动态链接器" class="headerlink" title="动态链接器"></a>动态链接器</h3><p>动态链接情况下，可执行文件的装载与静态链接情况基本一样。首先操作系统会读取可执行文件的头部，检查文件的合法性，然后从头部中的“Progeam Header”中读取每个“Segment”的虚拟地址、文件地址和属性，并将它们映射到虚拟空间的相应位置，这些步骤跟前面的静态链接情况装载基本无异。在静态链接情况下，操作系统接着就可以把控制权转交给可执行文件的入口地址，然后开始执行。</p>
+<p>但是在动态链接的情况下，操作系统还不能在装载完成可执行文件之后就把控制权交给可执行文件，因为我们知道可执行文件依赖于很多共享对象。这时候，可执行文件里对很多外部符号的引用还处于无效地址状态，即还没有相应的共享对象中的实际位置链接起来，所以在映射完可执行文件之后，操作系统会先启动一个动态链接器（Dynamaic Linker）。</p>
+<p>在Linux下，动态链接器ld.so实际上是一个共享对象，操作系统同样通过映射的方式将它加载到进程地址空间中。操作系统在加载完动态链接器之后，就将控制权交给动态链接的入口地址。当动态链接器得到控制权之后，它开始执行一系列自身的初始化操作，然后根据当前的环境参数，开始对可执行文件进行动态链接工作。当所有链接工作完成以后，动态链接器会将控制权转交给可执行文件的入口地址，程序开始正式执行。</p>
+<p>关于动态链接器本身的细节实虽然不再展开，但是作为一个非常有特点的，也很特殊的共享对象，关于动态链接器的实现的几个问题还是很值得思考的：</p>
+<ol>
+<li><p>动态链接器本身是动态链接还是静态链接的？<br>动态链接器本身应该是静态链接的，它不是依赖于其他共享对象，动态链接器本身是用来帮助其他ELF文件解决共享对象的依赖问题，如果它也是依赖于其他共享对象，那么谁来帮它解决依赖问题？所以它本身必须不依赖与其他共享对象。这一点可以使用 ldd 来判断：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ldd /lib/ld-linux.so.2</div><div class="line">    staticall linked</div></pre></td></tr></table></figure>
+</li>
+<li><p>动态链接器本身必须是PIC的吗？<br>是不是PIC对于动态链接器来说并不关键，动态链接器可以是PIC的也可以不是，但往往使用PIC会更加简单一些。一方面，如果不是PIC的话，会使得代码段无法共享，浪费内存，另一方面也会是ld.so本身初始化更加复杂，因为自举时还需要对代码段进行重定位。实际上ld-linux.so.2是PIC的。</p>
+</li>
+<li>动态链接器可以被当做可执行文件执行，那么装载地址应该是多少？<br>ld.so的装载地址跟一般的共享对象没区别，即0x00000000。这个装载地址是一个无效的装载地址，作为一个共享库，内核在装载它时会为其选择一个合适的装载地址。</li>
+</ol>
+<h3 id="“-interp”-段"><a href="#“-interp”-段" class="headerlink" title="“.interp” 段"></a>“.interp” 段</h3><p>那么操作系统中哪个才是动态链接器呢，它的位置由谁决定？是不是所有的*NIX系统的动态链接器都位于/lib/ld.so呢？实际上，动态链接器的位置既不是又系统配置指定，也不是由环境参数决定，而是由ELF可执行文件决定。在动态链接的ELF可执行文件中，有一个专门的段叫做“.interp”段（“interp”是“interpreter”（解释器）的缩写）。</p>
+<p>“.interp”的内容很简单，里面保存的就是一个字符串，这个字符串就是可执行文件所需要的动态链接器的路径，在Linux下，可执行文件所需要的动态链接器的路径几乎都是“lib/ld-linux.so.2”，其他*nix操作系统可能会有不同的路径。</p>
+<h3 id="“-dynamic”段"><a href="#“-dynamic”段" class="headerlink" title="“.dynamic”段"></a>“.dynamic”段</h3><p>类似于“.interp”这样的段，ELF中还有几个段也是专门用与动态链接的，比如“.dynamic”段和“.dynsym”段等</p>
+<p>动态链接ELF中最重要的结构应该是“.dynamic”段，这个段里面保存了动态链接器所需要的基本信息，比如依赖那些共享对象、动态链接符号表的位置、动态链接重定位表的位置、共享对象初始化代码的地址等。</p>
+<h3 id="动态符号表"><a href="#动态符号表" class="headerlink" title="动态符号表"></a>动态符号表</h3><p>为了完成动态链接，最关键的还是所依赖的符号和相关文件的信息。我们知道在静态链接中，有一个专门的段叫做符号表“.symbtab”（Symbol Table），里面保存了所有关于该目标的文件的符号的定义和引用。动态链接的符号表示实际上它和静态链接十分相似，比如前面列子中的Program1程序依赖于Lib.so,引用到了里面的foobar()函数。那么对于Progarml来说，我们往往称Progarm1<strong>导入（Import）</strong>了foobar函数，foobar是Program1的导入函数（Import Function）；而站在Lib.so的角度来看，它实际上定义了foobar()函数，并且提供给其他模块使用，我们往往称Lib.so导出（Export）了foobar()函数，foobar是Lib.so的导出函数（Export Function）。把这种导入导出关系放到静态链接的情形下，我们可以把它们叫看作普通的函数定义和引用。</p>
+<p>为了表示动态链接这些模块之间的符号导入导出的关系，ELF专门有一个叫做动态符号表（Dynamic Symbol Table）d段用来保存这些信息，这个段的段名通常叫做”.dynsym”（Dynamic Symbol）。与”.symtab”不同的是，”.dynsym”只保存了与动态链接相关的符号，对于那些模块内部的符号，比如模块私有变量则不保存。很多时候动态链接的模块同时拥有”.dynsym”和”.symtab”两个表，”.symtab”中往往包含了所有符号，包括”.dynsym”中的符号。</p>
+<p>与”.symtab”类似，动态符号表也需要一些辅助的表，比如用于保存符号的字符串表。静态链接时叫做符号字符串表“symtab”（String Table），在这里就是动态符号字符串”.dynstr”（Dynamic Stirng Table）;由于动态链接下，我们需要在程序运行时查找符号，为了加快符号的查找过程，往往还有辅助的符号哈希表（“.hash”）。</p>
+<p>动态链接符号表的结构与静态链接符号表几乎一样，我们可以简单地将导入函数看作是对其他目标文件中函数的引用；把导出函数看作是在本目标文件定义的函数就可以了。</p>
+<h3 id="动态链接重定位表"><a href="#动态链接重定位表" class="headerlink" title="动态链接重定位表"></a>动态链接重定位表</h3><p>共享对象需要重定位的主要原因是导入符号的存在。动态链接下，无论是可执行文件或共享对象，一旦它依赖其他共享对象，也就是说有导入的符号是，那么它的代码或数据中就会有对于导入符号的引用。在编译时这些导入符号的地址未知，在静态链接中，这些未知的地址引用在最终的链接时被修正。但是在动态链接中，导入符号的地址在运行时才确定，所以需要在运行时将这些导入的引用修正，即需要重定位。</p>
+<h3 id="动态链接的步骤"><a href="#动态链接的步骤" class="headerlink" title="动态链接的步骤"></a>动态链接的步骤</h3><ol>
+<li>启动动态链接器本身；</li>
+<li>装载所需要的共享对象；</li>
+<li>重定位和初始化；</li>
+</ol>
+<h3 id="显示运行时链接"><a href="#显示运行时链接" class="headerlink" title="显示运行时链接"></a>显示运行时链接</h3><p>支持动态链接的系统问问都支持一种更加灵活的模块加载方式，叫做<strong>显示运行时链接（Explicit Run-time Linking）</strong>，有时候也叫做<strong>运行时加载</strong>。也就是让程序自己在运行时控制加载指定的模块，并且可以在不需要的时候将该模块卸载。从前面的了解到的来看，如果动态链接器可以在运行时将共享模块装载进内存并且可以进行重定位操作，那么这种运行时加载在理论上也是很容易实现的。而且一般的共享对象不需要然后修改就可以进行运行时装载，这种共享对象往往被叫动态装载库（Dynamic Loading Library），其实本质上它跟一般共享对象没什么区别，只是程序开发者使用它的角度不同。</p>
+<p>这种运行时加载使得程序的模块组织更加灵活，可以用来实现一些诸如插件、驱动等功能。当程序需要用到某个插件或者驱动的时候，才讲相应的模块装载进行，而不需要从一开始就讲他们全部装载进来，从而减少了程序启动时间和内存。并且程序可以在运行的时候重新加载某个模块，这样使得程序本身不必重新启动而实现模块的增加、删除、更新等，这对于很多需要长期运行的程序来说是很大的优势。最常见的例子是Web 服务器程序，对于Web服务器程序来说，它需要根据配置来选择不同的脚本解释器。数据库连接驱动等，对于不同的脚本解释器分别做成一个独立的模块，当Web服务器需要某种脚本解释器的时候可以将其加载进来；这对于数据库连接的驱动程序也是一样的原理。另外对于一个可靠的Web服务器来说，长期的运行是必要的保证，如果我们需要增加某种脚本解释器，或者摸个脚本解释器需要升级，则可以通知Web服务器程序重新装载该共享模块以实现相应的目的。</p>
+<p>在Linux中，从文件本身的格式上来看，动态库实际上跟一般的共享对象没区别。主要的区别是共享对象是由动态链接器在程序启动之前负责装载和链接的，这一系列步骤都是由动态链接器自动完成，对于程序本身是透明的；而动态库的装载则是通过一系列又动态链接器提供API，具体讲共有4个函数：</p>
+<ul>
+<li><p>打开动态库（dlopen()）<br>dlopen()函数用来打开一个动态库，并将其加载到进程的地址空间，完成初始化过程，它的C原型定义为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">void * dlopen(const char *filename,int flag);</div></pre></td></tr></table></figure>
+<p>第一个参数是被加载的路径，如果是路径是绝对路径（以“/”开始的路径），则该函数将会尝试直接打开该动态库；如果是相对路径，那么dlopen()会尝试在以一定的顺序去查找该动态库文件：</p>
+<p>第二个参数flag表示函数符号的解析方式。</p>
+<ul>
+<li>RTLD_LAZY:表示使用延迟绑定，函数第一次被用到时才进行绑定，即PLT机制；</li>
+<li>RTLD_NOW:表示当模块被加载时即完成所有的函数绑定工作，如果有任何未定义的符号音乐绑定工作没法完成，那么dlopen()就返回错误;</li>
+<li>RTLD_GLOBAL:可以跟上面两者任意一个一起使用（通过常量的“或”操作），它表示将被加载的模块的全局符号合并到进程的全局符号中，使得以后加载的模块可以使用这些符号。</li>
+</ul>
+<p>dlopen的返回值是被加载的模块的句柄，这个句柄在后面使用的dlsym或者dlclose时需要用到。如果记载模块失败，则返回NULL。如果模块已经通过dlopen被加载过了，那么返回的是同一个句柄。另外如果被加载的模块之间有依赖关系，比如模块A依赖于模块B，那么程序员需要手动加载被依赖的模块，比如先加载B，再加载A。</p>
+</li>
+<li><p>查找符号（dlsym()）<br>dlsym 函数基本是运行时装载的核心部分，我们可以通过这个函数找到所需要的符号，它的定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">void * dlsym(void * handle, char * symbol);</div></pre></td></tr></table></figure>
+<p>定义非常简洁，两个参数，第一个参数是由dlopen()返回的动态库的句柄；<br>第二个参数即所需要查找的符号的名字，一个以“\0”结尾的C字符串。如果dlsym()找到了相应的符号，则返回该符号的值，没有找到相应的符号，则返回NULL。dlsym()返回的值对于不同类型的符号，意义是不同的。如果查找的符号是个常量，那么它返回的是该常量的值。这里有一个问题是：如果常量的值刚好是NULL或者0呢，我们如何判断dlsym()是否找到了该符号呢？这个问题就要用到下面介绍的dlerror()函数了。如果符号找到了，那么dlerror()返回NULL，如果没找到，deerror就会返回相应的错误信息。<br>这里说一下<strong>符号优先级</strong>，当许多共享模块中的符号同名冲突时，先装入的符号优先，我们把这种优先级方式成<strong>为装载序列（Load Ordering）</strong>。<br>当我们使用dlsym()进行符号的地址查找工作时，这个函数是不是也是按照装载序列的优先进行符号的查找呢？实际的情况是，dlsym()对符号的查找优先级分为两种类型。</p>
+<ul>
+<li>装载序列:如果我们是全局符号表中进行符号查找，即dlopen()时，参数filename为NULL，那么由于全局符号使用的装载序列，所以dlsym()使用的也是装载序列。</li>
+<li>依赖序列（Dependency Ordering）：我们是对某个通过dlopen()打开的共享对象进行符号查找的话，那么采用依赖序列，它是以被dlopen()打开的那个共享对象为根节点，对它所有依赖的共享对象进行广度优先遍历，直到找到符号为止。</li>
+</ul>
+</li>
+<li><p>错误处理（dlerror()）<br>每次我们调用dlopen()、dlsym()或dlclose以后，我们都可以调用dlerror()函数来判断上一次调用是否成功。dlerror()返回类型是char*，如果返回NULL，则表示上一次调用成功；如果不是，则返回相应的错误信息。</p>
+</li>
+<li><p>关闭动态库（dlclose()）<br>dlclose()的作用跟dlopen()刚还相反，它的作用是将一个已经记载好的模块卸载。系统会维持一个加载引用计数器每次使用dlopen()加载某个模块时，相应的计数器被加一；每次使用dlclose()卸载某个模块是，相应的计数器减一。只有当计数器值减到0时，模块才被真正地卸载掉。</p>
+</li>
+</ul>
+<p>程序可以通过这几个API对动态库进行操作。这几个API的实现是在/lib/libdl.so.2里面，它们的声明和相关常量被定义在系统标准头文件<dlfcn.h>。</dlfcn.h></p>
+<h3 id="程序的内存布局"><a href="#程序的内存布局" class="headerlink" title="程序的内存布局"></a>程序的内存布局</h3><p>一般来讲：应用程序使用的内存空间里有如下“默认”的区域：</p>
+<ul>
+<li>栈：栈用于维护函数调用的上下文，离开了栈函数调用就没办法实现。栈通常在用户空间的最高地址处分配，通常有数兆字节的大小；</li>
+<li>堆：堆是用来容纳应用程序动态分配的内存区域，当程序使用malloc或new分配内存时，得到的内存来自堆里。堆通常存在于栈的下方（低地址方向），在某些时候，堆也可能没有固定统一的存储区域。堆一般比栈大很多，可以有几十至数百兆字节的容量。</li>
+<li>可执行文件的映像：这里存储着可执行文件在内存里的映像。由装载器在装载时将可执行文件的内存读取或映像到这里。</li>
+<li>保留区：保留区并不是一个单一的内存区域，而是对内存中受到保护而禁止访问的内存区域的总称，例如，大多数操作系统里，极小的地址通常都是不允许访问的，如NULL。通常C语言将无效指针赋值为0也是出于这个考虑，因为0地址上正常情况下不可能有有效的可访问数据。</li>
+</ul>
+<p>Linux下一个进程里典型的内存布局如下：<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/201609295828Linux process address space layout.png" alt="201609295828Linux process address space layout.png"><br>上图中，有一个没有介绍的区域：“动态链接库映射区”，这个区域用于映射装载的动态链接库。在Linux下，如果可执行文件依赖其他共享库，那么系统就会为它从0x40000000开始的地址分配相应的空间，并将共享库装载入到该空间。</p>
+<p>图中箭头标明了几个大小可变的区的尺寸增长方向，在这里可以清晰地看出栈向低地址增长，堆向高地址增长。<strong>当栈或者堆现有的大小不够用时，它将按照图中的增长方向扩大自身的尺寸，直到预留空间被用完为止。</strong></p>
+<h3 id="Q-amp-A-1"><a href="#Q-amp-A-1" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h3><p>Q：写程序时常常出现“段错误（segment fault）”或“非法操作，改内存地址不能read/write”的错误，这是怎么回事儿？</p>
+<p>A：这是典型的非法指针解引用造成的错误。当指针指向一个不允许读或写的内存地址时，而程序却试图利用指针来读或写该地址的时候，就会出现这个错误。在Linux或Windows的内存布局中，有些地址是始终不能读写的，例如0地址。还有些地址是一开始不允许读写，应用程序必须事先请求获取这些地址的读写权，或者某些地址一开始并没有映射到实际的物理内存，应用程序必须事先请求将这些地址映射到实际的物理地址（commit），之后才能够自由地读写这篇内存。当一个指针指向这些区域的时候，对它指向的内存进行读写就会引发错误。造成这样的最普遍的原因有两种：</p>
+<ol>
+<li>程序员将指针初始化为NULL，之后却没有给它一个合理的值就开始使用指针。</li>
+<li>程序员没有初始化栈上的指针，指针的值一般会是随机数，之后就直接开始使用指针。</li>
+</ol>
+<p>因此，如果你的程序出现了这样的错误，请着重检查指针的使用情况。</p>
+<h3 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h3><p>栈（stack）是现代计算机程序里最为重要的概念之一，几乎每个程序都使用了栈，没有栈就没有函数，没有局部变量，也就没有我们如今能够看见的所有计算机语言。先了解一下传统栈的定义：</p>
+<p>在经典的计算机科学中，栈被定义为一个特殊的容器，用户可以将数据压入栈中（入栈push）,也可以将已经压入栈中的数据弹出（出栈，pop），但栈这个容器必须遵循一条规则：先入栈的数据后出栈（First In Last Out,FILO）。</p>
+<p>在计算机系统中，栈是一个具有以上属性的动态内存区域。程序可以将数据压入栈中，也可以将数据从栈顶弹出。压栈操作使得栈增大，而弹出操作使栈减小。</p>
+<p>栈总是向下增长的。在i386下，栈顶由称为esp的寄存器进行定位。压栈的操作栈顶的地址减小，弹出的操作使得栈顶的地址增大。</p>
+<p>栈在程序运行中具有举足轻重的地位。最重要的，栈保存了一个函数调用所需要的维护信息，这常常称为堆栈帧（Stack Frame）或活动记录（Activate Record）。堆栈帧一般包括如下几个方面内容：</p>
+<ul>
+<li>函数的返回地址和参数。</li>
+<li>临时变量：包括函数的非静态局部变量以及编译器自动生成的其他临时变量。</li>
+<li>保存的上下文：包括在函数调用前后需要保持不变的寄存器。</li>
+</ul>
+<h3 id="栈的调用惯例"><a href="#栈的调用惯例" class="headerlink" title="栈的调用惯例"></a>栈的调用惯例</h3><p>毫无疑问，函数的调用方和被调用方对于函数如何调用须要有一个明确的约定，只有双方都准守同样的约定，函数才能被正确的调用，这样的约定就称为调用惯例（Call Convention）。一个调用惯例一般会规定如下几个方面的内容。</p>
+<ul>
+<li>函数参数的传递顺序和方式<br>  函数参数的传递有很多种方式，最常见的一种是通过栈的传递。函数的调用方将参数压入栈中，函数自己在从栈中将参数取出。对于有多个参数的函数，调用惯例要规定函数调用方将参数压栈的顺序：是从左至右，还是从右至左。有些调用惯例还允许使用寄存器传递参数，以提高性能。</li>
+<li>栈的维护方式<br>  在函数将参数压栈之后，函数体会被调用，此后需要将被压入栈中的参数全部弹出，以使得栈在函数调用前后保持一致。这个弹出的工作可以由函数的调用方来完成，也可以由函数本身来完成。</li>
+<li>名字修饰（Name-mangling）的策略<br>  为了链接的时候对调用惯例进行区分，调用管理要对函数本身的名字进行修饰。不同的调用管理有不同的名字修饰策略。</li>
+</ul>
+<h3 id="函数返回值传递"><a href="#函数返回值传递" class="headerlink" title="函数返回值传递"></a>函数返回值传递</h3><p>书中的例子和探讨很长，这里我讲一下我自己的理解<br>例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">test(a,b)</div><div class="line">&#123;</div><div class="line">	return a + b;</div><div class="line">&#125;</div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">	int a = 1;</div><div class="line">	int b = 1;</div><div class="line">	</div><div class="line">	int n = test(a,b);</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>首先main函数在栈上额外开辟了一片，并将这块空间的一部分作为传递返回值的临时对象，这里称为temp。</li>
+<li>将temp对象的地址作为隐藏参数传递给test函数。</li>
+<li>test函数将数据拷贝给temp对象，并将temp对象的地址传出。</li>
+<li>test返回之后，main函数将temp对象的内容拷贝给n。</li>
+</ul>
+<p>当然以上过程会有一些汇编代码，这里省去了汇编代码的解释。</p>
+<h3 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h3><p>光有栈对于面向过程的程序设计还远远不够，因为栈上的数据函数返回的时候就会被释放掉，所以无法将数据传递至函数外部。而全局变量没有办法动态产生。只能在编译的时候定义，有很多情况下缺乏表现力。在这种情况下，堆（Heap）是唯一的选择。</p>
+<p>堆是一块巨大的内存空间，常常占据整个虚拟空间的绝大部分。在这片空间里，程序可以请求一块连续内存，并自由地使用，这块内存在程序主动放弃之前都会一直保持有效。</p>
+<p>如果每次程序申请或者释放堆空间都需要系统调用，实际这这样的做法是比较耗费性能的。所以程序向操作系统申请一块适当大小的堆空间，然后由程序自己管理这块空间。管理着堆的空间分配往往是程序的运行库。</p>
+<p>运行库相当于是向操作系统“批发”了一块较大的堆空间，然后“零售”给程序用。当全部“售完”或程序有大量的内存需求时，再根据实际需求向操作系统“进货”。当然运行库向程序零售堆空间时，必须管理它批发的堆空间，不能把同一块地址出售两次，导致地址冲突。于是运行库需要一个算法来管理堆空间，这个算法就是堆的分配算法。</p>
+<h3 id="堆分配算法"><a href="#堆分配算法" class="headerlink" title="堆分配算法"></a>堆分配算法</h3><p>如何管理一大块连续的内存空间，能够按照需求分配、释放其中的空间，这就是堆分配的算法。堆的分配算法有很多种，有很简单的（比如下面介绍的这几种算法），也有很复杂的、适应于某些高性能或者有其他特殊要求的场合。</p>
+<ol>
+<li><p><strong>空闲链表</strong><br><strong>空闲链表（Free List）</strong>的方法实际上就是把堆中各个空闲的块安装链表的方式连接起来，当用户请求一块空间时，可以遍历整个列表，直到找到合适大小的块并且将它拆分；当用户释放空间将它合并到空闲链表中。<br>我们首先需要一个数据结构来登记空间里所有的空闲空间，这样才能知道程序请求空间的时候该分配给它那一块内存。这样的结构有很多种，这里介绍最简单的一种–空闲链表。<br>空闲链表是这样一种结构，在堆里的每一个空闲空间的开头（或结尾）有一个头（header），头结构里记录了上一个（prev）和下一个（next）空闲块的地址，也就是说，所有的空闲块形成了一个链表。如下图：<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016100616640The distribution of free list.png" alt="2016100616640The distribution of free list.png"><br>在这样的结构下如何分配空间呢？<br>首先在空闲链表里查找足够容纳请求大小的一个空闲块，然后将这个块分两部分，一部分为程序请求的空间，另一部分为剩余下来的空闲空间。下面将链表里对应的空闲块的结构更新为新的剩下的空闲块，如果剩下的空闲块大小为0，则直接将这个结构从链表里删除。下图演示了用户请求一块和空闲块恰好相等的内存空间后堆的状态。<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016100612103The distribution of free list 2.png" alt="2016100612103The distribution of free list 2.png"><br>这样的空闲链表实现尽管简单，但是在释放空间的时候，给定一个已分配块的指针，堆无法确定这个块的大小。一个简单的解决方法是当用户请求k个字节空间的时候，我们实际上分配k+4个字节，这4个字节用于存储该分配的大小，即k+4。这样释放该内存的时候只要看这4个字节的值，就能知道该内存的大小，然后将其插入到空闲链表里就可以了。<br>当然这仅仅是最简单的一种分配策略，这样的思路存在很多问题。例如，一旦链表被破坏，或者记录长度的那4字节被破坏，整个堆就无法正常工作，而这些数据恰恰很容易被越界读写所接触到。</p>
+</li>
+<li><p><strong>位图</strong><br>针对空闲链表的弊端，另一种分配方式显得更贱稳健。这种方式称为<strong>位图（Bitmap）</strong>。其核心思想是将整个堆划分为大量的块（block），每个块的大小相同。当用户请求内存的时候，总是分配整数个块的空间给用户，第一个块我们称为已分配区域的头（Head），其余的称为已分配区域的主体（Body）。而我们可以使用一个整数数组来记录块的使用情况，由于每个块只有头/主体/空闲三种状态，因此仅仅需要两位即可表示一个块，因此称为位图。<br>假设堆的大小为1MB，那么我们让一个块的大小为128字节，那么总共就有1M/128=8K个块，可以用8k/(32/2)=512个int来存储。这有512个int数组就是一个位图，其中每两个位代表一个块。当用户请求300字节的内存时，堆分配给用户3个块，并将位图的相应位置标记为头或躯体。下图为一个这样的堆的实例。<br><img src="http://7xraw1.com1.z0.glb.clouddn.com/2016100612565Figure bit allocation.png" alt="2016100612565Figure bit allocation.png"><br>这个堆分配了3片内存，分别有2/4/1个块，用虚线框标出。其对应的位图将是：<br>（HIGH）11 00 00 10 10 10 10 11 00 00 00 00 00 00 00 10 11 (LOW)<br>其中 11 表示 H（Head），10表示主题（Body），00表示空闲（Free）。<br>这样的实现方式有几个优点：</p>
+<ul>
+<li>速度快：由于整个堆的空闲信息存储在一个数组内，因此访问该数组是cache容易命中。</li>
+<li>稳定性好：为了避免用户越界读写数据破坏，我们只须简单的备份一下位图即可。而且即使部分数据被破坏，也不会导致整个堆无法工作。</li>
+<li>块不需要额外信息，易于管理。</li>
+</ul>
+<p>当然缺点也是显而易见的：</p>
+<ul>
+<li>分配内存的时候容易产生碎片。例如分配300个字节，实际分配了3个块即384个字节，浪费了84个字节。</li>
+<li>如果堆很大，或者设定的一个块很小（这样可以减少碎片），那么这个位图将会很大，可能失去cache命中率高的优势，而且也会浪费一定的空间。针对这种情况，我们可以使用多级位图。</li>
+</ul>
+</li>
+<li><p><strong>对象池</strong><br>以上介绍的堆管理方法是最为基本的两种，实际上在一些场合，被分配对象的大小是较为固定的几个值，这时候我们可以针对这样的特征设计一个更为高效的堆算法，称为对象池。<br>对象池的思路很简单，如果每一次分配的空间大小都一样，那么久可以按照这个每次请求分配的大小作为一个单位，把整个堆空间划分为大量的小块，每次请求的时候只需要找到一个小块就可以了。<br>对象池的管理方法可以采用空闲链表，也可以采用位图，与它们的区别仅仅在于她假设了每次请求的都是一个固定的大小，因此实现起来很容易。由于每次总是只请求一个单位的内存，因此请求得到满足的速度非常快，无须查找一个足够大的空间。<br>实际上很多现实应用中，堆的分配算法往往是采取多种算法符合而成的。比如对于glibc来说，它对小于64字节的空间申请是采用类似于对象池的方法；而对于大于512字节的空间申请采用的是最佳适配算法；对于大于64字节而小于512字节的，它会根据情况采取上述方法中的最佳折中策略；对于大于128KB的申请，它会使用mmap机制向操作系统申请空间。</p>
+</li>
+</ol>
+<h1 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h1><p>本书前前后后小生读了两遍，第一遍读的实体书，没有做笔记；第二遍读的电子版，边看边做笔记。书读百遍其义自见，第一边看书让我对整部书有了一个大致的了解，第二遍细读和做笔记让我理解了很多之前工作中不明白的地方。但仍还有很多不明白之处，还需在今后的职业生涯中慢慢消化，慢慢体会。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/jianfeishuo.jpg" alt="李剑飞 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎订阅我的微信公众号"剑飞说"！</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.png" alt="李剑飞 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.png" alt="李剑飞 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      李剑飞
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://www.lijianfei.cn/2016/10/09/ios-programer-selfrelax/" title="iOS 程序员的自我修养 — 读《程序员的自我修养-链接、装载与库》">http://www.lijianfei.cn/2016/10/09/ios-programer-selfrelax/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/09/ios-abtest-explore/" rel="next" title="iOS A/B Test 方案探索">
+                <i class="fa fa-chevron-left"></i> iOS A/B Test 方案探索
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/08/ios-tools-up/" rel="prev" title="标题党： iOS 开发兵器进阶">
+                标题党： iOS 开发兵器进阶 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="李剑飞" />
+          <p class="site-author-name" itemprop="name">李剑飞</p>
+           
+              <p class="site-description motion-element" itemprop="description">本站没有添加评论，扫二维码加我微信好友，咨询文章的疑问点。本站只发布原创内容，我的学习笔记会记录在下面的 Wiki 链接中。</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lijianfeigeek" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/1855052150" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/lijianfei_" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lijianfeigeek/lijianfeigeek.github.io/wiki" target="_blank" title="Wiki">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Wiki
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://lijianfei.deercv.com/" target="_blank" title="Resume">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Resume
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#关于书名"><span class="nav-number">1.</span> <span class="nav-text">关于书名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#本书的组织"><span class="nav-number">2.</span> <span class="nav-text">本书的组织</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-简介"><span class="nav-number">2.1.</span> <span class="nav-text">第一部分 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第1章-温故而知新"><span class="nav-number">2.1.1.</span> <span class="nav-text">第1章 温故而知新</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-静态连接"><span class="nav-number">2.2.</span> <span class="nav-text">第二部分 静态连接</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第2章-编译和链接"><span class="nav-number">2.2.1.</span> <span class="nav-text">第2章 编译和链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第3章-目标文件里有什么"><span class="nav-number">2.2.2.</span> <span class="nav-text">第3章 目标文件里有什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第4章-静态链接"><span class="nav-number">2.2.3.</span> <span class="nav-text">第4章 静态链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第5章-Windows-PE-COFF"><span class="nav-number">2.2.4.</span> <span class="nav-text">第5章 Windows PE/COFF</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-装载与动态链接"><span class="nav-number">2.3.</span> <span class="nav-text">第三部分 装载与动态链接</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第6章-可执行文件的装载过程"><span class="nav-number">2.3.1.</span> <span class="nav-text">第6章 可执行文件的装载过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第7章-动态链接"><span class="nav-number">2.3.2.</span> <span class="nav-text">第7章 动态链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第8章-Linux共享库的组织"><span class="nav-number">2.3.3.</span> <span class="nav-text">第8章 Linux共享库的组织</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第9章-Windows下的动态链接"><span class="nav-number">2.3.4.</span> <span class="nav-text">第9章 Windows下的动态链接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四部分-库与运行时"><span class="nav-number">2.4.</span> <span class="nav-text">第四部分 库与运行时</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第10章-内存"><span class="nav-number">2.4.1.</span> <span class="nav-text">第10章 内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第11章-运行库"><span class="nav-number">2.4.2.</span> <span class="nav-text">第11章 运行库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第12章-系统调用与API"><span class="nav-number">2.4.3.</span> <span class="nav-text">第12章 系统调用与API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第13章-运行库的实现"><span class="nav-number">2.4.4.</span> <span class="nav-text">第13章 运行库的实现</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重点阅读章节"><span class="nav-number">3.</span> <span class="nav-text">重点阅读章节</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#读书笔记"><span class="nav-number">3.1.</span> <span class="nav-text">读书笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#温故而知新"><span class="nav-number">3.1.1.</span> <span class="nav-text">温故而知新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程的访问权限"><span class="nav-number">3.1.2.</span> <span class="nav-text">线程的访问权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程的调度与优先级"><span class="nav-number">3.1.3.</span> <span class="nav-text">线程的调度与优先级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程安全"><span class="nav-number">3.1.4.</span> <span class="nav-text">线程安全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译和链接"><span class="nav-number">3.1.5.</span> <span class="nav-text">编译和链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#预编译"><span class="nav-number">3.1.6.</span> <span class="nav-text">预编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译"><span class="nav-number">3.1.7.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#汇编"><span class="nav-number">3.1.8.</span> <span class="nav-text">汇编</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#链接"><span class="nav-number">3.1.9.</span> <span class="nav-text">链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#目标文件"><span class="nav-number">3.1.10.</span> <span class="nav-text">目标文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#目标文件什么样子"><span class="nav-number">3.1.11.</span> <span class="nav-text">目标文件什么样子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ELF文件结构"><span class="nav-number">3.1.12.</span> <span class="nav-text">ELF文件结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#链接的接口–符号"><span class="nav-number">3.1.13.</span> <span class="nav-text">链接的接口–符号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#符号修饰和函数签名"><span class="nav-number">3.1.14.</span> <span class="nav-text">符号修饰和函数签名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#弱符号和强符号-弱引用和强引用"><span class="nav-number">3.1.15.</span> <span class="nav-text">弱符号和强符号 | 弱引用和强引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调试信息"><span class="nav-number">3.1.16.</span> <span class="nav-text">调试信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态链接"><span class="nav-number">3.1.17.</span> <span class="nav-text">静态链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#空间与地址的分配"><span class="nav-number">3.1.18.</span> <span class="nav-text">空间与地址的分配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#符号解析与重定位"><span class="nav-number">3.1.19.</span> <span class="nav-text">符号解析与重定位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态库链接"><span class="nav-number">3.1.20.</span> <span class="nav-text">静态库链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可执行文件的装载与进程"><span class="nav-number">3.1.21.</span> <span class="nav-text">可执行文件的装载与进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程的虚拟地址空间"><span class="nav-number">3.1.22.</span> <span class="nav-text">进程的虚拟地址空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#装载的方式"><span class="nav-number">3.1.23.</span> <span class="nav-text">装载的方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程的建立"><span class="nav-number">3.1.24.</span> <span class="nav-text">进程的建立</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程虚存空间分布"><span class="nav-number">3.1.25.</span> <span class="nav-text">进程虚存空间分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#堆和栈"><span class="nav-number">3.1.26.</span> <span class="nav-text">堆和栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#堆的最大申请数量"><span class="nav-number">3.1.27.</span> <span class="nav-text">堆的最大申请数量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#段对齐"><span class="nav-number">3.1.28.</span> <span class="nav-text">段对齐</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要动态链接"><span class="nav-number">3.1.29.</span> <span class="nav-text">为什么要动态链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存和磁盘空间"><span class="nav-number">3.1.30.</span> <span class="nav-text">内存和磁盘空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#程序开发和发布"><span class="nav-number">3.1.31.</span> <span class="nav-text">程序开发和发布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态链接"><span class="nav-number">3.1.32.</span> <span class="nav-text">动态链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#程序可扩展性和兼容性"><span class="nav-number">3.1.33.</span> <span class="nav-text">程序可扩展性和兼容性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态链接的基本实现"><span class="nav-number">3.1.34.</span> <span class="nav-text">动态链接的基本实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态链接过程"><span class="nav-number">3.1.35.</span> <span class="nav-text">动态链接过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于模块"><span class="nav-number">3.1.36.</span> <span class="nav-text">关于模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态链接程序运行时的地址分布"><span class="nav-number">3.1.37.</span> <span class="nav-text">动态链接程序运行时的地址分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#地址无关代码"><span class="nav-number">3.1.38.</span> <span class="nav-text">地址无关代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q-amp-A"><span class="nav-number">3.1.39.</span> <span class="nav-text">Q&A</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#影响动态链接性能的主要问题"><span class="nav-number">3.1.40.</span> <span class="nav-text">影响动态链接性能的主要问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#延迟绑定（PLT）"><span class="nav-number">3.1.41.</span> <span class="nav-text">延迟绑定（PLT）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态链接器"><span class="nav-number">3.1.42.</span> <span class="nav-text">动态链接器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#“-interp”-段"><span class="nav-number">3.1.43.</span> <span class="nav-text">“.interp” 段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#“-dynamic”段"><span class="nav-number">3.1.44.</span> <span class="nav-text">“.dynamic”段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态符号表"><span class="nav-number">3.1.45.</span> <span class="nav-text">动态符号表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态链接重定位表"><span class="nav-number">3.1.46.</span> <span class="nav-text">动态链接重定位表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态链接的步骤"><span class="nav-number">3.1.47.</span> <span class="nav-text">动态链接的步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#显示运行时链接"><span class="nav-number">3.1.48.</span> <span class="nav-text">显示运行时链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#程序的内存布局"><span class="nav-number">3.1.49.</span> <span class="nav-text">程序的内存布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q-amp-A-1"><span class="nav-number">3.1.50.</span> <span class="nav-text">Q&A</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#栈"><span class="nav-number">3.1.51.</span> <span class="nav-text">栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#栈的调用惯例"><span class="nav-number">3.1.52.</span> <span class="nav-text">栈的调用惯例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数返回值传递"><span class="nav-number">3.1.53.</span> <span class="nav-text">函数返回值传递</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#堆"><span class="nav-number">3.1.54.</span> <span class="nav-text">堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#堆分配算法"><span class="nav-number">3.1.55.</span> <span class="nav-text">堆分配算法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结尾"><span class="nav-number">4.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李剑飞</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

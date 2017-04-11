@@ -1,0 +1,924 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="李剑飞" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/avatar2.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引子公元2016年末，2017年初，某做旅行产品的互联网公司内，产品经理疯狂的提 A/BTest 需求，以至于该司程序猿谈AB色变，邪恶的产品经理令程序猿们闻风丧胆，苦不堪言…咳咳，扯远了。 近期团队做了很多 AB Test 的业务需求，在这种需求日益见多的情况下，我们不得不提升我们的代码组织方式，以适应或更好的在此类需求上维护我们的代码。所以有了本文，本文主要阐述了业务团队在做 AB Test">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS A/B Test 方案探索">
+<meta property="og:url" content="http://www.lijianfei.cn/2017/01/09/ios-abtest-explore/index.html">
+<meta property="og:site_name" content="李剑飞的博客">
+<meta property="og:description" content="引子公元2016年末，2017年初，某做旅行产品的互联网公司内，产品经理疯狂的提 A/BTest 需求，以至于该司程序猿谈AB色变，邪恶的产品经理令程序猿们闻风丧胆，苦不堪言…咳咳，扯远了。 近期团队做了很多 AB Test 的业务需求，在这种需求日益见多的情况下，我们不得不提升我们的代码组织方式，以适应或更好的在此类需求上维护我们的代码。所以有了本文，本文主要阐述了业务团队在做 AB Test">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2017010534065A:BTest_functionA:B2_no.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/201701052172A:BTest_functionA:B_no.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2017010548669A:BTest_Selector+dic1.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/201701052186A:BTest_Selector+dic2.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2017010594760OTA_ABTestClass.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/201701058434ABstrategy_pattern1.png">
+<meta property="og:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2017010524744ABstrategy_pattern2.png">
+<meta property="og:updated_time" content="2017-01-09T01:17:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS A/B Test 方案探索">
+<meta name="twitter:description" content="引子公元2016年末，2017年初，某做旅行产品的互联网公司内，产品经理疯狂的提 A/BTest 需求，以至于该司程序猿谈AB色变，邪恶的产品经理令程序猿们闻风丧胆，苦不堪言…咳咳，扯远了。 近期团队做了很多 AB Test 的业务需求，在这种需求日益见多的情况下，我们不得不提升我们的代码组织方式，以适应或更好的在此类需求上维护我们的代码。所以有了本文，本文主要阐述了业务团队在做 AB Test">
+<meta name="twitter:image" content="http://7xraw1.com1.z0.glb.clouddn.com/2017010534065A:BTest_functionA:B2_no.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.lijianfei.cn/2017/01/09/ios-abtest-explore/"/>
+
+
+
+
+
+  <title> iOS A/B Test 方案探索 | 李剑飞的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1260409211&web_id=1260409211" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">李剑飞的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://www.lijianfei.cn/2017/01/09/ios-abtest-explore/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="李剑飞">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李剑飞的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS A/B Test 方案探索
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-01-09T09:16:51+08:00">
+                2017-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>公元2016年末，2017年初，某做旅行产品的互联网公司内，产品经理疯狂的提 A/BTest 需求，以至于该司程序猿谈AB色变，邪恶的产品经理令程序猿们闻风丧胆，苦不堪言…咳咳，扯远了。</p>
+<p>近期团队做了很多 AB Test 的业务需求，在这种需求日益见多的情况下，我们不得不提升我们的代码组织方式，以适应或更好的在此类需求上维护我们的代码。所以有了本文，本文主要阐述了业务团队在做 AB Test 的一些想法和思路，才疏学浅，不灵赐教。</p>
+<h1 id="A-B-Test"><a href="#A-B-Test" class="headerlink" title="A/B Test"></a>A/B Test</h1><h2 id="A-B-Test-是什么？"><a href="#A-B-Test-是什么？" class="headerlink" title="A/B Test 是什么？"></a>A/B Test 是什么？</h2><p>既然产品经理在 A/B Test 胯下疯狂的输出，那我们就要弄清楚，什么是 A/BTest？为何产品经理如此痴情于 A/B Test ？</p>
+<p>A/B Test 就是为了<strong>同一个目标</strong>制定<strong>两个方案</strong>（比如两个website，app的页面），让<strong>一部分用户</strong>使用 A 方案，<strong>另一部分用户</strong>使用 B 方案，<strong>记录</strong>下用户的使用情况，<strong>看</strong>哪个方案更接近测试想要的结果，并确信该结论在推广到全部流量可信。</p>
+<p>请注意上述那段话中的黑体字，这将是 AB Test 的核心价值所在。</p>
+<p>其实 A/B Test 就是我们中学上化学实验课时常做的对照试验，把这种对照试验搬到了互联网上，通过改变单一变量的实验组和原来的对照组做对比，通过数据指标对比，看哪种方案能够提高用户体验（转化率）；</p>
+<h2 id="AB-Test-的优点有哪些（对产品而言）？"><a href="#AB-Test-的优点有哪些（对产品而言）？" class="headerlink" title="AB Test 的优点有哪些（对产品而言）？"></a>AB Test 的优点有哪些（对产品而言）？</h2><h3 id="优点1-灰度发布"><a href="#优点1-灰度发布" class="headerlink" title="优点1. 灰度发布"></a>优点1. 灰度发布</h3><p>灰度发布，是指在黑与白之间，能够平滑过渡的一种发布方式。A/B Test就是一种灰度发布方式，让一部分用户继续用A，一部分用户开始用B，如果用户对B没有什么反对意见，那么逐步扩大范围，把所有用户都迁移到B上面来。灰度发布可以保证整体系统的稳定，在初始灰度的时候就可以发现、调整问题，以保证其影响度。</p>
+<h3 id="优点2-可逆方案"><a href="#优点2-可逆方案" class="headerlink" title="优点2. 可逆方案"></a>优点2. 可逆方案</h3><p>可逆方案，有点类似于之前的灰度发布，只不过不灰度的控制力更强，当我们发布后发现实验组方案出现了严重的故障，或者对比数据量相差悬殊，那么就完全可以全量切换回原来的对照组，保证了线上环境的稳定，不影响用户的正常使用。</p>
+<p>这点，对产品而言就是多了试错的可能，想想在之前App动态化匮乏的时代，App的发布就是嫁出去的女儿泼出去的水，一去不复返，发布了的产品用户更新完就不可能在回退到上一个版本。从这一点开始，产品经理就大爱A/B Test !</p>
+<h3 id="优点3-数据驱动"><a href="#优点3-数据驱动" class="headerlink" title="优点3. 数据驱动"></a>优点3. 数据驱动</h3><p>数据驱动，这一点我想至关重要，在目前这种以用户数据为商业土壤的大数据时代，一个产品是以数据驱动，将能够更加铿锵有力的支持这个产品的全线发布，也是产品经理对新方案推进的重要王牌。之前要发布一个新产品，要么美其名曰参考竞品（不反对抄袭，抄袭是赶上竞争对手最快的手段，但是并不是超越的手段），要么脑洞打开，认为某种新的方案或交互体验能带来更多的转化率。这种方法都是没有数据说明的，只能通过项目上线后进行后评估才能确定是否如产品经理所愿真正到达了目标。</p>
+<p>通过A/B Test，能在不全量影响线上的正常运转的情况下，通过对照度和试验组的数据对比，在短时间能确定哪种方案的优越，从而让产品的转化率在短时间能得可信性提升。这也正是产品经理说服老板，并彰显其能力价值的精华之处！so，大爱！</p>
+<h1 id="开发工程师需要关注的事情"><a href="#开发工程师需要关注的事情" class="headerlink" title="开发工程师需要关注的事情"></a>开发工程师需要关注的事情</h1><h2 id="六问产品经理"><a href="#六问产品经理" class="headerlink" title="六问产品经理"></a>六问产品经理</h2><p>在做 AB Test 之前，有几个问题是要问产品经理的：</p>
+<ol>
+<li>目标是什么？</li>
+<li>AB版本是什么?</li>
+<li>样本量有多大？</li>
+<li>用户如何分流？</li>
+<li>测试时间多长？</li>
+<li>如何衡量效果？</li>
+</ol>
+<p>这其实就是我们上面那段话中加粗文字的重点，当然，有些问题是服务端需要关心的，比如问题3和4。</p>
+<p>那么客户端开发需要关心哪些个问题呢？</p>
+<h3 id="目标是什么？"><a href="#目标是什么？" class="headerlink" title="目标是什么？"></a>目标是什么？</h3><p>第一个问题，目标是什么？目的是什么，这是我们需要问的，对客户端而言，A/B Test 就需要客户端维护两套同样业务的代码，这种工作量简单理解就是之前的double，既然会导致工作量翻倍，那就要问清楚，这次做 A/B Test 的目的是什么？评估一下真的值得这样做吗？虽然有时候胳膊拧不过大腿，但或许在你的分析下，某些需求是不需要做 A/B Test 的。例如：竞品已经做了很久方案（你不要告诉我抄都没自信），或者很明显的UI改动是优于之前的方案的，等等。</p>
+<h3 id="A-B-Test-版本是什么？测试时间多长？"><a href="#A-B-Test-版本是什么？测试时间多长？" class="headerlink" title="A/B Test 版本是什么？测试时间多长？"></a>A/B Test 版本是什么？测试时间多长？</h3><p>第二个问题，A/B Test 版本是什么？测试时间多长？其实这两个问题，就是在确认这个 A/B Test 方案什么时候上线，什么时候下线。上下线的时间我们要清楚，因为在这段时间内，我们都需要去维护两套代码，而且在 App Size 这么紧张，大家都在搞瘦身的大环境下，你的安装包的过大或需就是用户从一开始就不选择你们产品的理由！A/B Test 方案，代码有写就有删，何时删代码取决于这个 A/B Test 方案何时下线，删完代码后有多久的时间给 QA 测试工程师去测试，这都是要安排的。</p>
+<h3 id="如何衡量效果？"><a href="#如何衡量效果？" class="headerlink" title="如何衡量效果？"></a>如何衡量效果？</h3><p>对于某些开发每天都要声嘶力竭的说5次以上：“这个（需求）是要算（研发）成本的呀。”这样用力扣研发成本，尽量把价值低收益低的需求砍下去，把收益不明确的需求排到后面去，相当于在输出几乎不变的基础上，节约了2-3个开发工程师。这也是长期维持团队的诀窍，从源头上精简，而不是苛求超人般的程序员。</p>
+<p>如何衡量效果，就是来判断这种需求是否是价值低收益低或不明确的项目，我们都想做有价值的东西，而不是随随便便随时准备砍掉的功能，希望产品经理敢想，而且加以思考！</p>
+<h1 id="iOS-A-B-Test-方案探索"><a href="#iOS-A-B-Test-方案探索" class="headerlink" title="iOS A/B Test 方案探索"></a>iOS A/B Test 方案探索</h1><p>好了，扯完了产品篇，咱们进入正题。<br>既然原本一套代码有了两种逻辑，或者两种UI样式，就需要从原本的逻辑中拆出来，其必然结果是多了一个if判断语句，那如果判断的地方多了，咱还这样if、if、if、if、i….就太失水准了，常言道：写业务代码，搬得一手好砖是程序员的基本要求。接下来讲下小生的 A/B Test 方案探索历程。</p>
+<h2 id="方案探索历程"><a href="#方案探索历程" class="headerlink" title="方案探索历程"></a>方案探索历程</h2><p>先来大概介绍本次探索的业务背景：</p>
+<h3 id="A-B-Test-方案背景介绍"><a href="#A-B-Test-方案背景介绍" class="headerlink" title="A/B Test 方案背景介绍"></a>A/B Test 方案背景介绍</h3><ul>
+<li>A 方案 线上方案，全量；</li>
+<li>B 方案，适用于 A 中的一种情况，是 A 方案的子集；</li>
+<li>非标准 A/B Test，只是过渡，因为 A 方案为全量方案，无法被下掉，B方案为部分A中的；</li>
+</ul>
+<p>我们就以 iOS 中典型的 UITabelView 中的 Delegate 和 DataSource 的协议函数分 A/B 方案来说；</p>
+<h3 id="最基本的函数-A-B"><a href="#最基本的函数-A-B" class="headerlink" title="最基本的函数 A/B"></a>最基本的函数 A/B</h3><p><img src="http://7xraw1.com1.z0.glb.clouddn.com/2017010534065A:BTest_functionA:B2_no.png" alt="2017010534065A:BTest_functionA:B2_no.png"></p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/201701052172A:BTest_functionA:B_no.png" alt="201701052172A:BTest_functionA:B_no.png"></p>
+<p>刚刚说了，A 方案是一个全量方案，所以这里的switch会有一个默认方案。但是这种写法实在是太low了，每一个调用函数中都去判断一次A/B，影响效率暂且不提，维护起来也是坑坑坑，看见第二张图的函数列表页觉得头大，而且也导致了Controller过于庞大，如果再有一个C方案岂不是要炸？所以这种方案不可取。</p>
+<h3 id="方法选择子-字典，缓存式-A-B"><a href="#方法选择子-字典，缓存式-A-B" class="headerlink" title="方法选择子 + 字典，缓存式 A/B"></a>方法选择子 + 字典，缓存式 A/B</h3><p><img src="http://7xraw1.com1.z0.glb.clouddn.com/2017010548669A:BTest_Selector+dic1.png" alt="2017010548669A:BTest_Selector+dic1.png"></p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/201701052186A:BTest_Selector+dic2.png" alt="201701052186A:BTest_Selector+dic2.png"></p>
+<p>由于Objective-C 的Runtime 动态特性，我们可以把方法选择子缓存在一个字典中，在需要确定 A/B 方案的调用处判断一次，得到对应方案的方法缓存字典，在调用的时候，只需要去对应的缓存字典中调用就可以了，当然这里需要扩展NSObject类中的<code>- (id)performSelector:(SEL)aSelector withObject:(id)object;</code>使其支持多个参数的传递。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">- (id)fperformSelector:(SEL)selector withObjects:(NSArray *)objects</div><div class="line">&#123;</div><div class="line">    NSMethodSignature *methodSignature = [[self class] instanceMethodSignatureForSelector:selector];</div><div class="line">    </div><div class="line">    if(methodSignature == nil)</div><div class="line">    &#123;</div><div class="line">        @throw [NSException exceptionWithName:@&quot;抛异常错误&quot; reason:@&quot;没有这个方法，或者方法名字错误&quot; userInfo:nil];</div><div class="line">        return nil;</div><div class="line">    &#125;</div><div class="line">    else</div><div class="line">    &#123;</div><div class="line">        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];</div><div class="line">        [invocation setTarget:self];</div><div class="line">        [invocation setSelector:selector];</div><div class="line">        //签名中方法参数的个数，内部包含了self和_cmd，所以参数从第3个开始</div><div class="line">        NSInteger  signatureParamCount = methodSignature.numberOfArguments - 2;</div><div class="line">        NSInteger requireParamCount = objects.count;</div><div class="line">        NSInteger resultParamCount = MIN(signatureParamCount, requireParamCount);</div><div class="line">        for (NSInteger i = 0; i &lt; resultParamCount; i++) &#123;</div><div class="line">            id  obj = objects[i];</div><div class="line">            [invocation setArgument:&amp;obj atIndex:i+2];</div><div class="line">        &#125;</div><div class="line">        [invocation invoke];</div><div class="line">        //返回值处理</div><div class="line">        id callBackObject = nil;</div><div class="line">        if(methodSignature.methodReturnLength)</div><div class="line">        &#123;</div><div class="line">            [invocation getReturnValue:&amp;callBackObject];</div><div class="line">        &#125;</div><div class="line">        return callBackObject;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这种方案仅仅比上个方案提高了一点，就是我们并没有在每个函数中判断 A/B ，只判断了一次。但仍然解决不了Controller过于庞大，无法优雅的扩展的问题。而且还引入了新的问题，就是在进行Runtime消息转发时的额外开销，和<code>performSelector</code>返回值需要转一下类型的尴尬。</p>
+<h3 id="设计模式之策略模式"><a href="#设计模式之策略模式" class="headerlink" title="设计模式之策略模式"></a>设计模式之策略模式</h3><p><img src="http://7xraw1.com1.z0.glb.clouddn.com/2017010594760OTA_ABTestClass.png" alt="2017010594760OTA_ABTestClass.png"></p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/201701058434ABstrategy_pattern1.png" alt="201701058434ABstrategy_pattern1.png"></p>
+<p><img src="http://7xraw1.com1.z0.glb.clouddn.com/2017010524744ABstrategy_pattern2.png" alt="2017010524744ABstrategy_pattern2.png"></p>
+<p>如图所示，通过策略模式，把需要分 A/B 的方法抽象到一个协议中，然后抽象出一个策略父类去遵循这个协议，其两个A/B子类也遵循这个协议，这样在Controller只需要在判断A/B策略的调用处初始化对应的策略类，通过父类指针去调用子类的协议方法，达到A/B函数的执行。这样采用了面向对象的继承和多态的机制，完成了一次完美的 A/B 函数执行，AB策略可以自由切换，避免了使用多重条件判断，同时满足了开闭原则，对扩展开放（增加新的策略类），对修改关闭。</p>
+<h3 id="Protocol协议分发器，运用于-A-B-Test-方案"><a href="#Protocol协议分发器，运用于-A-B-Test-方案" class="headerlink" title="Protocol协议分发器，运用于 A/B Test 方案"></a>Protocol协议分发器，运用于 A/B Test 方案</h3><p>协议分发可以简单理解为将协议代理交给多个对象实现，类似于多播委托。</p>
+<p>Protocol协议代理在开发中应用频繁，开发者经常会遇到一个问题——事件的连续传递。比如，为了隔离封装，开发者可能经常会把tableview的delegate或者datesource抽离出独立的对象，而其它对象（比如VC）需要获取某些delegate事件时，只能通过事件的二次传递。有没有更简单的方法了？协议分发器正好可以派上用场。</p>
+<p>既然能实现多播委托消息分发，那么消息分发时，指定的分发的接收者，不就是 A/B Test 的消息分为A/B分发吗?</p>
+<p>先给各位看官呈上干货，<a href="https://github.com/lijianfeigeek/LJFABTestProtocolDispatcher" target="_blank" rel="external">LJFABTestProtocolDispatcher</a>是一个协议分发器，通过该工具能够轻易实现将协议事件分发给多个实现者，并且能指定调用哪些实现者。比如最常见的UITableViewDelegate和UITableViewDataSource协议，通过<a href="https://github.com/lijianfeigeek/LJFABTestProtocolDispatcher" target="_blank" rel="external">LJFABTestProtocolDispatcher</a>能够非常容易发分发给多个对象，而且可以指定A/B方案执行，具体可参考<a href="https://github.com/lijianfeigeek/LJFABTestProtocolDispatcher" target="_blank" rel="external">Demo</a>。</p>
+<h4 id="原理解析"><a href="#原理解析" class="headerlink" title="原理解析"></a>原理解析</h4><p>原理并不复杂， 协议分发器Dispatcher并不实现Protocol协议，其只需将对应的Protocol事件分发给不同的实现者Implemertor。如何实现分发？</p>
+<p>NSObject对象主要通过以下函数响应未实现的Selector函数调用</p>
+<ul>
+<li><p>方案一：动态解析</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">+ (BOOL)resolveInstanceMethod:(SEL)sel;</div><div class="line">+ (BOOL)resolveClassMethod:(SEL)sel;</div></pre></td></tr></table></figure>
+</li>
+<li><p>方案二：快速转发</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">//返回实现了方法的消息转发对象</div><div class="line">- (id)forwardingTargetForSelector:(SEL)aSelector OBJC_AVAILABLE(10.5, 2.0,9.0, 1.0);</div></pre></td></tr></table></figure>
+</li>
+<li><p>方案三：慢速转发</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">//函数签名</div><div class="line">- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector</div><div class="line">//函数调用</div><div class="line">- (void)forwardInvocation:(NSInvocation *)anInvocation     OBJC_SWIFT_UNAVAILABLE(&quot;&quot;);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>因此，协议分发器Dispatcher可以在该函数中将Protocol中Selector的调用传递给实现者Implemertor，由实现者Implemertor实现具体的Selector函数即可，而现实指定的A/B调用，需要传入所有实现者组织的下标，来指定调用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> 协议分发器Dispatcher可以在该函数中将Protocol中Selector的调用传递给实现者Implemertor，由实现者Implemertor实现具体的Selector函数即可</div><div class="line"> */</div><div class="line">- (void)forwardInvocation:(NSInvocation *)anInvocation</div><div class="line">&#123;</div><div class="line">    SEL aSelector = anInvocation.selector;</div><div class="line">    if (!ProtocolContainSel(self.prococol, aSelector))</div><div class="line">    &#123;</div><div class="line">        [super forwardInvocation:anInvocation];</div><div class="line">        return;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    if (self.indexImplemertor)</div><div class="line">    &#123;</div><div class="line">        for (NSInteger i = 0; i &lt; [self.implemertors count]; i++)</div><div class="line">        &#123;</div><div class="line">            ImplemertorContext *implemertorContext = [self.implemertors objectAtIndex:i];</div><div class="line">            if (i == self.indexImplemertor.integerValue &amp;&amp; [implemertorContext.implemertor respondsToSelector:aSelector])</div><div class="line">            &#123;</div><div class="line">                [anInvocation invokeWithTarget:implemertorContext.implemertor];</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    else</div><div class="line">    &#123;</div><div class="line">        for (ImplemertorContext *implemertorContext in self.implemertors)</div><div class="line">        &#123;</div><div class="line">            if ([implemertorContext.implemertor respondsToSelector:aSelector])</div><div class="line">            &#123;</div><div class="line">                [anInvocation invokeWithTarget:implemertorContext.implemertor];</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="设计关键"><a href="#设计关键" class="headerlink" title="设计关键"></a>设计关键</h4><p>如何做到只对Protocol中Selector函数的调用做分发是设计的关键，系统提供有函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">objc_method_description protocol_getMethodDescription(Protocol *p, SEL aSel, BOOL isRequiredMethod, BOOL isInstanceMethod)</div></pre></td></tr></table></figure></p>
+<p>通过以下方法即可判断Selector是否属于某一Protocol<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">struct objc_method_description MethodDescriptionForSELInProtocol(Protocol *protocol, SEL sel) &#123;</div><div class="line">    struct objc_method_description description = protocol_getMethodDescription(protocol, sel, YES, YES);</div><div class="line">    if (description.types) &#123;</div><div class="line">        return description;</div><div class="line">    &#125;</div><div class="line">    description = protocol_getMethodDescription(protocol, sel, NO, YES);</div><div class="line">    if (description.types) &#123;</div><div class="line">        return description;</div><div class="line">    &#125;</div><div class="line">    return (struct objc_method_description)&#123;NULL, NULL&#125;;</div><div class="line">&#125;</div><div class="line"> </div><div class="line">BOOL ProtocolContainSel(Protocol *protocol, SEL sel) &#123;</div><div class="line">    return MethodDescriptionForSELInProtocol(protocol, sel).types ? YES: NO;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>还有一点，协议分发器并不是一个单例，而是一个局部变量，那如何来防止一个局部变量延迟释放呢？这里使用了“自释放”的一种思想，看源码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">- (instancetype)initWithProtocol:(Protocol *)protocol</div><div class="line">            withIndexImplemertor:(NSNumber *)indexImplemertor</div><div class="line">                  toImplemertors:(NSArray *)implemertors</div><div class="line">&#123;</div><div class="line">    if (self = [super init])</div><div class="line">    &#123;</div><div class="line">        self.prococol = protocol;</div><div class="line">        self.indexImplemertor = indexImplemertor;</div><div class="line">        NSMutableArray *implemertorContexts = [NSMutableArray arrayWithCapacity:implemertors.count];</div><div class="line">        [implemertors enumerateObjectsUsingBlock:^(id implemertor, NSUInteger idx, BOOL * _Nonnull stop)&#123;</div><div class="line">            ImplemertorContext *implemertorContext = [ImplemertorContext new];</div><div class="line">            implemertorContext.implemertor = implemertor;</div><div class="line">            [implemertorContexts addObject:implemertorContext];</div><div class="line">            //  为什么关联个 ProtocolDispatcher 属性？</div><div class="line">            // &quot;自释放&quot;，ProtocolDispatcher 并不是一个单例，而是一个局部变量，当implemertor释放时就会触发ProtocolDispatcher释放。</div><div class="line">            // key 需要为随机，否则当有两个分发器是，key 会被覆盖，导致第一个分发器释放。所以 key = _cmd 是不行的。</div><div class="line">            void *key = (__bridge void *)([NSString stringWithFormat:@&quot;%p&quot;,self]);</div><div class="line">            objc_setAssociatedObject(implemertor, key, self, OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">        &#125;];</div><div class="line">        self.implemertors = implemertorContexts;</div><div class="line">    &#125;</div><div class="line">    return self;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h4><p>协议分发器使用需要了解如何处理带有返回值的函数 ，比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section</div></pre></td></tr></table></figure></p>
+<p>我们知道，iOS中，函数执行返回的结果存在于寄存器R0中，后执行的会覆盖先执行的结果。因此，当遇到有返回结果的函数时，返回结果以后执行的函数返回结果为最终值。</p>
+<h4 id="感谢"><a href="#感谢" class="headerlink" title="感谢"></a>感谢</h4><p>Protocol协议分发器，本人并不是首创，也是看了这篇文章<a href="http://www.olinone.com/?p=643" target="_blank" rel="external">Protocol协议分发器</a>得到运用于 A/B Test 的灵感，在这里感谢作者和开源社区。</p>
+<h2 id="业务模块内的-A-B-Test-组件探索"><a href="#业务模块内的-A-B-Test-组件探索" class="headerlink" title="业务模块内的 A/B Test 组件探索"></a>业务模块内的 A/B Test 组件探索</h2><p>随着A/B Test 的代码越来越多，业务模块内的 A/B Test 组件化，无非是为了更方便的上下业务的 A/B Test 代码，提高工作效率，让写代码和删代码变成一件快乐的事情。</p>
+<p>关于 iOS 组件化，网上也有很多文章，这里就不炒冷饭了，大家可以搜索一下关于组件化的一些定义和经验。</p>
+<p>在整个客户端已经被组件化的今天，不是架构组的业务程序员可不可以尝试来解决一下业务模块内的 A/B Test 组件化呢？iOS 组件化大部分都是围绕 Cocoapods 来展开的，所以在基于 Cocoapods iOS 高度组件化的的框架下， 我们先来问几个技术问题。</p>
+<h3 id="相同架构的不同静态库是否可合并？"><a href="#相同架构的不同静态库是否可合并？" class="headerlink" title="相同架构的不同静态库是否可合并？"></a>相同架构的不同静态库是否可合并？</h3><p>这个问题主要是基于目前整个客户端架构，各个业务线向壳工程提供了自己的静态库，<br>我们大部分时间（打包时）都会合并不同架构的相同静态库，相同架构的不同静态库是否可合并？</p>
+<p>答案是，可以的。</p>
+<p>在合并不同架构的相同静态库时，用到以下命令：</p>
+<ul>
+<li><p>查看静态库支持的CPU架构</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lipo -info libname.a(或者libname.framework/libname)</div></pre></td></tr></table></figure>
+</li>
+<li><p>合并静态库</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lipo -create 静态库存放路径1  静态库存放路径2 ...  -output 整合后存放的路径</div></pre></td></tr></table></figure>
+</li>
+<li><p>静态库拆分</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lipo 静态库源文件路径 -thin CPU架构名称 -output 拆分后文件存放路径</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>那么合并相同架构的不同静态库是怎么做的？</p>
+<p>静态库文件也称为“文档文件”，它是一些.o文件的集合。在Linux（Unix）中使用工具“ar”对它进行维护管理。它所包含的成员（member）就是若干.o文件。除了.o文件，还有一个一个特殊的成员，它的名字是<code>__.SYMDEF</code>。它包含了静态库中所有成员所定义的有效符号（函数名、变量名）。因此，当为库增加了一个成员时，相应的就需要更新成员<code>__.SYMDEF</code>，否则所增加的成员中定义的所有的符号将无法被连接程序定位。完成更新的命令是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ranlib libname.a</div></pre></td></tr></table></figure></p>
+<p>举个例子：<br>我们有俩个静态库<code>libFlight.a</code>和<code>libHotel.a</code>，合并成一个<code>libFlight_Hotel.a</code>。</p>
+<ul>
+<li><p>取出相同架构下的Lib.a。<br>  首先查看静态库<code>Flight.a</code>的架构：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lipo -info Flight.a</div></pre></td></tr></table></figure>
+<p>  可以看到：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">input file /Users/f.li/Desktop/相同架构的不同静态库合并/libFlight.a is not a fat file</div><div class="line">Non-fat file: /Users/f.li/Desktop/相同架构的不同静态库合并/libFlight.a is architecture: x86_64</div></pre></td></tr></table></figure>
+<p>  libFlight.a is not a fat file 和 libFlight.a is architecture: x86_64</p>
+<p>  fat file 那么代表这个包是支持多平台的，not a fat file 就是不支持多平台的，架构是x86_64。</p>
+<p>  当然，如果是 fat file ，我们就需要取出相同平台架构的库。</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lipo libFlight.a -thin x86_64 -output libFlight.a</div></pre></td></tr></table></figure>
+<p>  这样，就会取出 x86_64 架构下的<code>libFlight.a</code>。</p>
+</li>
+<li><p>查看库中所包含的文件列表。</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ar -t /Users/f.li/Desktop/相同架构的不同静态库合并/libFlight.a</div><div class="line">__.SYMDEF SORTED</div><div class="line">Flight.o</div></pre></td></tr></table></figure>
+<p>  看到<code>libFlight.a</code>有两个文件，<code>__.SYMDEF SORTED</code>和<code>Flight.o</code></p>
+</li>
+<li><p>解压出object file（即.o后缀文件）。</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">~libFlight_o ar xv /Users/f.li/Desktop/libFlight.a</div><div class="line">x - __.SYMDEF SORTED</div><div class="line">x - Flight.o</div></pre></td></tr></table></figure>
+<p>  这样，在<code>libFlight_o</code>文件夹内，就有了<code>__.SYMDEF SORTED</code>和<code>Flight.o</code>这个两个文件。<br>  同样，在<code>libHotel_o</code>文件夹内获得<code>__.SYMDEF SORTED</code>和<code>Hotel.o</code></p>
+</li>
+<li><p>合并，重新打包。<br>  把<code>__.SYMDEF SORTED</code>和<code>Flight.o</code>，还有<code>Hotel.o</code>移动到<code>libFlight_Hotel_o</code>文件夹内。把重新打包object file；</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ar rcs libFlight_Hotel.a /Users/f.li/Desktop/libFlight_Hotel_o/*o</div></pre></td></tr></table></figure>
+<p>  这样就得到了<code>libFlight_Hotel.a</code>。</p>
+</li>
+<li><p>更新<code>__.SYMDEF</code>文件。<br>  其实，我们是把<code>Hotel.o</code>加入了LibFlight.a中，最后，需要更新<code>__.SYMDEF</code>文件。</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ranlib libFlight_Hotel.a</div></pre></td></tr></table></figure>
+<p>  如果包含头文件，那么把头文件也放到一个文件内在使用libFlight_Hotel.a的工程中引入就可以了。</p>
+</li>
+</ul>
+<p>但是显然这样做太麻烦。</p>
+<h3 id="Xcode-子工程？"><a href="#Xcode-子工程？" class="headerlink" title="Xcode 子工程？"></a>Xcode 子工程？</h3><p>Xcode 子工程，其实是帮助我们在一个工程内配合git submodule 来进行分模块开发。<br>整理下思路。</p>
+<ul>
+<li>创建一个 target(Flight_Hotel_Project) 为 Application 的 Xcode 工程为父工程。并git化。</li>
+<li>创建一个 tagget(Flight_SubProject) 为 Static Library 的 Xcode 工程为子工程，并git化。</li>
+<li>为父工程添加git submodule。具体参照git。</li>
+<li>将子工程文件夹拖入父工程。</li>
+<li>在父工程的 link binary with library 加入Flight_SubProject.a</li>
+<li>在父工程的 header search paths 中添加头文件搜索路径 <code>$(SRCROOT)/Flight_SubProject/Flight_SubProject</code>，其中$(SRCROOT)宏代表你的工程文件目录。</li>
+<li>编译运行。</li>
+</ul>
+<p>这样其实回到了之前架构的一个状态，无法调用解耦，相互依赖严重。</p>
+<h3 id="Cocoapods-的-subspecs-是什么概念？subspec-有自己独立的git仓库吗？是可以理解成pod的子pod吗？"><a href="#Cocoapods-的-subspecs-是什么概念？subspec-有自己独立的git仓库吗？是可以理解成pod的子pod吗？" class="headerlink" title="Cocoapods 的 subspecs 是什么概念？subspec 有自己独立的git仓库吗？是可以理解成pod的子pod吗？"></a>Cocoapods 的 subspecs 是什么概念？subspec 有自己独立的git仓库吗？是可以理解成pod的子pod吗？</h3><p>答案是，subspec 不是独立的代码库，只是编译时候分开进行，最后会和pod形成一个产物。</p>
+<p>为什么会问 Cocoapods subspecs？因为在基于Cocoapods架构组件化后，业务对外部提供的是静态库类型的pod。</p>
+<p>源码类型是subspec，在引入pod时，可以选择引入subspec目录，也可以设置podspec的默认subsepc，subspect之间也可以有依赖关系。</p>
+<h3 id="最终解决方案是什么？"><a href="#最终解决方案是什么？" class="headerlink" title="最终解决方案是什么？"></a>最终解决方案是什么？</h3><p>业务线内部拆分可以做成多个 pod，最后提供一个 pod 依赖所有业务内部的组件 pod，这样不影响外部架构打包，业务线也可以灵活修改。</p>
+<p>最后这个依赖所有业务内部组件的pod对外提供的也是一个静态库，业务内部的组件pod不需要提供静态库，但是也会有独立的Git。</p>
+<p>当然这种业务内部的 A/B Test 组件化方案目前处于探索阶段，因为目前我们的 A/B Test 的代码量并没有达到需要我们进行拆分的地步，所有这阶段尚处于技术拓展调(yi)研(yin)阶段。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>关于 iOS A/B Test 的探索目前小生就这么多，A/B Test 对于产品而言确实是一种比较好的方案，尤其是可逆性和数据驱动，当然小生是站在开发的角度上来看待 A/B Test。既然是对产品有利的方案，我们的代码就应该时代潮流，毕竟技术是为业务服务的。</p>
+<p>前段时间在看 sunny 直播时，谈到了 iOS 开发的进阶速度</p>
+<blockquote>
+<p>纯日常开发 &lt; 纯看书、博客 &lt; 自己试验、Demo &lt; 写博客 &lt; 系统性分享和讨论 &lt; 提供完整的开源方案</p>
+</blockquote>
+<p>之前自己的进阶速度仅仅到写博客的分段，最近这半年在团队中发起了技术分享了和团队博客的浪潮，希望能够向系统性分享、讨论和完整的开源方案这两个高分段冲分，本次结合最近的业务和自身的一些想法和实践，完成了一次冲分尝试，希望在冲分的路上越战越勇！</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/jianfeishuo.jpg" alt="李剑飞 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎订阅我的微信公众号"剑飞说"！</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.png" alt="李剑飞 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.png" alt="李剑飞 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      李剑飞
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://www.lijianfei.cn/2017/01/09/ios-abtest-explore/" title="iOS A/B Test 方案探索">http://www.lijianfei.cn/2017/01/09/ios-abtest-explore/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/11/ios-http2-server-push/" rel="next" title="iOS  HTTP/2 Server Push 探索">
+                <i class="fa fa-chevron-left"></i> iOS  HTTP/2 Server Push 探索
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/09/ios-programer-selfrelax/" rel="prev" title="iOS 程序员的自我修养 — 读《程序员的自我修养-链接、装载与库》">
+                iOS 程序员的自我修养 — 读《程序员的自我修养-链接、装载与库》 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="李剑飞" />
+          <p class="site-author-name" itemprop="name">李剑飞</p>
+           
+              <p class="site-description motion-element" itemprop="description">本站没有添加评论，扫二维码加我微信好友，咨询文章的疑问点。本站只发布原创内容，我的学习笔记会记录在下面的 Wiki 链接中。</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lijianfeigeek" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/1855052150" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/lijianfei_" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lijianfeigeek/lijianfeigeek.github.io/wiki" target="_blank" title="Wiki">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Wiki
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://lijianfei.deercv.com/" target="_blank" title="Resume">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Resume
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引子"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#A-B-Test"><span class="nav-number">2.</span> <span class="nav-text">A/B Test</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#A-B-Test-是什么？"><span class="nav-number">2.1.</span> <span class="nav-text">A/B Test 是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AB-Test-的优点有哪些（对产品而言）？"><span class="nav-number">2.2.</span> <span class="nav-text">AB Test 的优点有哪些（对产品而言）？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#优点1-灰度发布"><span class="nav-number">2.2.1.</span> <span class="nav-text">优点1. 灰度发布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点2-可逆方案"><span class="nav-number">2.2.2.</span> <span class="nav-text">优点2. 可逆方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点3-数据驱动"><span class="nav-number">2.2.3.</span> <span class="nav-text">优点3. 数据驱动</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开发工程师需要关注的事情"><span class="nav-number">3.</span> <span class="nav-text">开发工程师需要关注的事情</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#六问产品经理"><span class="nav-number">3.1.</span> <span class="nav-text">六问产品经理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#目标是什么？"><span class="nav-number">3.1.1.</span> <span class="nav-text">目标是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#A-B-Test-版本是什么？测试时间多长？"><span class="nav-number">3.1.2.</span> <span class="nav-text">A/B Test 版本是什么？测试时间多长？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何衡量效果？"><span class="nav-number">3.1.3.</span> <span class="nav-text">如何衡量效果？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iOS-A-B-Test-方案探索"><span class="nav-number">4.</span> <span class="nav-text">iOS A/B Test 方案探索</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方案探索历程"><span class="nav-number">4.1.</span> <span class="nav-text">方案探索历程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-B-Test-方案背景介绍"><span class="nav-number">4.1.1.</span> <span class="nav-text">A/B Test 方案背景介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最基本的函数-A-B"><span class="nav-number">4.1.2.</span> <span class="nav-text">最基本的函数 A/B</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法选择子-字典，缓存式-A-B"><span class="nav-number">4.1.3.</span> <span class="nav-text">方法选择子 + 字典，缓存式 A/B</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设计模式之策略模式"><span class="nav-number">4.1.4.</span> <span class="nav-text">设计模式之策略模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Protocol协议分发器，运用于-A-B-Test-方案"><span class="nav-number">4.1.5.</span> <span class="nav-text">Protocol协议分发器，运用于 A/B Test 方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#原理解析"><span class="nav-number">4.1.5.1.</span> <span class="nav-text">原理解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设计关键"><span class="nav-number">4.1.5.2.</span> <span class="nav-text">设计关键</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注意事项"><span class="nav-number">4.1.5.3.</span> <span class="nav-text">注意事项</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#感谢"><span class="nav-number">4.1.5.4.</span> <span class="nav-text">感谢</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#业务模块内的-A-B-Test-组件探索"><span class="nav-number">4.2.</span> <span class="nav-text">业务模块内的 A/B Test 组件探索</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#相同架构的不同静态库是否可合并？"><span class="nav-number">4.2.1.</span> <span class="nav-text">相同架构的不同静态库是否可合并？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Xcode-子工程？"><span class="nav-number">4.2.2.</span> <span class="nav-text">Xcode 子工程？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cocoapods-的-subspecs-是什么概念？subspec-有自己独立的git仓库吗？是可以理解成pod的子pod吗？"><span class="nav-number">4.2.3.</span> <span class="nav-text">Cocoapods 的 subspecs 是什么概念？subspec 有自己独立的git仓库吗？是可以理解成pod的子pod吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最终解决方案是什么？"><span class="nav-number">4.2.4.</span> <span class="nav-text">最终解决方案是什么？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李剑飞</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
